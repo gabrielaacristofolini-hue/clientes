@@ -15,29 +15,30 @@
    DADOS — é só editar aqui para atualizar o painel.
    Datas no formato DD/MM/AAAA. A próxima revisão é calculada sozinha
    (sempre 7 dias depois da última revisão/alteração).
+   "tarefas" alimenta a lista de tarefas ao lado das caixas.
    ===================================================================== */
-const ATUALIZADO_EM = "27/10/2026 às 15:20";
+const ATUALIZADO_EM = "27/10/2026 às 15:23";
 
 const RECORRENTES = [
-  { nome: "LEOCAR",     segmento: "Concessionária",               revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
-  { nome: "VILA 86",    segmento: "Moda streetwear",              revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Acompanhar as vendas e os dados do Analytics." },
-  { nome: "TITORION",   segmento: "",                             revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Acompanhar o custo por conversão no Google Ads." },
-  { nome: "ANA WARLA",  segmento: "Estética",                     revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Conta pausada. A previsão é retomar em novembro." },
-  { nome: "061 RACING", segmento: "Mecânica de alta performance", revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Acompanhar a qualidade dos contatos recebidos." },
-  { nome: "NARA",       segmento: "Psicologia",                   revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "30/09/2026", obs: "Verificação prevista até 04/11. Acompanhar se será concluída." },
-  { nome: "NATHALIA",   segmento: "Psicologia",                   revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "23/09/2026", obs: "Conta sem saldo. Precisamos fazer uma recarga." },
-  { nome: "CLÉCIA",     segmento: "Psicologia",                   revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "22/09/2026", obs: "Finalizar as verificações até 16/11." },
-  { nome: "HUGO",       segmento: "Psicologia",                   revisao: "22/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "29/09/2026", obs: "" },
+  { nome: "LEOCAR",     segmento: "Concessionária",               revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca.", tarefas: ["Acompanhar os contatos de BMW e Fusca"] },
+  { nome: "VILA 86",    segmento: "Moda streetwear",              revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Acompanhar as vendas e os dados do Analytics.", tarefas: ["Acompanhar as vendas e o Analytics"] },
+  { nome: "TITORION",   segmento: "",                             revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Acompanhar o custo por conversão no Google Ads.", tarefas: ["Acompanhar o custo por conversão no Google Ads"] },
+  { nome: "ANA WARLA",  segmento: "Estética",                     revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Conta pausada. A previsão é retomar em novembro.", tarefas: ["Retomar as campanhas em novembro"] },
+  { nome: "061 RACING", segmento: "Mecânica de alta performance", revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Acompanhar a qualidade dos contatos recebidos.", tarefas: ["Acompanhar a qualidade dos contatos"] },
+  { nome: "NARA",       segmento: "Psicologia",                   revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "30/09/2026", obs: "Verificação prevista até 04/11. Acompanhar se será concluída.", tarefas: ["Acompanhar a verificação (prazo 04/11)"] },
+  { nome: "NATHALIA",   segmento: "Psicologia",                   revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "23/09/2026", obs: "Conta sem saldo. Precisamos fazer uma recarga.", tarefas: ["Recarregar o saldo da conta"] },
+  { nome: "CLÉCIA",     segmento: "Psicologia",                   revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "22/09/2026", obs: "Finalizar as verificações até 16/11.", tarefas: ["Finalizar as verificações até 16/11"] },
+  { nome: "HUGO",       segmento: "Psicologia",                   revisao: "22/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "29/09/2026", obs: "", tarefas: [] },
 ];
 
 const PROJETOS = [
-  { nome: "SHEILA",    segmento: "Psicologia", revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "24/09/2026", obs: "Verificação até 05/11. Enviar um vídeo explicando o processo. No momento, a conta está pausada por falta de saldo." },
-  { nome: "CARMEM",    segmento: "Psicologia", revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "",      inicio: "05/10/2026", obs: "Campanhas pausadas, com retorno previsto para novembro. Verificação até 05/11." },
-  { nome: "THAYNARA",  segmento: "Psicologia", revisao: "20/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "03/09/2026", obs: "Conta pausada por falta de saldo. Precisamos fazer uma recarga." },
-  { nome: "DANIELLE",  segmento: "Psicologia", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "14/09/2026", obs: "Conta pausada. A verificação está em andamento; acompanhar o status." },
-  { nome: "ALICE",     segmento: "Psicologia", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "14/09/2026", obs: "Finalizar as verificações. Ainda sem prazo definido." },
-  { nome: "YASMIN",    segmento: "Psicologia", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "30/09/2026", obs: "Finalizar as verificações, ainda sem prazo definido. No momento, o orçamento está maior para atingir a promoção." },
-  { nome: "THAIS",     segmento: "Psicologia", revisao: "",           script: "",    mensal: 150, pagamento: "",      inicio: "",           obs: "Ainda estamos criando o site, por isso as campanhas não começaram." },
+  { nome: "SHEILA",    segmento: "Psicologia", revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "24/09/2026", obs: "Verificação até 05/11. Enviar um vídeo explicando o processo. No momento, a conta está pausada por falta de saldo.", tarefas: ["Concluir a verificação até 05/11", "Enviar vídeo explicando o processo", "Recarregar o saldo da conta"] },
+  { nome: "CARMEM",    segmento: "Psicologia", revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "",      inicio: "05/10/2026", obs: "Campanhas pausadas, com retorno previsto para novembro. Verificação até 05/11.", tarefas: ["Concluir a verificação até 05/11", "Retomar as campanhas em novembro"] },
+  { nome: "THAYNARA",  segmento: "Psicologia", revisao: "20/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "03/09/2026", obs: "Conta pausada por falta de saldo. Precisamos fazer uma recarga.", tarefas: ["Recarregar o saldo da conta"] },
+  { nome: "DANIELLE",  segmento: "Psicologia", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "14/09/2026", obs: "Conta pausada. A verificação está em andamento; acompanhar o status.", tarefas: ["Acompanhar o status da verificação"] },
+  { nome: "ALICE",     segmento: "Psicologia", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "14/09/2026", obs: "Finalizar as verificações. Ainda sem prazo definido.", tarefas: ["Finalizar as verificações"] },
+  { nome: "YASMIN",    segmento: "Psicologia", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "30/09/2026", obs: "Finalizar as verificações, ainda sem prazo definido. No momento, o orçamento está maior para atingir a promoção.", tarefas: ["Finalizar as verificações"] },
+  { nome: "THAIS",     segmento: "Psicologia", revisao: "",           script: "",    mensal: 150, pagamento: "",      inicio: "",           obs: "Ainda estamos criando o site, por isso as campanhas não começaram.", tarefas: ["Finalizar o site"] },
 ];
 </script>
 <style>
@@ -70,8 +71,22 @@ const PROJETOS = [
   .wrap { padding: 24px 40px 32px; }
   @media (max-width: 600px) { .wrap { padding: 16px; } }
 
-  /* Caixas sempre uma embaixo da outra, centralizadas e com a mesma largura */
-  .sections { display: grid; grid-template-columns: minmax(0, max-content); justify-content: center; gap: 14px; margin-bottom: 10px; }
+  /* Caixas de clientes à esquerda (uma embaixo da outra) e tarefas à direita; o conjunto fica centralizado */
+  .layout { display: grid; grid-template-columns: minmax(0, max-content) 320px; justify-content: center; align-items: start; gap: 18px; margin-bottom: 10px; }
+  .sections { display: grid; grid-template-columns: minmax(0, max-content); gap: 14px; }
+  @media (max-width: 1440px) {
+    .layout { grid-template-columns: minmax(0, max-content); }
+    .sections { justify-content: center; }
+  }
+
+  /* Lista de tarefas */
+  .task-list { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 14px; box-shadow: var(--shadow); }
+  .task-group { padding: 7px 0; border-top: 1px solid var(--line); }
+  .task-group:first-child { border-top: 0; }
+  .task-group h3 { margin: 0 0 3px; font-size: 12px; font-weight: 700; letter-spacing: .01em; }
+  .task-group ul { margin: 0; padding-left: 18px; color: var(--soft-ink); font-size: 13px; }
+  .task-group li + li { margin-top: 2px; }
+  .task-group li::marker { color: var(--accent); }
 
   /* Cada seção (Recorrentes / Projetos) fica dentro de uma caixa com contorno */
   section {
@@ -182,15 +197,22 @@ const PROJETOS = [
 </head>
 <body>
 <div class="wrap">
-  <div class="sections">
-    <section>
-      <h2>Recorrentes <span id="count-rec"></span></h2>
-      <div class="cards" id="rec"></div>
-    </section>
+  <div class="layout">
+    <div class="sections">
+      <section>
+        <h2>Recorrentes <span id="count-rec"></span></h2>
+        <div class="cards" id="rec"></div>
+      </section>
 
-    <section>
-      <h2>Projetos <span id="count-proj"></span></h2>
-      <div class="cards" id="proj"></div>
+      <section>
+        <h2>Projetos <span id="count-proj"></span></h2>
+        <div class="cards" id="proj"></div>
+      </section>
+    </div>
+
+    <section class="tasks">
+      <h2>Tarefas <span id="count-tasks"></span></h2>
+      <div class="task-list" id="tasks"></div>
     </section>
   </div>
 
@@ -309,6 +331,14 @@ const PROJETOS = [
   document.getElementById("count-proj").textContent = `${PROJETOS.length} clientes`;
   render("rec");
   render("proj");
+
+  // Tarefas: agrupadas por cliente, na mesma ordem das caixas
+  const withTasks = RECORRENTES.concat(PROJETOS).filter(c => c.tarefas && c.tarefas.length);
+  document.getElementById("tasks").innerHTML = withTasks.map(c =>
+    `<div class="task-group"><h3>${esc(c.nome)}</h3><ul>${c.tarefas.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>`
+  ).join("");
+  const total = withTasks.reduce((n, c) => n + c.tarefas.length, 0);
+  document.getElementById("count-tasks").textContent = `${total} tarefa${total === 1 ? "" : "s"}`;
 })();
 </script>
 </body>
