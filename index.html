@@ -17,7 +17,7 @@
    (sempre 7 dias depois da última revisão/alteração).
    "tarefas" alimenta a lista de tarefas ao lado das caixas.
    ===================================================================== */
-const ATUALIZADO_EM = "27/10/2026 às 15:29";
+const ATUALIZADO_EM = "27/10/2026 às 15:31";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca.", tarefas: ["Acompanhar os contatos de BMW e Fusca"] },
@@ -72,10 +72,25 @@ const PROJETOS = [
   @media (max-width: 600px) { .wrap { padding: 16px; } }
 
   /* Caixas de clientes à esquerda (uma embaixo da outra) e tarefas à direita; o conjunto fica centralizado */
-  .layout { display: grid; grid-template-columns: minmax(0, max-content) max-content; justify-content: center; align-items: start; gap: 18px; margin-bottom: 10px; }
+  .layout { display: grid; grid-template-columns: minmax(0, max-content) max-content; justify-content: center; align-items: start; gap: 18px; }
+  /* Cabeçalho em cima de tudo; tarefas ao lado das caixas; "Atualizado em" centralizado embaixo das caixas */
+  .top { grid-column: 1 / -1; }
+  .tasks { grid-column: 2; grid-row: 2 / span 2; }
+  .layout > footer { grid-column: 1; margin-top: -8px; }
+
+  .top {
+    display: flex; align-items: center; gap: 10px;
+    padding: 2px 2px 14px;
+    border-bottom: 1px solid rgba(252, 244, 216, .14);
+    color: var(--box);
+    font-size: 16px; font-weight: 700; letter-spacing: .02em;
+  }
+  .top svg { display: block; flex: none; }
   .sections { display: grid; grid-template-columns: minmax(0, max-content); gap: 14px; }
   @media (max-width: 1540px) {
     .layout { grid-template-columns: minmax(0, max-content); }
+    .tasks { grid-column: auto; grid-row: auto; }
+    .layout > footer { margin-top: 0; }
     .sections { justify-content: center; }
   }
 
@@ -199,6 +214,18 @@ const PROJETOS = [
 <body>
 <div class="wrap">
   <div class="layout">
+    <header class="top">
+      <svg viewBox="0 0 64 64" width="26" height="26" aria-hidden="true">
+        <clipPath id="avatar-clip"><circle cx="32" cy="32" r="32"/></clipPath>
+        <g clip-path="url(#avatar-clip)">
+          <rect width="64" height="64" fill="#2c6a4c"/>
+          <circle cx="32" cy="25" r="11" fill="#fff"/>
+          <path d="M9 68c0-15 10-25 23-25s23 10 23 25z" fill="#fff"/>
+        </g>
+      </svg>
+      <span>Clientes</span>
+    </header>
+
     <div class="sections">
       <section>
         <h2>Recorrentes <span id="count-rec"></span></h2>
@@ -215,9 +242,9 @@ const PROJETOS = [
       <h2>Tarefas <span id="count-tasks"></span></h2>
       <div class="task-list" id="tasks"></div>
     </section>
-  </div>
 
-  <footer id="updated"></footer>
+    <footer id="updated"></footer>
+  </div>
 </div>
 
 <script>
