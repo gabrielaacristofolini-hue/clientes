@@ -88,7 +88,7 @@ const PROJETOS = [
 
   /* As colunas são compartilhadas por todos os cards da seção (subgrid),
      então cada coluna tem a largura do seu maior conteúdo e nada quebra linha. */
-  .cards { display: grid; grid-template-columns: var(--cols); row-gap: 3px; }
+  .cards { display: grid; grid-template-columns: var(--cols); row-gap: 6px; }
   #rec  { --cols: repeat(6, max-content) minmax(0, 1fr); }
   #proj { --cols: repeat(7, max-content) minmax(0, 1fr); }
 
@@ -163,7 +163,7 @@ const PROJETOS = [
   /* Telas menores: cada cliente vira um bloco, com rótulos em cada campo */
   @media (max-width: 1000px) {
     body { font-size: 14px; }
-    .cards { display: flex; flex-direction: column; gap: 6px; }
+    .cards { display: flex; flex-direction: column; gap: 9px; }
     .card.head { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; }
     .card.head .sort { width: auto; padding: 3px 9px; border: 1px solid var(--box-line); border-radius: 999px; background: var(--surface); }
     .card { grid-template-columns: repeat(6, 1fr); gap: 6px 12px; padding: 12px 14px; border-radius: 10px; }
