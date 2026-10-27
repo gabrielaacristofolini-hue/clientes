@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Clientes</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+/* =====================================================================
+   DADOS — é só editar aqui para atualizar o painel.
+   Datas no formato DD/MM/AAAA. A próxima revisão é calculada sozinha
+   (sempre 7 dias depois da última revisão/alteração).
+   ===================================================================== */
+const ATUALIZADO_EM = "27/10/2026";
+
+const RECORRENTES = [
+  { nome: "LEOCAR",     revisao: "26/10/2026", script: "NÃO", mensal: 250, inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
+  { nome: "VILA 86",    revisao: "26/10/2026", script: "NÃO", mensal: 200, inicio: "",           obs: "Acompanhar as vendas e os dados do Analytics." },
+  { nome: "TITORION",   revisao: "26/10/2026", script: "NÃO", mensal: 200, inicio: "",           obs: "Acompanhar o custo por conversão no Google Ads." },
+  { nome: "ANA WARLA",  revisao: "26/10/2026", script: "NÃO", mensal: 200, inicio: "",           obs: "Conta pausada. A previsão é retomar em novembro." },
+  { nome: "061 RACING", revisao: "26/10/2026", script: "NÃO", mensal: 200, inicio: "",           obs: "Acompanhar a qualidade dos contatos recebidos." },
+  { nome: "NARA",       revisao: "26/10/2026", script: "SIM", mensal: 150, inicio: "30/09/2026", obs: "Verificação prevista até 04/11. Acompanhar se será concluída." },
+  { nome: "NATHALIA",   revisao: "26/10/2026", script: "SIM", mensal: 150, inicio: "23/09/2026", obs: "Conta sem saldo. Precisamos fazer uma recarga." },
+  { nome: "CLÉCIA",     revisao: "19/10/2026", script: "SIM", mensal: 150, inicio: "22/09/2026", obs: "Finalizar as verificações até 16/11." },
+  { nome: "HUGO",       revisao: "22/10/2026", script: "SIM", mensal: 150, inicio: "29/09/2026", obs: "" },
+];
+
+const PROJETOS = [
+  { nome: "SHEILA",    revisao: "26/10/2026", script: "SIM", pagamento: "01/03", inicio: "24/09/2026", fim: "", obs: "Verificação até 05/11. Enviar um vídeo explicando o processo. No momento, a conta está pausada por falta de saldo." },
+  { nome: "CARMEM",    revisao: "26/10/2026", script: "SIM", pagamento: "",      inicio: "05/10/2026", fim: "", obs: "Campanhas pausadas, com retorno previsto para novembro. Verificação até 05/11." },
+  { nome: "THAYNARA",  revisao: "20/10/2026", script: "SIM", pagamento: "01/03", inicio: "03/09/2026", fim: "", obs: "Conta pausada por falta de saldo. Precisamos fazer uma recarga." },
+  { nome: "DANIELLE",  revisao: "19/10/2026", script: "SIM", pagamento: "01/03", inicio: "14/09/2026", fim: "", obs: "Conta pausada. A verificação está em andamento; acompanhar o status." },
+  { nome: "ALICE",     revisao: "19/10/2026", script: "SIM", pagamento: "01/03", inicio: "14/09/2026", fim: "", obs: "Finalizar as verificações. Ainda sem prazo definido." },
+  { nome: "YASMIN",    revisao: "19/10/2026", script: "SIM", pagamento: "01/03", inicio: "30/09/2026", fim: "", obs: "Finalizar as verificações, ainda sem prazo definido. No momento, o orçamento está maior para atingir a promoção." },
+  { nome: "THAIS",     revisao: "",           script: "",    pagamento: "",      inicio: "",           fim: "", obs: "" },
+];
+</script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --box: #f5f6f8;
+    --box-line: #dfe3e8;
+    --surface: #ffffff;
+    --ink: #1a1f24;
+    --label: #8a929b;
+    --soft-ink: #4a535c;
+    --line: #eceef1;
+    --accent: #2c6a4c;
+    --accent-soft: #e8f3ec;
+    --accent-soft-ink: #24593f;
+    --warn-ink: #b45309;
+    --danger-ink: #c0261b;
+    --shadow: 0 1px 2px rgba(16, 24, 32, .04);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; color-scheme: light; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 13px/1.4 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { padding: 16px 16px 24px; }
+
+  /* Caixas sempre uma embaixo da outra, encostadas à esquerda e com a mesma largura */
+  .sections { display: grid; grid-template-columns: minmax(0, max-content); gap: 14px; margin-bottom: 10px; }
+
+  /* Cada seção (Recorrentes / Projetos) fica dentro de uma caixa com contorno */
+  section {
+    min-width: 0;
+    background: var(--box);
+    border: 1px solid var(--box-line);
+    border-radius: 14px;
+    padding: 10px 12px 12px;
+  }
+  section h2 {
+    display: flex; align-items: baseline; gap: 8px;
+    margin: 0 0 4px 2px; font-size: 12px; font-weight: 600; color: var(--accent);
+    text-transform: uppercase; letter-spacing: .08em;
+  }
+  section h2 span { color: var(--label); font-weight: 500; text-transform: none; letter-spacing: 0; }
+
+  /* As colunas são compartilhadas por todos os cards da seção (subgrid),
+     então cada coluna tem a largura do seu maior conteúdo e nada quebra linha. */
+  .cards { display: grid; grid-template-columns: var(--cols); row-gap: 3px; }
+  #rec  { --cols: repeat(6, max-content) minmax(0, 1fr); }
+  #proj { --cols: repeat(7, max-content) minmax(0, 1fr); }
+
+  .card {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 6px 0;
+    box-shadow: var(--shadow);
+  }
+  .card.head { background: transparent; border-color: transparent; box-shadow: none; padding: 0; }
+
+  .c {
+    min-width: 0;
+    padding: 0 14px;
+    border-left: 1px solid var(--line);
+    font-variant-numeric: tabular-nums; font-weight: 500;
+    white-space: nowrap;
+  }
+  .c:first-child { border-left: 0; }
+  .c.name { font-weight: 700; letter-spacing: .01em; }
+  .c.empty { color: var(--label); }
+  .c.next.late { color: var(--danger-ink); font-weight: 600; }
+  .c.next.today { color: var(--warn-ink); font-weight: 600; }
+
+  /* Títulos das colunas: clicar ordena */
+  .sort {
+    display: flex; align-items: center; gap: 4px;
+    width: 100%; padding: 4px 14px;
+    border: 0; border-left: 1px solid transparent; background: none;
+    font: inherit; font-size: 11.5px; font-weight: 500; color: var(--label);
+    white-space: nowrap; cursor: pointer; text-align: left;
+  }
+  .sort:hover { color: var(--ink); }
+  .sort[aria-sort="ascending"], .sort[aria-sort="descending"] { color: var(--ink); font-weight: 600; }
+  .sort .arrow { font-size: 10px; opacity: 0; }
+  .sort:hover .arrow { opacity: .4; }
+  .sort[aria-sort="ascending"] .arrow, .sort[aria-sort="descending"] .arrow { opacity: 1; }
+
+  .pill {
+    display: inline-block; padding: 0 8px; border-radius: 999px;
+    background: var(--accent-soft); color: var(--accent-soft-ink);
+    font-size: 12px; font-weight: 600;
+  }
+
+  .note {
+    grid-column: 1 / -1;
+    contain: inline-size; /* observação longa quebra linha em vez de alargar a caixa */
+    margin: 6px 14px 0;
+    padding-top: 5px;
+    border-top: 1px solid var(--line);
+    font-size: 12.5px;
+    color: var(--soft-ink);
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+  }
+  .note::before {
+    content: "Obs:";
+    margin-right: 6px;
+    font-size: 11px; font-weight: 700; color: var(--label);
+    text-transform: uppercase; letter-spacing: .05em;
+  }
+
+  footer { color: var(--label); font-size: 12px; margin-top: 4px; }
+  footer .late { color: var(--danger-ink); font-weight: 600; }
+  footer .today { color: var(--warn-ink); font-weight: 600; }
+
+  /* Telas menores: cada cliente vira um bloco, com rótulos em cada campo */
+  @media (max-width: 1000px) {
+    body { font-size: 14px; }
+    .cards { display: flex; flex-direction: column; gap: 6px; }
+    .card.head { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; }
+    .card.head .sort { width: auto; padding: 3px 9px; border: 1px solid var(--box-line); border-radius: 999px; background: var(--surface); }
+    .card { grid-template-columns: repeat(6, 1fr); gap: 6px 12px; padding: 12px 14px; border-radius: 10px; }
+    .c { grid-column: span 2; padding: 0; border-left: 0; }
+    .c.name { grid-column: 1 / -1; font-size: 15px; }
+    .c:nth-child(2), .c:nth-child(3) { grid-column: span 3; }
+    .c[data-label]::before {
+      content: attr(data-label);
+      display: block;
+      font-size: 11.5px; font-weight: 500; color: var(--label);
+    }
+    .note { margin: 0; padding-top: 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="sections">
+    <section>
+      <h2>Recorrentes <span id="count-rec"></span></h2>
+      <div class="cards" id="rec"></div>
+    </section>
+
+    <section>
+      <h2>Projetos <span id="count-proj"></span></h2>
+      <div class="cards" id="proj"></div>
+    </section>
+  </div>
+
+  <footer>
+    <span id="updated"></span>.
+    A próxima revisão é sempre 7 dias após a última revisão/alteração.
+    Data em <span class="late">vermelho</span>: revisão atrasada. Em <span class="today">laranja</span>: revisão hoje.
+    Clique no título de uma coluna para ordenar.
+  </footer>
+</div>
+
+<script>
+(function () {
+  const DAY = 86400000;
+
+  function parseDate(s) {
+    if (!s) return null;
+    const [d, m, y] = s.split("/").map(Number);
+    return Date.UTC(y, m - 1, d);
+  }
+  function fmtDate(t) {
+    const d = new Date(t);
+    return String(d.getUTCDate()).padStart(2, "0") + "/" + String(d.getUTCMonth() + 1).padStart(2, "0") + "/" + d.getUTCFullYear();
+  }
+  function today() {
+    const n = new Date();
+    return Date.UTC(n.getFullYear(), n.getMonth(), n.getDate());
+  }
+  const money = v => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  function cell(label, value, cls, title) {
+    const empty = value === "" || value == null;
+    return `<div class="c ${cls || ""} ${empty ? "empty" : ""}" data-label="${label}"${title ? ` title="${title}"` : ""}>${empty ? "—" : value}</div>`;
+  }
+
+  function nextOf(c) {
+    const last = parseDate(c.revisao);
+    return last == null ? null : last + 7 * DAY;
+  }
+
+  function nextCell(c) {
+    const next = nextOf(c);
+    if (next == null) return cell("Próxima revisão", "", "next");
+    const diff = Math.round((next - today()) / DAY);
+    let cls = "next", title = "";
+    if (diff < 0) { cls += " late"; title = `Atrasada há ${-diff} dia${diff === -1 ? "" : "s"}`; }
+    else if (diff === 0) { cls += " today"; title = "Revisão hoje"; }
+    return cell("Próxima revisão", fmtDate(next), cls, title);
+  }
+
+  /* Colunas de cada seção. "first" é a direção do primeiro clique:
+     datas e valores começam do mais recente/maior; textos, de A a Z. */
+  const COLS = {
+    rec: [
+      { label: "Cliente", key: c => c.nome, type: "text" },
+      { label: "Última revisão/alteração", key: c => parseDate(c.revisao), type: "num" },
+      { label: "Próxima revisão", key: nextOf, type: "num" },
+      { label: "Script", key: c => c.script, type: "text" },
+      { label: "Mensal", key: c => c.mensal, type: "num" },
+      { label: "Início", key: c => parseDate(c.inicio), type: "num" },
+    ],
+    proj: [
+      { label: "Cliente", key: c => c.nome, type: "text" },
+      { label: "Última revisão/alteração", key: c => parseDate(c.revisao), type: "num" },
+      { label: "Próxima revisão", key: nextOf, type: "num" },
+      { label: "Script", key: c => c.script, type: "text" },
+      { label: "Pagamento", key: c => c.pagamento, type: "text" },
+      { label: "Início", key: c => parseDate(c.inicio), type: "num" },
+      { label: "Fim", key: c => parseDate(c.fim), type: "num" },
+    ],
+  };
+
+  function card(c, kind) {
+    let html = `<div class="c name">${esc(c.nome)}</div>`
+      + cell("Última revisão/alteração", esc(c.revisao))
+      + nextCell(c)
+      + cell("Script", esc(c.script));
+    if (kind === "rec") {
+      html += cell("Mensal", c.mensal != null ? money(c.mensal) : "")
+            + cell("Início", esc(c.inicio));
+    } else {
+      html += cell("Pagamento", c.pagamento ? `<span class="pill">${esc(c.pagamento)}</span>` : "")
+            + cell("Início", esc(c.inicio))
+            + cell("Fim", esc(c.fim));
+    }
+    if (c.obs) html += `<p class="note">${esc(c.obs)}</p>`;
+    return `<article class="card">${html}</article>`;
+  }
+
+  // Ordenação de cada seção: coluna (índice) e direção (1 = crescente, -1 = decrescente)
+  const state = { rec: { col: null, dir: 1 }, proj: { col: null, dir: 1 } };
+  const DATA = { rec: RECORRENTES, proj: PROJETOS };
+
+  function sorted(kind) {
+    const { col, dir } = state[kind];
+    const list = DATA[kind].map((c, i) => ({ c, i }));
+    if (col == null) return list.map(x => x.c);
+    const { key, type } = COLS[kind][col];
+    const isEmpty = v => v == null || v === "";
+    list.sort((a, b) => {
+      const va = key(a.c), vb = key(b.c);
+      if (isEmpty(va) || isEmpty(vb)) return (isEmpty(va) - isEmpty(vb)) || a.i - b.i; // vazios sempre no fim
+      const cmp = type === "num" ? va - vb : String(va).localeCompare(String(vb), "pt-BR");
+      return cmp * dir || a.i - b.i;
+    });
+    return list.map(x => x.c);
+  }
+
+  function render(kind) {
+    const { col, dir } = state[kind];
+    const head = COLS[kind].map((h, i) => {
+      const sort = col === i ? (dir === 1 ? "ascending" : "descending") : "none";
+      const arrow = col === i ? (dir === 1 ? "▲" : "▼") : (h.type === "num" ? "▼" : "▲");
+      return `<button type="button" class="sort" data-kind="${kind}" data-col="${i}" aria-sort="${sort}" title="Ordenar por ${h.label}">${h.label}<span class="arrow">${arrow}</span></button>`;
+    }).join("");
+    document.getElementById(kind).innerHTML =
+      `<div class="card head">${head}</div>` + sorted(kind).map(c => card(c, kind)).join("");
+  }
+
+  // 1º clique: ordena (datas e valores do maior para o menor; textos de A a Z).
+  // 2º clique: inverte. 3º clique: volta à ordem original.
+  document.addEventListener("click", e => {
+    const b = e.target.closest(".sort");
+    if (!b) return;
+    const kind = b.dataset.kind, i = Number(b.dataset.col);
+    const s = state[kind], first = COLS[kind][i].type === "num" ? -1 : 1;
+    if (s.col !== i) { s.col = i; s.dir = first; }
+    else if (s.dir === first) s.dir = -first;
+    else s.col = null;
+    render(kind);
+  });
+
+  document.getElementById("updated").textContent = `Atualizado em ${ATUALIZADO_EM}`;
+  document.getElementById("count-rec").textContent = `${RECORRENTES.length} clientes`;
+  document.getElementById("count-proj").textContent = `${PROJETOS.length} clientes`;
+  render("rec");
+  render("proj");
+})();
+</script>
+</body>
+</html>
