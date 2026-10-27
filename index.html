@@ -17,7 +17,7 @@
    (sempre 7 dias depois da última revisão/alteração).
    "tarefas" alimenta a lista de tarefas ao lado das caixas.
    ===================================================================== */
-const ATUALIZADO_EM = "27/10/2026 às 15:26";
+const ATUALIZADO_EM = "27/10/2026 às 15:27";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca.", tarefas: ["Acompanhar os contatos de BMW e Fusca"] },
@@ -81,11 +81,11 @@ const PROJETOS = [
 
   /* Lista de tarefas */
   .task-list { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 14px; box-shadow: var(--shadow); }
-  .task-list ol { margin: 0; padding: 4px 0 4px 26px; font-size: 13px; }
+  .task-list ol { margin: 0; padding: 4px 0; list-style: none; font-size: 13px; }
+  .task-list .num { flex: none; width: 26px; color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; }
   .task-list li { padding: 5px 0; border-top: 1px solid var(--line); }
   .task-list li:first-child { border-top: 0; }
-  .task-list li { padding-left: 4px; }
-  .task-list li::marker { color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .task-list li { display: flex; align-items: baseline; }
   .task-list .who { color: var(--label); font-size: 11.5px; font-weight: 600; white-space: nowrap; }
 
   /* Cada seção (Recorrentes / Projetos) fica dentro de uma caixa com contorno */
@@ -335,7 +335,7 @@ const PROJETOS = [
   // Tarefas: uma lista única, com o cliente entre parênteses no fim de cada linha
   const allTasks = RECORRENTES.concat(PROJETOS).flatMap(c => (c.tarefas || []).map(t => ({ t, nome: c.nome })));
   document.getElementById("tasks").innerHTML =
-    `<ol>${allTasks.map(x => `<li>${esc(x.t)} <span class="who">(${esc(x.nome)})</span></li>`).join("")}</ol>`;
+    `<ol>${allTasks.map((x, i) => `<li><span class="num">${String(i + 1).padStart(2, "0")}</span><span>${esc(x.t)} <span class="who">(${esc(x.nome)})</span></span></li>`).join("")}</ol>`;
   const total = allTasks.length;
   document.getElementById("count-tasks").textContent = `${total} tarefa${total === 1 ? "" : "s"}`;
 })();
