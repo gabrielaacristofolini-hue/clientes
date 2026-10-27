@@ -17,7 +17,7 @@
    (sempre 7 dias depois da última revisão/alteração).
    "tarefas" alimenta a lista de tarefas ao lado das caixas.
    ===================================================================== */
-const ATUALIZADO_EM = "27/10/2026 às 15:45";
+const ATUALIZADO_EM = "27/10/2026 às 15:49";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca.", tarefas: ["Acompanhar os contatos de BMW e Fusca"] },
@@ -72,10 +72,9 @@ const PROJETOS = [
 
   /* Caixas de clientes à esquerda (uma embaixo da outra) e tarefas à direita; o conjunto fica centralizado */
   .layout { display: grid; grid-template-columns: minmax(0, max-content) max-content; justify-content: center; align-items: start; gap: 18px; }
-  /* Cabeçalho em cima de tudo; tarefas ao lado das caixas; "Atualizado em" centralizado embaixo das caixas */
+  /* Cabeçalho (com "Atualizado em") em cima de tudo; tarefas ao lado das caixas */
   .top { grid-column: 1 / -1; }
-  .tasks { grid-column: 2; grid-row: 2 / span 2; }
-  .layout > footer { grid-column: 1; margin-top: -8px; }
+  .tasks { grid-column: 2; grid-row: 2; }
 
   .top {
     display: flex; align-items: center; gap: 10px;
@@ -89,7 +88,6 @@ const PROJETOS = [
   @media (max-width: 1540px) {
     .layout { grid-template-columns: minmax(0, max-content); }
     .tasks { grid-column: auto; grid-row: auto; }
-    .layout > footer { margin-top: 0; }
     .sections { justify-content: center; }
   }
 
@@ -189,7 +187,7 @@ const PROJETOS = [
     text-transform: uppercase; letter-spacing: .05em;
   }
 
-  footer { color: var(--box); font-size: 13px; font-weight: 500; text-align: center; margin-top: 6px; }
+  .top .updated { margin-left: auto; padding: 3px 10px; border: 1px solid rgba(252, 244, 216, .25); border-radius: 999px; font-size: 12.5px; font-weight: 500; letter-spacing: 0; }
 
   /* Telas menores: cada cliente vira um bloco, com rótulos em cada campo */
   @media (max-width: 1000px) {
@@ -223,6 +221,7 @@ const PROJETOS = [
         </g>
       </svg>
       <span>Clientes</span>
+      <span class="updated" id="updated"></span>
     </header>
 
     <div class="sections">
@@ -242,7 +241,6 @@ const PROJETOS = [
       <div class="task-list" id="tasks"></div>
     </section>
 
-    <footer id="updated"></footer>
   </div>
 </div>
 
