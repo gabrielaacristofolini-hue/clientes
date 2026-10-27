@@ -17,7 +17,7 @@
    (sempre 7 dias depois da última revisão/alteração).
    "tarefas" alimenta a lista de tarefas ao lado das caixas.
    ===================================================================== */
-const ATUALIZADO_EM = "27/10/2026 às 15:27";
+const ATUALIZADO_EM = "27/10/2026 às 15:29";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca.", tarefas: ["Acompanhar os contatos de BMW e Fusca"] },
@@ -72,9 +72,9 @@ const PROJETOS = [
   @media (max-width: 600px) { .wrap { padding: 16px; } }
 
   /* Caixas de clientes à esquerda (uma embaixo da outra) e tarefas à direita; o conjunto fica centralizado */
-  .layout { display: grid; grid-template-columns: minmax(0, max-content) 320px; justify-content: center; align-items: start; gap: 18px; margin-bottom: 10px; }
+  .layout { display: grid; grid-template-columns: minmax(0, max-content) max-content; justify-content: center; align-items: start; gap: 18px; margin-bottom: 10px; }
   .sections { display: grid; grid-template-columns: minmax(0, max-content); gap: 14px; }
-  @media (max-width: 1440px) {
+  @media (max-width: 1540px) {
     .layout { grid-template-columns: minmax(0, max-content); }
     .sections { justify-content: center; }
   }
@@ -85,7 +85,8 @@ const PROJETOS = [
   .task-list .num { flex: none; width: 26px; color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; }
   .task-list li { padding: 5px 0; border-top: 1px solid var(--line); }
   .task-list li:first-child { border-top: 0; }
-  .task-list li { display: flex; align-items: baseline; }
+  .task-list li { display: flex; align-items: baseline; white-space: nowrap; } /* cada tarefa numa linha só */
+  @media (max-width: 600px) { .task-list li { white-space: normal; } }
   .task-list .who { color: var(--label); font-size: 11.5px; font-weight: 600; white-space: nowrap; }
 
   /* Cada seção (Recorrentes / Projetos) fica dentro de uma caixa com contorno */
