@@ -19,25 +19,25 @@
 const ATUALIZADO_EM = "27/10/2026";
 
 const RECORRENTES = [
-  { nome: "LEOCAR",     revisao: "26/10/2026", script: "NÃO", mensal: 250, inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
-  { nome: "VILA 86",    revisao: "26/10/2026", script: "NÃO", mensal: 200, inicio: "",           obs: "Acompanhar as vendas e os dados do Analytics." },
-  { nome: "TITORION",   revisao: "26/10/2026", script: "NÃO", mensal: 200, inicio: "",           obs: "Acompanhar o custo por conversão no Google Ads." },
-  { nome: "ANA WARLA",  revisao: "26/10/2026", script: "NÃO", mensal: 200, inicio: "",           obs: "Conta pausada. A previsão é retomar em novembro." },
-  { nome: "061 RACING", revisao: "26/10/2026", script: "NÃO", mensal: 200, inicio: "",           obs: "Acompanhar a qualidade dos contatos recebidos." },
-  { nome: "NARA",       revisao: "26/10/2026", script: "SIM", mensal: 150, inicio: "30/09/2026", obs: "Verificação prevista até 04/11. Acompanhar se será concluída." },
-  { nome: "NATHALIA",   revisao: "26/10/2026", script: "SIM", mensal: 150, inicio: "23/09/2026", obs: "Conta sem saldo. Precisamos fazer uma recarga." },
-  { nome: "CLÉCIA",     revisao: "19/10/2026", script: "SIM", mensal: 150, inicio: "22/09/2026", obs: "Finalizar as verificações até 16/11." },
-  { nome: "HUGO",       revisao: "22/10/2026", script: "SIM", mensal: 150, inicio: "29/09/2026", obs: "" },
+  { nome: "LEOCAR",     revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
+  { nome: "VILA 86",    revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Acompanhar as vendas e os dados do Analytics." },
+  { nome: "TITORION",   revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Acompanhar o custo por conversão no Google Ads." },
+  { nome: "ANA WARLA",  revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Conta pausada. A previsão é retomar em novembro." },
+  { nome: "061 RACING", revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Acompanhar a qualidade dos contatos recebidos." },
+  { nome: "NARA",       revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "30/09/2026", obs: "Verificação prevista até 04/11. Acompanhar se será concluída." },
+  { nome: "NATHALIA",   revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "23/09/2026", obs: "Conta sem saldo. Precisamos fazer uma recarga." },
+  { nome: "CLÉCIA",     revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "22/09/2026", obs: "Finalizar as verificações até 16/11." },
+  { nome: "HUGO",       revisao: "22/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "29/09/2026", obs: "" },
 ];
 
 const PROJETOS = [
-  { nome: "SHEILA",    revisao: "26/10/2026", script: "SIM", pagamento: "01/03", inicio: "24/09/2026", fim: "", obs: "Verificação até 05/11. Enviar um vídeo explicando o processo. No momento, a conta está pausada por falta de saldo." },
-  { nome: "CARMEM",    revisao: "26/10/2026", script: "SIM", pagamento: "",      inicio: "05/10/2026", fim: "", obs: "Campanhas pausadas, com retorno previsto para novembro. Verificação até 05/11." },
-  { nome: "THAYNARA",  revisao: "20/10/2026", script: "SIM", pagamento: "01/03", inicio: "03/09/2026", fim: "", obs: "Conta pausada por falta de saldo. Precisamos fazer uma recarga." },
-  { nome: "DANIELLE",  revisao: "19/10/2026", script: "SIM", pagamento: "01/03", inicio: "14/09/2026", fim: "", obs: "Conta pausada. A verificação está em andamento; acompanhar o status." },
-  { nome: "ALICE",     revisao: "19/10/2026", script: "SIM", pagamento: "01/03", inicio: "14/09/2026", fim: "", obs: "Finalizar as verificações. Ainda sem prazo definido." },
-  { nome: "YASMIN",    revisao: "19/10/2026", script: "SIM", pagamento: "01/03", inicio: "30/09/2026", fim: "", obs: "Finalizar as verificações, ainda sem prazo definido. No momento, o orçamento está maior para atingir a promoção." },
-  { nome: "THAIS",     revisao: "",           script: "",    pagamento: "",      inicio: "",           fim: "", obs: "" },
+  { nome: "SHEILA",    revisao: "26/10/2026", script: "SIM", mensal: 200, pagamento: "01/03", inicio: "24/09/2026", obs: "Verificação até 05/11. Enviar um vídeo explicando o processo. No momento, a conta está pausada por falta de saldo." },
+  { nome: "CARMEM",    revisao: "26/10/2026", script: "SIM", mensal: 200, pagamento: "",      inicio: "05/10/2026", obs: "Campanhas pausadas, com retorno previsto para novembro. Verificação até 05/11." },
+  { nome: "THAYNARA",  revisao: "20/10/2026", script: "SIM", mensal: 200, pagamento: "01/03", inicio: "03/09/2026", obs: "Conta pausada por falta de saldo. Precisamos fazer uma recarga." },
+  { nome: "DANIELLE",  revisao: "19/10/2026", script: "SIM", mensal: 200, pagamento: "01/03", inicio: "14/09/2026", obs: "Conta pausada. A verificação está em andamento; acompanhar o status." },
+  { nome: "ALICE",     revisao: "19/10/2026", script: "SIM", mensal: 200, pagamento: "01/03", inicio: "14/09/2026", obs: "Finalizar as verificações. Ainda sem prazo definido." },
+  { nome: "YASMIN",    revisao: "19/10/2026", script: "SIM", mensal: 200, pagamento: "01/03", inicio: "30/09/2026", obs: "Finalizar as verificações, ainda sem prazo definido. No momento, o orçamento está maior para atingir a promoção." },
+  { nome: "THAIS",     revisao: "",           script: "",    mensal: 200, pagamento: "",      inicio: "",           obs: "" },
 ];
 </script>
 <style>
@@ -67,7 +67,8 @@ const PROJETOS = [
     font: 13px/1.4 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { padding: 16px 16px 24px; }
+  .wrap { padding: 24px 40px 32px; }
+  @media (max-width: 600px) { .wrap { padding: 16px; } }
 
   /* Caixas sempre uma embaixo da outra, encostadas à esquerda e com a mesma largura */
   .sections { display: grid; grid-template-columns: minmax(0, max-content); gap: 14px; margin-bottom: 10px; }
@@ -90,8 +91,8 @@ const PROJETOS = [
   /* As colunas são compartilhadas por todos os cards da seção (subgrid),
      então cada coluna tem a largura do seu maior conteúdo e nada quebra linha. */
   .cards { display: grid; grid-template-columns: var(--cols); row-gap: 6px; }
-  #rec  { --cols: repeat(6, max-content) minmax(0, 1fr); }
-  #proj { --cols: repeat(7, max-content) minmax(0, 1fr); }
+  /* Larguras fixas para as colunas das duas caixas ficarem alinhadas entre si */
+  .cards { --cols: minmax(124px, max-content) 182px 138px 76px 112px 112px 112px minmax(0, 1fr); }
 
   .card {
     grid-column: 1 / -1;
@@ -142,8 +143,8 @@ const PROJETOS = [
   .note {
     grid-column: 1 / -1;
     contain: inline-size; /* observação longa quebra linha em vez de alargar a caixa */
-    margin: 6px 14px 0;
-    padding-top: 5px;
+    margin: 9px 14px 0;
+    padding-top: 8px;
     border-top: 1px solid var(--line);
     font-size: 12.5px;
     color: var(--soft-ink);
@@ -242,41 +243,26 @@ const PROJETOS = [
     return cell("Próxima revisão", fmtDate(next), cls, title);
   }
 
-  /* Colunas de cada seção. "first" é a direção do primeiro clique:
+  /* Colunas (iguais para Recorrentes e Projetos). O tipo define o primeiro clique:
      datas e valores começam do mais recente/maior; textos, de A a Z. */
-  const COLS = {
-    rec: [
-      { label: "Cliente", key: c => c.nome, type: "text" },
-      { label: "Última revisão/alteração", key: c => parseDate(c.revisao), type: "num" },
-      { label: "Próxima revisão", key: nextOf, type: "num" },
-      { label: "Script", key: c => c.script, type: "text" },
-      { label: "Mensal", key: c => c.mensal, type: "num" },
-      { label: "Início", key: c => parseDate(c.inicio), type: "num" },
-    ],
-    proj: [
-      { label: "Cliente", key: c => c.nome, type: "text" },
-      { label: "Última revisão/alteração", key: c => parseDate(c.revisao), type: "num" },
-      { label: "Próxima revisão", key: nextOf, type: "num" },
-      { label: "Script", key: c => c.script, type: "text" },
-      { label: "Pagamento", key: c => c.pagamento, type: "text" },
-      { label: "Início", key: c => parseDate(c.inicio), type: "num" },
-      { label: "Fim", key: c => parseDate(c.fim), type: "num" },
-    ],
-  };
+  const COLS = [
+    { label: "Cliente", key: c => c.nome, type: "text" },
+    { label: "Última revisão/alteração", key: c => parseDate(c.revisao), type: "num" },
+    { label: "Próxima revisão", key: nextOf, type: "num" },
+    { label: "Script", key: c => c.script, type: "text" },
+    { label: "Mensal", key: c => c.mensal, type: "num" },
+    { label: "Pagamento", key: c => c.pagamento, type: "text" },
+    { label: "Início", key: c => parseDate(c.inicio), type: "num" },
+  ];
 
-  function card(c, kind) {
+  function card(c) {
     let html = `<div class="c name">${esc(c.nome)}</div>`
       + cell("Última revisão/alteração", esc(c.revisao))
       + nextCell(c)
-      + cell("Script", esc(c.script));
-    if (kind === "rec") {
-      html += cell("Mensal", c.mensal != null ? money(c.mensal) : "")
-            + cell("Início", esc(c.inicio));
-    } else {
-      html += cell("Pagamento", c.pagamento ? `<span class="pill">${esc(c.pagamento)}</span>` : "")
-            + cell("Início", esc(c.inicio))
-            + cell("Fim", esc(c.fim));
-    }
+      + cell("Script", esc(c.script))
+      + cell("Mensal", c.mensal != null ? money(c.mensal) : "")
+      + cell("Pagamento", c.pagamento ? `<span class="pill">${esc(c.pagamento)}</span>` : "")
+      + cell("Início", esc(c.inicio));
     if (c.obs) html += `<p class="note">${esc(c.obs)}</p>`;
     return `<article class="card">${html}</article>`;
   }
@@ -289,7 +275,7 @@ const PROJETOS = [
     const { col, dir } = state[kind];
     const list = DATA[kind].map((c, i) => ({ c, i }));
     if (col == null) return list.map(x => x.c);
-    const { key, type } = COLS[kind][col];
+    const { key, type } = COLS[col];
     const isEmpty = v => v == null || v === "";
     list.sort((a, b) => {
       const va = key(a.c), vb = key(b.c);
@@ -302,13 +288,13 @@ const PROJETOS = [
 
   function render(kind) {
     const { col, dir } = state[kind];
-    const head = COLS[kind].map((h, i) => {
+    const head = COLS.map((h, i) => {
       const sort = col === i ? (dir === 1 ? "ascending" : "descending") : "none";
       const arrow = col === i ? (dir === 1 ? "▲" : "▼") : (h.type === "num" ? "▼" : "▲");
       return `<button type="button" class="sort" data-kind="${kind}" data-col="${i}" aria-sort="${sort}" title="Ordenar por ${h.label}">${h.label}<span class="arrow">${arrow}</span></button>`;
     }).join("");
     document.getElementById(kind).innerHTML =
-      `<div class="card head">${head}</div>` + sorted(kind).map(c => card(c, kind)).join("");
+      `<div class="card head">${head}</div>` + sorted(kind).map(card).join("");
   }
 
   // 1º clique: ordena (datas e valores do maior para o menor; textos de A a Z).
@@ -317,7 +303,7 @@ const PROJETOS = [
     const b = e.target.closest(".sort");
     if (!b) return;
     const kind = b.dataset.kind, i = Number(b.dataset.col);
-    const s = state[kind], first = COLS[kind][i].type === "num" ? -1 : 1;
+    const s = state[kind], first = COLS[i].type === "num" ? -1 : 1;
     if (s.col !== i) { s.col = i; s.dir = first; }
     else if (s.dir === first) s.dir = -first;
     else s.col = null;
