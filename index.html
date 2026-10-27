@@ -16,7 +16,7 @@
    Datas no formato DD/MM/AAAA. A próxima revisão é calculada sozinha
    (sempre 7 dias depois da última revisão/alteração).
    ===================================================================== */
-const ATUALIZADO_EM = "27/10/2026";
+const ATUALIZADO_EM = "27/10/2026 às 15:17";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
@@ -31,25 +31,25 @@ const RECORRENTES = [
 ];
 
 const PROJETOS = [
-  { nome: "SHEILA",    revisao: "26/10/2026", script: "SIM", mensal: 200, pagamento: "01/03", inicio: "24/09/2026", obs: "Verificação até 05/11. Enviar um vídeo explicando o processo. No momento, a conta está pausada por falta de saldo." },
-  { nome: "CARMEM",    revisao: "26/10/2026", script: "SIM", mensal: 200, pagamento: "",      inicio: "05/10/2026", obs: "Campanhas pausadas, com retorno previsto para novembro. Verificação até 05/11." },
-  { nome: "THAYNARA",  revisao: "20/10/2026", script: "SIM", mensal: 200, pagamento: "01/03", inicio: "03/09/2026", obs: "Conta pausada por falta de saldo. Precisamos fazer uma recarga." },
-  { nome: "DANIELLE",  revisao: "19/10/2026", script: "SIM", mensal: 200, pagamento: "01/03", inicio: "14/09/2026", obs: "Conta pausada. A verificação está em andamento; acompanhar o status." },
-  { nome: "ALICE",     revisao: "19/10/2026", script: "SIM", mensal: 200, pagamento: "01/03", inicio: "14/09/2026", obs: "Finalizar as verificações. Ainda sem prazo definido." },
-  { nome: "YASMIN",    revisao: "19/10/2026", script: "SIM", mensal: 200, pagamento: "01/03", inicio: "30/09/2026", obs: "Finalizar as verificações, ainda sem prazo definido. No momento, o orçamento está maior para atingir a promoção." },
-  { nome: "THAIS",     revisao: "",           script: "",    mensal: 200, pagamento: "",      inicio: "",           obs: "" },
+  { nome: "SHEILA",    revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "24/09/2026", obs: "Verificação até 05/11. Enviar um vídeo explicando o processo. No momento, a conta está pausada por falta de saldo." },
+  { nome: "CARMEM",    revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "",      inicio: "05/10/2026", obs: "Campanhas pausadas, com retorno previsto para novembro. Verificação até 05/11." },
+  { nome: "THAYNARA",  revisao: "20/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "03/09/2026", obs: "Conta pausada por falta de saldo. Precisamos fazer uma recarga." },
+  { nome: "DANIELLE",  revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "14/09/2026", obs: "Conta pausada. A verificação está em andamento; acompanhar o status." },
+  { nome: "ALICE",     revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "14/09/2026", obs: "Finalizar as verificações. Ainda sem prazo definido." },
+  { nome: "YASMIN",    revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "30/09/2026", obs: "Finalizar as verificações, ainda sem prazo definido. No momento, o orçamento está maior para atingir a promoção." },
+  { nome: "THAIS",     revisao: "",           script: "",    mensal: 150, pagamento: "",      inicio: "",           obs: "" },
 ];
 </script>
 <style>
   :root {
-    --bg: #ffffff;
-    --box: #f5f6f8;
-    --box-line: #dfe3e8;
+    --bg: #fefae9;
+    --box: #fcf4d8;
+    --box-line: #ede0b3;
     --surface: #ffffff;
     --ink: #1a1f24;
     --label: #8a929b;
     --soft-ink: #4a535c;
-    --line: #eceef1;
+    --line: #f0e9d0;
     --accent: #2c6a4c;
     --accent-soft: #e8f3ec;
     --accent-soft-ink: #24593f;
@@ -70,8 +70,8 @@ const PROJETOS = [
   .wrap { padding: 24px 40px 32px; }
   @media (max-width: 600px) { .wrap { padding: 16px; } }
 
-  /* Caixas sempre uma embaixo da outra, encostadas à esquerda e com a mesma largura */
-  .sections { display: grid; grid-template-columns: minmax(0, max-content); gap: 14px; margin-bottom: 10px; }
+  /* Caixas sempre uma embaixo da outra, centralizadas e com a mesma largura */
+  .sections { display: grid; grid-template-columns: minmax(0, max-content); justify-content: center; gap: 14px; margin-bottom: 10px; }
 
   /* Cada seção (Recorrentes / Projetos) fica dentro de uma caixa com contorno */
   section {
@@ -158,9 +158,7 @@ const PROJETOS = [
     text-transform: uppercase; letter-spacing: .05em;
   }
 
-  footer { color: var(--label); font-size: 12px; margin-top: 4px; }
-  footer .late { color: var(--danger-ink); font-weight: 600; }
-  footer .today { color: var(--warn-ink); font-weight: 600; }
+  footer { color: var(--label); font-size: 12px; text-align: center; margin-top: 6px; }
 
   /* Telas menores: cada cliente vira um bloco, com rótulos em cada campo */
   @media (max-width: 1000px) {
@@ -195,12 +193,7 @@ const PROJETOS = [
     </section>
   </div>
 
-  <footer>
-    <span id="updated"></span>.
-    A próxima revisão é sempre 7 dias após a última revisão/alteração.
-    Data em <span class="late">vermelho</span>: revisão atrasada. Em <span class="today">laranja</span>: revisão hoje.
-    Clique no título de uma coluna para ordenar.
-  </footer>
+  <footer id="updated"></footer>
 </div>
 
 <script>
