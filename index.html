@@ -17,7 +17,7 @@
    (sempre 7 dias depois da última revisão/alteração).
    "tarefas" alimenta a lista de tarefas ao lado das caixas.
    ===================================================================== */
-const ATUALIZADO_EM = "27/10/2026 às 15:23";
+const ATUALIZADO_EM = "27/10/2026 às 15:24";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca.", tarefas: ["Acompanhar os contatos de BMW e Fusca"] },
@@ -81,12 +81,11 @@ const PROJETOS = [
 
   /* Lista de tarefas */
   .task-list { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 14px; box-shadow: var(--shadow); }
-  .task-group { padding: 7px 0; border-top: 1px solid var(--line); }
-  .task-group:first-child { border-top: 0; }
-  .task-group h3 { margin: 0 0 3px; font-size: 12px; font-weight: 700; letter-spacing: .01em; }
-  .task-group ul { margin: 0; padding-left: 18px; color: var(--soft-ink); font-size: 13px; }
-  .task-group li + li { margin-top: 2px; }
-  .task-group li::marker { color: var(--accent); }
+  .task-list ul { margin: 0; padding: 4px 0 4px 18px; font-size: 13px; }
+  .task-list li { padding: 5px 0; border-top: 1px solid var(--line); }
+  .task-list li:first-child { border-top: 0; }
+  .task-list li::marker { color: var(--accent); }
+  .task-list .who { color: var(--label); font-size: 11.5px; font-weight: 600; white-space: nowrap; }
 
   /* Cada seção (Recorrentes / Projetos) fica dentro de uma caixa com contorno */
   section {
@@ -332,12 +331,11 @@ const PROJETOS = [
   render("rec");
   render("proj");
 
-  // Tarefas: agrupadas por cliente, na mesma ordem das caixas
-  const withTasks = RECORRENTES.concat(PROJETOS).filter(c => c.tarefas && c.tarefas.length);
-  document.getElementById("tasks").innerHTML = withTasks.map(c =>
-    `<div class="task-group"><h3>${esc(c.nome)}</h3><ul>${c.tarefas.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>`
-  ).join("");
-  const total = withTasks.reduce((n, c) => n + c.tarefas.length, 0);
+  // Tarefas: uma lista única, com o cliente entre parênteses no fim de cada linha
+  const allTasks = RECORRENTES.concat(PROJETOS).flatMap(c => (c.tarefas || []).map(t => ({ t, nome: c.nome })));
+  document.getElementById("tasks").innerHTML =
+    `<ul>${allTasks.map(x => `<li>${esc(x.t)} <span class="who">(${esc(x.nome)})</span></li>`).join("")}</ul>`;
+  const total = allTasks.length;
   document.getElementById("count-tasks").textContent = `${total} tarefa${total === 1 ? "" : "s"}`;
 })();
 </script>
