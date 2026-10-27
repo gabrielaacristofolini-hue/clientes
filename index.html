@@ -17,7 +17,7 @@
    (sempre 7 dias depois da última revisão/alteração).
    "tarefas" alimenta a lista de tarefas ao lado das caixas.
    ===================================================================== */
-const ATUALIZADO_EM = "27/10/2026 às 15:31";
+const ATUALIZADO_EM = "27/10/2026 às 15:35";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca.", tarefas: ["Acompanhar os contatos de BMW e Fusca"] },
@@ -192,6 +192,25 @@ const PROJETOS = [
 
   footer { color: var(--box); font-size: 13px; font-weight: 500; text-align: center; margin-top: 6px; }
 
+  /* Aba Geral (Google Ads), lida ao vivo da planilha */
+  .ads-box { grid-column: 1 / -1; contain: inline-size; margin-top: 10px; }
+  .ads-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; margin-bottom: 4px; }
+  .ads-head h2 { margin: 0 0 0 2px; }
+  .period { display: inline-flex; gap: 2px; padding: 2px; background: var(--surface); border: 1px solid var(--box-line); border-radius: 8px; }
+  .period button {
+    font: inherit; font-size: 12px; font-weight: 500; color: var(--soft-ink);
+    border: 0; background: transparent; padding: 4px 10px; border-radius: 6px; cursor: pointer;
+  }
+  .period button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+  .cards.ads { --cols: repeat(12, max-content) minmax(0, 1fr); overflow-x: auto; }
+  .cards.ads .c, .cards.ads .sort { padding-left: 11px; padding-right: 11px; }
+  .sub { display: block; margin-top: 1px; font-size: 11.5px; font-weight: 500; letter-spacing: 0; color: var(--label); }
+  .alert { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .alert.ok { background: var(--accent-soft); color: var(--accent-soft-ink); }
+  .alert.warn { background: #fff0d6; color: var(--warn-ink); }
+  .alert.crit { background: #fde5e2; color: var(--danger-ink); }
+  .ads-msg { grid-column: 1 / -1; margin: 0; padding: 12px 14px; background: var(--surface); border-radius: 8px; color: var(--soft-ink); }
+
   /* Telas menores: cada cliente vira um bloco, com rótulos em cada campo */
   @media (max-width: 1000px) {
     body { font-size: 14px; }
@@ -244,6 +263,18 @@ const PROJETOS = [
     </section>
 
     <footer id="updated"></footer>
+
+    <section class="ads-box" id="geral">
+      <div class="ads-head">
+        <h2>Geral · Google Ads <span id="count-ads"></span></h2>
+        <div class="period" role="group" aria-label="Período">
+          <button type="button" data-period="hoje" aria-pressed="true">Hoje</button>
+          <button type="button" data-period="ontem" aria-pressed="false">Ontem</button>
+          <button type="button" data-period="semana" aria-pressed="false">Últimos 7 dias</button>
+        </div>
+      </div>
+      <div class="cards ads" id="ads"><p class="ads-msg">Carregando dados da planilha…</p></div>
+    </section>
   </div>
 </div>
 
@@ -344,7 +375,7 @@ const PROJETOS = [
   // 1º clique: ordena (datas e valores do maior para o menor; textos de A a Z).
   // 2º clique: inverte. 3º clique: volta à ordem original.
   document.addEventListener("click", e => {
-    const b = e.target.closest(".sort");
+    const b = e.target.closest(".sort[data-kind]");
     if (!b) return;
     const kind = b.dataset.kind, i = Number(b.dataset.col);
     const s = state[kind], first = COLS[i].type === "num" ? -1 : 1;
@@ -359,6 +390,104 @@ const PROJETOS = [
   document.getElementById("count-proj").textContent = `${PROJETOS.length} clientes`;
   render("rec");
   render("proj");
+
+  /* ===== Aba Geral: lida ao vivo da aba "Geral" da planilha do Google ===== */
+  const SHEET_CSV = "https://docs.google.com/spreadsheets/d/14wsRMmTuI7v7nT2yy6AXYKzlhBHNkznw4XXsen69xxE/gviz/tq?tqx=out:csv&sheet=Geral";
+  // Posição das colunas na planilha: 0 cliente, 1 ID, 2 status, 3 orçamento/dia,
+  // cada período tem 9 métricas a partir da coluna indicada, 31 alertas, 32 atualizado em.
+  const PERIOD_START = { hoje: 4, ontem: 13, semana: 22 };
+  const METRICS = ["Custo", "Impr.", "Cliques", "CTR", "CPC méd.", "CPM", "Conv.", "Taxa conv.", "Custo/conv."];
+
+  function parseCSV(text) {
+    const rows = []; let row = [], cur = "", q = false;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (q) {
+        if (ch === '"' && text[i + 1] === '"') { cur += '"'; i++; }
+        else if (ch === '"') q = false;
+        else cur += ch;
+      } else if (ch === '"') q = true;
+      else if (ch === ",") { row.push(cur); cur = ""; }
+      else if (ch === "\n") { row.push(cur); rows.push(row); row = []; cur = ""; }
+      else if (ch !== "\r") cur += ch;
+    }
+    if (cur || row.length) { row.push(cur); rows.push(row); }
+    return rows;
+  }
+  const blank = v => !v || v.trim() === "" || v.trim() === "–";
+  const toNum = v => blank(v) ? null : parseFloat(v.replace(/[R$\s%.]/g, "").replace(",", "."));
+
+  const ads = { rows: [], period: "hoje", col: null, dir: 1 };
+
+  function adsCols() {
+    const s = PERIOD_START[ads.period];
+    return [
+      { label: "Conta", key: r => r[0], type: "text" },
+      { label: "Orçamento/dia", key: r => toNum(r[3]), type: "num", cell: r => r[3] },
+      ...METRICS.map((m, i) => ({ label: m, key: r => toNum(r[s + i]), type: "num", cell: r => r[s + i] })),
+      { label: "Alertas", key: r => r[31], type: "text" },
+    ];
+  }
+
+  function adsCard(r) {
+    const cols = adsCols();
+    const alert = (r[31] || "").trim();
+    const level = /^crítico/i.test(alert) ? "crit" : /^atenção/i.test(alert) ? "warn" : "ok";
+    const when = (r[32] || "").trim().replace(/^(\d\d\/\d\d)\/\d{4}/, "$1");
+    let html = `<div class="c name">${esc(r[0].trim())}<span class="sub">${esc(r[1].trim())} · ${esc(r[2].trim())}</span></div>`;
+    html += cols.slice(1, -1).map(c => cell(c.label, blank(c.cell(r)) ? "" : esc(c.cell(r).trim()))).join("");
+    html += cell("Alertas", alert ? `<span class="alert ${level}">${esc(alert)}</span>${when ? `<span class="sub">atualizado ${esc(when)}</span>` : ""}` : "");
+    return `<article class="card">${html}</article>`;
+  }
+
+  function renderAds() {
+    const cols = adsCols();
+    const list = ads.rows.map((r, i) => ({ r, i }));
+    if (ads.col != null) {
+      const { key, type } = cols[ads.col];
+      const isEmpty = v => v == null || v === "" || Number.isNaN(v);
+      list.sort((a, b) => {
+        const va = key(a.r), vb = key(b.r);
+        if (isEmpty(va) || isEmpty(vb)) return (isEmpty(va) - isEmpty(vb)) || a.i - b.i;
+        const cmp = type === "num" ? va - vb : String(va).localeCompare(String(vb), "pt-BR");
+        return cmp * ads.dir || a.i - b.i;
+      });
+    }
+    const head = cols.map((h, i) => {
+      const sort = ads.col === i ? (ads.dir === 1 ? "ascending" : "descending") : "none";
+      const arrow = ads.col === i ? (ads.dir === 1 ? "▲" : "▼") : (h.type === "num" ? "▼" : "▲");
+      return `<button type="button" class="sort" data-ads-col="${i}" aria-sort="${sort}" title="Ordenar por ${h.label}">${h.label}<span class="arrow">${arrow}</span></button>`;
+    }).join("");
+    document.getElementById("ads").innerHTML = `<div class="card head">${head}</div>` + list.map(x => adsCard(x.r)).join("");
+    document.getElementById("count-ads").textContent = `${ads.rows.length} contas`;
+  }
+
+  document.addEventListener("click", e => {
+    const p = e.target.closest("[data-period]");
+    if (p) {
+      ads.period = p.dataset.period;
+      document.querySelectorAll("[data-period]").forEach(x => x.setAttribute("aria-pressed", x === p));
+      return renderAds();
+    }
+    const b = e.target.closest(".sort[data-ads-col]");
+    if (!b) return;
+    const i = Number(b.dataset.adsCol), first = adsCols()[i].type === "num" ? -1 : 1;
+    if (ads.col !== i) { ads.col = i; ads.dir = first; }
+    else if (ads.dir === first) ads.dir = -first;
+    else ads.col = null;
+    renderAds();
+  });
+
+  fetch(SHEET_CSV)
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+    .then(text => {
+      ads.rows = parseCSV(text).slice(1).filter(r => r[0] && r[0].trim());
+      renderAds();
+    })
+    .catch(() => {
+      document.getElementById("ads").innerHTML =
+        `<p class="ads-msg">Não foi possível carregar a planilha agora. Tente recarregar a página.</p>`;
+    });
 
   // Tarefas: uma lista única, com o cliente entre parênteses no fim de cada linha
   const allTasks = RECORRENTES.concat(PROJETOS).flatMap(c => (c.tarefas || []).map(t => ({ t, nome: c.nome })));
