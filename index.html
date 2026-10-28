@@ -20,14 +20,18 @@
    Na observação: **trecho** fica com marcador amarelo (verificação, promoção) e
    !!trecho!! com marcador laranja (saldo, recarga: o que é urgente).
    "plataformas": onde o cliente roda anúncios ("google", "meta" ou os dois).
+   Cada caixa mostra primeiro quem foi revisado mais recentemente (mesma data → ordem alfabética).
    ===================================================================== */
-const ATUALIZADO_EM = "28/10/2026 às 17:24";
+const ATUALIZADO_EM = "28/10/2026 às 17:27";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
   { nome: "VILA 86",    segmento: "Moda streetwear",              plataformas: ["meta", "google"], revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Acompanhar as vendas e os dados do Analytics." },
   { nome: "ANA WARLA",  segmento: "Estética",                     plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Conta pausada. A previsão é retomar em novembro." },
   { nome: "061 RACING", segmento: "Mecânica de alta performance", plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Acompanhar a qualidade dos contatos recebidos." },
+];
+
+const RECORRENTES_PSICOLOGOS = [
   { nome: "NARA",       segmento: "Psicologia",                   plataformas: ["google"], conta: "775-492-4225", revisao: "28/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "30/09/2026", obs: "**Verificação da conta até 04/11** e **promoção de créditos do Google até 24/11**. A dona da conta foi furtada e perdeu o acesso; estamos com o suporte para trocar o perfil de pagamento. Se der certo, colocamos um cartão novo, sem vínculo com a Bárbara, e conseguimos fazer a verificação. Se não der, seguimos com acesso à conta, mas sem alterar o pagamento, e a verificação fica impossível sem o acesso dela." },
   { nome: "NATHALIA",   segmento: "Psicologia",                   plataformas: ["google"], conta: "359-065-0990", revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "23/09/2026", obs: "!!Conta sem saldo. Precisamos fazer uma recarga.!!" },
   { nome: "CLÉCIA",     segmento: "Psicologia",                   plataformas: ["google"], conta: "128-846-8174", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "22/09/2026", obs: "**Finalizar as verificações até 16/11.**" },
@@ -42,24 +46,6 @@ const PROJETOS = [
   { nome: "ALICE",     segmento: "Psicologia", plataformas: ["google"], conta: "357-411-5648", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "14/09/2026", obs: "Finalizar as verificações. Ainda sem prazo definido." },
   { nome: "YASMIN",    segmento: "Psicologia", plataformas: ["google"], conta: "756-159-1841", revisao: "28/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "30/09/2026", obs: "Ajustes em 28/10 nos anúncios, palavras-chave e termos de pesquisa, para manter o que está convertendo. **Promoção até 14/11.** **Verificação até 20/11** (só confirmar o telefone). No momento, o orçamento está maior para atingir a promoção." },
   { nome: "THAIS",     segmento: "Psicologia", plataformas: ["google"], revisao: "",           script: "",    mensal: 150, pagamento: "",      inicio: "",           obs: "Ainda estamos criando o site, por isso as campanhas não começaram." },
-];
-
-/* Tarefas (embaixo das caixas de clientes): só verificação, prazo da promoção e recarga.
-   Com prazo, a lista ordena sozinha pela data mais próxima. */
-const TAREFAS = [
-  { tipo: "verificacao", cliente: "NARA",     prazo: "04/11/2026" },
-  { tipo: "verificacao", cliente: "SHEILA",   prazo: "05/11/2026" },
-  { tipo: "verificacao", cliente: "CARMEM",   prazo: "11/11/2026" },
-  { tipo: "verificacao", cliente: "CLÉCIA",   prazo: "16/11/2026" },
-  { tipo: "verificacao", cliente: "YASMIN",   prazo: "20/11/2026" },
-  { tipo: "promocao",    cliente: "YASMIN",   prazo: "14/11/2026" },
-  { tipo: "promocao",    cliente: "HUGO",     prazo: "20/11/2026" },
-  { tipo: "promocao",    cliente: "NARA",     prazo: "24/11/2026" },
-  { tipo: "promocao",    cliente: "CARMEM",   prazo: "27/11/2026" },
-  { tipo: "recarga",     cliente: "HUGO" },
-  { tipo: "recarga",     cliente: "NATHALIA" },
-  { tipo: "recarga",     cliente: "SHEILA" },
-  { tipo: "recarga",     cliente: "THAYNARA" },
 ];
 
 /* Aba Google Ads: os números vêm ao vivo da aba "Geral" da planilha.
@@ -154,7 +140,7 @@ const CONTAS_GOOGLE_ADS = [
   .ads-msg { grid-column: 1 / -1; margin: 0; padding: 12px 14px; background: var(--surface); border-radius: 8px; color: var(--soft-ink); }
   .sections { display: grid; grid-template-columns: minmax(0, max-content); gap: 14px; }
 
-  /* Cada seção (Recorrentes / Projetos) fica dentro de uma caixa com contorno */
+  /* Cada seção (Recorrentes, Recorrentes · Psicólogos, Projetos · Psicólogos) fica dentro de uma caixa com contorno */
   section {
     min-width: 0;
     background: var(--box);
@@ -236,7 +222,7 @@ const CONTAS_GOOGLE_ADS = [
     white-space: pre-line;
     overflow-wrap: anywhere;
   }
-  .note mark.urgent, .task-col mark.urgent { background: #fde0c2; }
+  .note mark.urgent { background: #fde0c2; }
   .note mark {
     padding: 0 4px; border-radius: 3px;
     background: #fdf1c7; color: inherit;
@@ -247,19 +233,6 @@ const CONTAS_GOOGLE_ADS = [
     font-size: 11px; font-weight: 700; color: var(--label);
     text-transform: uppercase; letter-spacing: .05em;
   }
-
-  /* Tarefas: três colunas curtas (Verificação | Promoção | Recarga), cada tarefa numa linha */
-  .tasks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-  .task-col { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 14px 6px; box-shadow: var(--shadow); }
-  .task-col h3 { margin: 0 0 2px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--soft-ink); }
-  .task-col ol { margin: 0; padding: 0; list-style: none; }
-  .task-col li { display: flex; align-items: baseline; gap: 8px; padding: 4px 0; border-top: 1px solid var(--line); white-space: nowrap; }
-  .task-col li:first-of-type { border-top: 0; }
-  .task-col .num { color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; }
-  .task-col .who { font-weight: 600; }
-  .task-col mark { padding: 0 4px; border-radius: 3px; background: #fdf1c7; color: inherit; font-variant-numeric: tabular-nums; }
-  .task-col .none { color: var(--label); }
-  @media (max-width: 700px) { .tasks { grid-template-columns: 1fr; } }
 
   .top .updated { margin-left: auto; padding: 3px 10px; border: 1px solid rgba(252, 244, 216, .25); border-radius: 999px; font-size: 12.5px; font-weight: 500; letter-spacing: 0; }
 
@@ -315,24 +288,24 @@ const CONTAS_GOOGLE_ADS = [
       </section>
 
       <section>
-        <h2>Projetos <span id="count-proj"></span></h2>
-        <div class="cards" id="proj"></div>
+        <h2>Recorrentes · Psicólogos <span id="count-recpsi"></span></h2>
+        <div class="cards" id="recpsi"></div>
       </section>
 
       <section>
-        <h2>Tarefas <span id="count-tasks"></span></h2>
-        <div class="tasks" id="tasks"></div>
+        <h2>Projetos · Psicólogos <span id="count-proj"></span></h2>
+        <div class="cards" id="proj"></div>
       </section>
     </div>
 
     <div class="sections" data-panel="ads" hidden>
       <section>
-        <h2>Recorrentes · Campanhas de Pesquisa <span id="count-ads-rec"></span></h2>
+        <h2>Recorrentes Psicólogos · Campanhas de Pesquisa <span id="count-ads-rec"></span></h2>
         <div class="cards ads" id="ads-rec"><p class="ads-msg">Carregando dados da planilha…</p></div>
       </section>
 
       <section>
-        <h2>Projetos · Campanhas de Pesquisa <span id="count-ads-proj"></span></h2>
+        <h2>Projetos Psicólogos · Campanhas de Pesquisa <span id="count-ads-proj"></span></h2>
         <div class="cards ads" id="ads-proj"><p class="ads-msg">Carregando dados da planilha…</p></div>
       </section>
     </div>
@@ -379,7 +352,7 @@ const CONTAS_GOOGLE_ADS = [
     return cell("Próxima revisão", fmtDate(next), cls, title);
   }
 
-  /* Colunas (iguais para Recorrentes e Projetos). O tipo define o primeiro clique:
+  /* Colunas (iguais para todas as caixas). O tipo define o primeiro clique:
      datas e valores começam do mais recente/maior; textos, de A a Z. */
   const COLS = [
     { label: "Cliente", key: c => c.nome, type: "text" },
@@ -392,7 +365,7 @@ const CONTAS_GOOGLE_ADS = [
   ];
 
   // Cliente dono de cada conta do Google Ads (pelo campo "conta")
-  const CLIENT_BY_ACCOUNT = Object.fromEntries(RECORRENTES.concat(PROJETOS).filter(c => c.conta).map(c => [c.conta, c]));
+  const CLIENT_BY_ACCOUNT = Object.fromEntries(RECORRENTES.concat(RECORRENTES_PSICOLOGOS, PROJETOS).filter(c => c.conta).map(c => [c.conta, c]));
 
   const PLATFORMS = {
     google: { title: "Google Ads", svg: `<svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>` },
@@ -417,13 +390,21 @@ const CONTAS_GOOGLE_ADS = [
     return `<article class="card" data-cliente="${esc(c.nome)}">${html}</article>`;
   }
 
+  // Ordem padrão de cada caixa: revisão mais recente no topo; mesma data → ordem alfabética;
+  // quem não tem revisão vai para o fim
+  function byReview(list) {
+    return list.slice().sort((a, b) =>
+      (parseDate(b.revisao) ?? -Infinity) - (parseDate(a.revisao) ?? -Infinity) ||
+      a.nome.localeCompare(b.nome, "pt-BR"));
+  }
+
   // Ordenação de cada seção: coluna (índice) e direção (1 = crescente, -1 = decrescente)
-  const state = { rec: { col: null, dir: 1 }, proj: { col: null, dir: 1 } };
-  const DATA = { rec: RECORRENTES, proj: PROJETOS };
+  const state = { rec: { col: null, dir: 1 }, recpsi: { col: null, dir: 1 }, proj: { col: null, dir: 1 } };
+  const DATA = { rec: RECORRENTES, recpsi: RECORRENTES_PSICOLOGOS, proj: PROJETOS };
 
   function sorted(kind) {
     const { col, dir } = state[kind];
-    const list = DATA[kind].map((c, i) => ({ c, i }));
+    const list = byReview(DATA[kind]).map((c, i) => ({ c, i }));
     if (col == null) return list.map(x => x.c);
     const { key, type } = COLS[col];
     const isEmpty = v => v == null || v === "";
@@ -460,24 +441,10 @@ const CONTAS_GOOGLE_ADS = [
     render(kind);
   });
 
-  document.getElementById("count-rec").textContent = `${RECORRENTES.length} clientes`;
-  document.getElementById("count-proj").textContent = `${PROJETOS.length} clientes`;
-  render("rec");
-  render("proj");
-
-  // Tarefas: numeração contínua (01, 02…) nas três colunas; com prazo, ordena pela data mais próxima
-  const TASK_TYPES = [["verificacao", "Verificação"], ["promocao", "Prazo da promoção"], ["recarga", "Recarga"]];
-  let n = 0;
-  document.getElementById("tasks").innerHTML = TASK_TYPES.map(([tipo, label]) => {
-    const list = TAREFAS.map((x, i) => ({ ...x, i })).filter(x => x.tipo === tipo)
-      .sort((a, b) => (parseDate(a.prazo) ?? Infinity) - (parseDate(b.prazo) ?? Infinity) || a.i - b.i);
-    const items = list.map(x => `<li><span class="num">${String(++n).padStart(2, "0")}</span>` +
-      `<span class="who">${esc(x.cliente)}</span>` +
-      (x.prazo ? `<mark>até ${esc(x.prazo.slice(0, 5))}</mark>` : x.tipo === "recarga" ? `<mark class="urgent">colocar saldo</mark>` : "") +
-      `</li>`).join("");
-    return `<div class="task-col"><h3>${label}</h3><ol>${items || `<li class="none">Nada pendente</li>`}</ol></div>`;
-  }).join("");
-  document.getElementById("count-tasks").textContent = `${n} tarefa${n === 1 ? "" : "s"}`;
+  Object.keys(DATA).forEach(kind => {
+    document.getElementById(`count-${kind}`).textContent = `${DATA[kind].length} clientes`;
+    render(kind);
+  });
 
   /* ===== Aba Google Ads: lida ao vivo da aba "Geral" da planilha do Google ===== */
   const SHEET_CSV = "https://docs.google.com/spreadsheets/d/14wsRMmTuI7v7nT2yy6AXYKzlhBHNkznw4XXsen69xxE/gviz/tq?tqx=out:csv&sheet=Geral";
@@ -507,9 +474,9 @@ const CONTAS_GOOGLE_ADS = [
   const blank = v => !v || v.trim() === "" || v.trim() === "–";
   const toNum = v => blank(v) ? null : parseFloat(v.replace(/[R$\s%.]/g, "").replace(",", "."));
 
-  // Ordenação separada para cada caixa (Recorrentes / Projetos), como na aba Clientes
+  // Ordenação separada para cada caixa (Recorrentes Psicólogos / Projetos Psicólogos), como na aba Clientes
   const ads = { rows: null, loading: false, updated: "", sort: { rec: { col: null, dir: 1 }, proj: { col: null, dir: 1 } } };
-  const REC_ACCOUNTS = new Set(RECORRENTES.map(c => c.conta).filter(Boolean));
+  const REC_ACCOUNTS = new Set(RECORRENTES.concat(RECORRENTES_PSICOLOGOS).map(c => c.conta).filter(Boolean));
   const displayName = r => { const cli = CLIENT_BY_ACCOUNT[r[1].trim()]; return cli ? cli.nome : r[0].trim(); };
 
   const ADS_COLS = [
@@ -534,11 +501,11 @@ const CONTAS_GOOGLE_ADS = [
     return `<article class="card" data-conta="${esc(id)}">${html}</article>`;
   }
 
-  // Contas separadas como na aba Clientes: dono recorrente → Recorrentes; o resto → Projetos
+  // Contas separadas como na aba Clientes: dono recorrente → Recorrentes Psicólogos; o resto → Projetos Psicólogos
   function renderAdsBox(kind) {
     const cols = ADS_COLS, { col, dir } = ads.sort[kind];
-    // Ordem padrão = a mesma da aba Clientes
-    const order = (kind === "rec" ? RECORRENTES : PROJETOS).map(c => c.conta);
+    // Ordem padrão = a mesma da aba Clientes (revisão mais recente no topo)
+    const order = byReview(kind === "rec" ? RECORRENTES.concat(RECORRENTES_PSICOLOGOS) : PROJETOS).map(c => c.conta);
     const pos = r => { const k = order.indexOf(r[1].trim()); return k < 0 ? Infinity : k; };
     const list = ads.rows
       .filter(r => REC_ACCOUNTS.has(r[1].trim()) === (kind === "rec"))
