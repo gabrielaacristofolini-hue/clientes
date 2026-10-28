@@ -15,15 +15,15 @@
    DADOS — é só editar aqui para atualizar o painel.
    Datas no formato DD/MM/AAAA. A próxima revisão é calculada sozinha
    (sempre 7 dias depois da última revisão/alteração).
-   "conta" é o ID da conta do Google Ads do cliente: liga o card dele à
-   linha da aba Google Ads (o mesmo nome aparece nas duas abas).
+   "conta" é o ID da conta do Google Ads do cliente: traz para o card dele os
+   dados da aba "Geral" da planilha (orçamento, gasto, conversões, alerta).
    Na observação: **trecho** fica com marcador amarelo (verificação, promoção) e
    !!trecho!! com marcador laranja (saldo, recarga: o que é urgente).
    "plataformas": onde o cliente roda anúncios ("google", "meta" ou os dois).
    Cada caixa mostra primeiro quem foi revisado mais recentemente (mesma data → ordem alfabética).
    "verificacao" (data ou "sem prazo"), "saldo: true" e "promocao" (data) alimentam a tabelinha lateral.
    ===================================================================== */
-const ATUALIZADO_EM = "28/10/2026 às 17:33";
+const ATUALIZADO_EM = "28/10/2026 às 17:39";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
@@ -48,7 +48,7 @@ const PROJETOS = [
   { nome: "THAIS",     segmento: "Psicologia", plataformas: ["google"], revisao: "",           script: "",    mensal: 150, pagamento: "",      inicio: "",           obs: "Ainda estamos criando o site, por isso as campanhas não começaram." },
 ];
 
-/* Aba Google Ads: os números vêm ao vivo da aba "Geral" da planilha.
+/* Google Ads: os números vêm ao vivo da aba "Geral" da planilha.
    Só aparecem as contas abaixo, que têm aba particular visível na planilha
    (conferido em 28/10/2026). Conta nova na Geral sem estar aqui não aparece. */
 const CONTAS_GOOGLE_ADS = [
@@ -108,7 +108,7 @@ const CONTAS_GOOGLE_ADS = [
   .top svg { display: block; flex: none; }
   .top { flex-wrap: wrap; }
 
-  /* Abas do topo: Clientes / Google Ads */
+  /* Abas do topo: Recorrentes / Recorrentes · Psicólogos / Projetos · Psicólogos */
   .tabs { display: flex; gap: 4px; flex-wrap: wrap; }
   .tabs a {
     padding: 5px 12px; border-radius: 999px;
@@ -119,36 +119,43 @@ const CONTAS_GOOGLE_ADS = [
   .tabs a[aria-current="page"] { opacity: 1; background: var(--box); color: var(--ink); }
   [hidden] { display: none !important; }
 
-  /* Aba Google Ads (lida ao vivo da aba "Geral" da planilha) */
-  /* Cada métrica tem Hoje, Ontem e 7 dias lado a lado */
-  /* Larguras fixas para as colunas das duas caixas ficarem alinhadas entre si */
-  .cards.ads { --cols: 300px 118px repeat(3, 94px) repeat(3, 72px) repeat(3, 94px) 236px minmax(0, 1fr); overflow-x: auto; }
-  .cards.ads .c, .cards.ads .sort { padding-left: 9px; padding-right: 9px; }
-  .cards.ads .card.head { row-gap: 0; }
-  .cards.ads .group {
-    grid-row: 1; margin: 0 0 1px; padding: 2px 9px 3px;
-    border-left: 2px solid var(--box-line); border-bottom: 1px solid var(--box-line);
-    font-size: 11px; font-weight: 700; color: var(--soft-ink); text-transform: uppercase; letter-spacing: .05em; text-align: center;
+  /* Dados do Google Ads no card de cada psicólogo (lidos ao vivo da aba "Geral" da planilha):
+     uma faixa embaixo da observação, com Hoje, Ontem e 7 dias lado a lado em cada métrica */
+  .ads-strip {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 96px 86px 74px 78px 72px 52px 56px 104px 72px 72px minmax(170px, 1fr);
+    margin: 8px 14px 0; padding-top: 7px;
+    border-top: 1px dashed var(--box-line);
+    font-variant-numeric: tabular-nums;
   }
-  .cards.ads .card.head .sort { grid-row: 2; }
-  .cards.ads .gstart { border-left: 2px solid var(--box-line); }
+  .ads-strip > div { min-width: 0; padding: 0 8px; border-left: 1px solid var(--line); white-space: nowrap; }
+  .ads-strip > div:first-child { padding-left: 0; border-left: 0; }
+  .ads-strip > .gs { border-left: 2px solid var(--box-line); }
+  .ads-strip .k { display: block; font-size: 11px; color: var(--label); }
+  .ads-strip .v { display: block; font-size: 13px; font-weight: 500; }
+  .ads-strip .alert-cell .sub { display: inline; margin-left: 6px; }
+  .ads-strip.none { display: block; color: var(--label); font-size: 12.5px; }
+  /* Caixas dos psicólogos ficam um pouco mais largas para caber a faixa do Google Ads */
+  .cards.psi { min-width: 1060px; }
+  section.wide { overflow-x: auto; }
   .sub { display: block; margin-top: 1px; font-size: 11.5px; font-weight: 500; letter-spacing: 0; color: var(--label); }
   .alert { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
   .alert.ok { background: var(--accent-soft); color: var(--accent-soft-ink); }
   .alert.warn { background: #fff0d6; color: var(--warn-ink); }
   .alert.crit { background: #fde5e2; color: var(--danger-ink); }
-  .ads-msg { grid-column: 1 / -1; margin: 0; padding: 12px 14px; background: var(--surface); border-radius: 8px; color: var(--soft-ink); }
   .sections { display: grid; grid-template-columns: minmax(0, max-content); gap: 14px; }
 
   /* Aba Clientes: caixas à esquerda e a tabelinha de pendências à direita (embaixo em telas menores) */
   .clientes-wrap { display: grid; grid-template-columns: minmax(0, max-content) 230px; gap: 18px; align-items: start; }
-  @media (max-width: 1340px) { .clientes-wrap { grid-template-columns: minmax(0, max-content); } }
+  @media (max-width: 1460px) { .clientes-wrap { grid-template-columns: minmax(0, max-content); } }
+  .clientes-wrap:has(> .side[hidden]) { grid-template-columns: minmax(0, max-content); }
   .side {
     position: sticky; top: 16px;
     background: var(--surface); border: 1px solid var(--box-line); border-radius: 12px;
     padding: 12px 16px 10px; font-size: 13px; color: var(--soft-ink);
   }
-  @media (max-width: 1340px) { .side { position: static; } }
+  @media (max-width: 1460px) { .side { position: static; } }
   .side h3 { margin: 0 0 4px; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: var(--label); }
   .side h4 { margin: 8px 0 2px; font-size: 12.5px; font-weight: 500; color: var(--ink); }
   .side h3 + h4 { margin-top: 2px; }
@@ -172,6 +179,7 @@ const CONTAS_GOOGLE_ADS = [
     text-transform: uppercase; letter-spacing: .08em;
   }
   section h2 span { color: var(--label); font-weight: 500; text-transform: none; letter-spacing: 0; }
+  section h2 span.t { color: inherit; font-weight: inherit; text-transform: inherit; letter-spacing: inherit; }
 
   /* As colunas são compartilhadas por todos os cards da seção (subgrid),
      então cada coluna tem a largura do seu maior conteúdo e nada quebra linha. */
@@ -271,12 +279,12 @@ const CONTAS_GOOGLE_ADS = [
     }
     .note { margin: 0; padding-top: 8px; }
 
-    /* Google Ads no celular: nome e orçamento em cima, depois uma linha por métrica (Hoje | Ontem | 7 dias) */
-    .cards.ads .card.head { display: none; }
-    .cards.ads .card { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .cards.ads .c, .cards.ads .c:nth-child(2), .cards.ads .c:nth-child(3) { grid-column: span 1; padding: 0; border-left: 0; white-space: normal; }
-    .cards.ads .c.name, .cards.ads .c:nth-child(2), .cards.ads .c:last-child { grid-column: 1 / -1; }
-    .cards.ads .c[data-label]::before { font-size: 11px; }
+    /* Faixa do Google Ads no celular: orçamento e alerta em linha inteira; cada métrica numa linha (Hoje | Ontem | 7 dias) */
+    .cards.psi { min-width: 0; }
+    .ads-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 10px; margin: 0; padding-top: 8px; }
+    .ads-strip > div, .ads-strip > .gs { padding: 0; border-left: 0; white-space: normal; }
+    .ads-strip > div:first-child, .ads-strip > div:last-child { grid-column: 1 / -1; }
+    .ads-strip .alert-cell .sub { display: block; margin-left: 0; }
   }
 </style>
 </head>
@@ -293,43 +301,22 @@ const CONTAS_GOOGLE_ADS = [
         </g>
       </svg>
       <nav class="tabs" aria-label="Abas">
-        <a href="#clientes" data-view="clientes">Clientes</a>
-        <a href="#google-ads" data-view="ads">Google Ads · Pesquisa</a>
+        <a href="#recorrentes" data-view="rec">Recorrentes</a>
+        <a href="#recorrentes-psicologos" data-view="recpsi">Recorrentes · Psicólogos</a>
+        <a href="#projetos-psicologos" data-view="proj">Projetos · Psicólogos</a>
       </nav>
       <span class="updated" id="updated"></span>
     </header>
 
-    <div class="clientes-wrap" data-panel="clientes">
+    <div class="clientes-wrap">
       <div class="sections">
-        <section>
-          <h2>Recorrentes <span id="count-rec"></span></h2>
-          <div class="cards" id="rec"></div>
-        </section>
-
-        <section>
-          <h2>Recorrentes · Psicólogos <span id="count-recpsi"></span></h2>
-          <div class="cards" id="recpsi"></div>
-        </section>
-
-        <section>
-          <h2>Projetos · Psicólogos <span id="count-proj"></span></h2>
-          <div class="cards" id="proj"></div>
+        <section id="box">
+          <h2><span id="box-title" class="t"></span> <span id="count"></span></h2>
+          <div class="cards" id="cards"></div>
         </section>
       </div>
 
       <aside class="side" id="side" aria-label="Pendências"></aside>
-    </div>
-
-    <div class="sections" data-panel="ads" hidden>
-      <section>
-        <h2>Recorrentes Psicólogos · Campanhas de Pesquisa <span id="count-ads-rec"></span></h2>
-        <div class="cards ads" id="ads-rec"><p class="ads-msg">Carregando dados da planilha…</p></div>
-      </section>
-
-      <section>
-        <h2>Projetos Psicólogos · Campanhas de Pesquisa <span id="count-ads-proj"></span></h2>
-        <div class="cards ads" id="ads-proj"><p class="ads-msg">Carregando dados da planilha…</p></div>
-      </section>
     </div>
   </div>
 </div>
@@ -374,7 +361,14 @@ const CONTAS_GOOGLE_ADS = [
     return cell("Próxima revisão", fmtDate(next), cls, title);
   }
 
-  /* Colunas (iguais para todas as caixas). O tipo define o primeiro clique:
+  /* ===== Abas: uma para cada grupo de clientes ===== */
+  const VIEWS = {
+    rec:    { title: "Recorrentes",              hash: "#recorrentes",            data: RECORRENTES },
+    recpsi: { title: "Recorrentes · Psicólogos", hash: "#recorrentes-psicologos", data: RECORRENTES_PSICOLOGOS, ads: true },
+    proj:   { title: "Projetos · Psicólogos",    hash: "#projetos-psicologos",    data: PROJETOS,               ads: true },
+  };
+
+  /* Colunas (iguais em todas as abas). O tipo define o primeiro clique:
      datas e valores começam do mais recente/maior; textos, de A a Z. */
   const COLS = [
     { label: "Cliente", key: c => c.nome, type: "text" },
@@ -386,113 +380,19 @@ const CONTAS_GOOGLE_ADS = [
     { label: "Início", key: c => parseDate(c.inicio), type: "num" },
   ];
 
-  // Cliente dono de cada conta do Google Ads (pelo campo "conta")
-  const CLIENT_BY_ACCOUNT = Object.fromEntries(RECORRENTES.concat(RECORRENTES_PSICOLOGOS, PROJETOS).filter(c => c.conta).map(c => [c.conta, c]));
-
   const PLATFORMS = {
     google: { title: "Google Ads", svg: `<svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>` },
     meta: { title: "Meta Ads", svg: `<svg viewBox="0 0 24 24"><path d="M12 12c-2-3-3.6-5.2-5.6-5.2S2.8 9 2.8 12s1.6 5.2 3.6 5.2S10 15 12 12s3.6-5.2 5.6-5.2 3.6 2.2 3.6 5.2-1.6 5.2-3.6 5.2S14 15 12 12z" fill="none" stroke="#0866FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
   };
 
-  function card(c) {
-    const plats = (c.plataformas || []).filter(p => PLATFORMS[p])
-      .map(p => `<span class="plat" title="${PLATFORMS[p].title}" role="img" aria-label="${PLATFORMS[p].title}">${PLATFORMS[p].svg}</span>`).join("");
-    let html = `<div class="c name">${esc(c.nome)}${plats}<span class="seg">${c.segmento ? esc(c.segmento) : "&nbsp;"}</span></div>`
-      + cell("Última revisão/alteração", esc(c.revisao))
-      + nextCell(c)
-      + cell("Script", esc(c.script))
-      + cell("Mensal", c.mensal != null ? money(c.mensal) : "")
-      + cell("Pagamento", c.pagamento ? `<span class="pill">${esc(c.pagamento)}</span>` : "")
-      + cell("Início", esc(c.inicio));
-    // Na observação: **trecho** = marcador amarelo (verificação/promoção); !!trecho!! = laranja (saldo/recarga)
-    const obs = c.obs ? esc(c.obs)
-      .replace(/\*\*(.+?)\*\*/g, "<mark>$1</mark>")
-      .replace(/!!(.+?)!!/g, `<mark class="urgent">$1</mark>`) : "&nbsp;";
-    html += `<p class="note">${obs}</p>`; // a linha de OBS aparece sempre, mesmo vazia
-    return `<article class="card" data-cliente="${esc(c.nome)}">${html}</article>`;
-  }
-
-  // Ordem padrão de cada caixa: revisão mais recente no topo; mesma data → ordem alfabética;
-  // quem não tem revisão vai para o fim
-  function byReview(list) {
-    return list.slice().sort((a, b) =>
-      (parseDate(b.revisao) ?? -Infinity) - (parseDate(a.revisao) ?? -Infinity) ||
-      a.nome.localeCompare(b.nome, "pt-BR"));
-  }
-
-  // Ordenação de cada seção: coluna (índice) e direção (1 = crescente, -1 = decrescente)
-  const state = { rec: { col: null, dir: 1 }, recpsi: { col: null, dir: 1 }, proj: { col: null, dir: 1 } };
-  const DATA = { rec: RECORRENTES, recpsi: RECORRENTES_PSICOLOGOS, proj: PROJETOS };
-
-  function sorted(kind) {
-    const { col, dir } = state[kind];
-    const list = byReview(DATA[kind]).map((c, i) => ({ c, i }));
-    if (col == null) return list.map(x => x.c);
-    const { key, type } = COLS[col];
-    const isEmpty = v => v == null || v === "";
-    list.sort((a, b) => {
-      const va = key(a.c), vb = key(b.c);
-      if (isEmpty(va) || isEmpty(vb)) return (isEmpty(va) - isEmpty(vb)) || a.i - b.i; // vazios sempre no fim
-      const cmp = type === "num" ? va - vb : String(va).localeCompare(String(vb), "pt-BR");
-      return cmp * dir || a.i - b.i;
-    });
-    return list.map(x => x.c);
-  }
-
-  function render(kind) {
-    const { col, dir } = state[kind];
-    const head = COLS.map((h, i) => {
-      const sort = col === i ? (dir === 1 ? "ascending" : "descending") : "none";
-      const arrow = col === i ? (dir === 1 ? "▲" : "▼") : (h.type === "num" ? "▼" : "▲");
-      return `<button type="button" class="sort" data-kind="${kind}" data-col="${i}" aria-sort="${sort}" title="Ordenar por ${h.label}">${h.label}<span class="arrow">${arrow}</span></button>`;
-    }).join("");
-    document.getElementById(kind).innerHTML =
-      `<div class="card head">${head}</div>` + sorted(kind).map(card).join("");
-  }
-
-  // 1º clique: ordena (datas e valores do maior para o menor; textos de A a Z).
-  // 2º clique: inverte. 3º clique: volta à ordem original.
-  document.addEventListener("click", e => {
-    const b = e.target.closest(".sort[data-kind]");
-    if (!b) return;
-    const kind = b.dataset.kind, i = Number(b.dataset.col);
-    const s = state[kind], first = COLS[i].type === "num" ? -1 : 1;
-    if (s.col !== i) { s.col = i; s.dir = first; }
-    else if (s.dir === first) s.dir = -first;
-    else s.col = null;
-    render(kind);
-  });
-
-  /* Tabelinha lateral: tirada dos campos verificacao / saldo / promocao de cada cliente.
-     Urgentes (verificação e saldo) em cima; promoções embaixo. Com data, a mais próxima primeiro. */
-  const ALL = RECORRENTES.concat(RECORRENTES_PSICOLOGOS, PROJETOS);
-  const isDate = d => /^\d\d\/\d\d\/\d{4}$/.test(d || "");
-  const dateVal = d => isDate(d) ? parseDate(d) : Infinity; // sem data vai para o fim
-  const byDate = field => (a, b) => dateVal(a[field]) - dateVal(b[field]) || a.nome.localeCompare(b.nome, "pt-BR");
-  const when = d => isDate(d) ? `até ${d.slice(0, 5)}` : d;
-  const li = (nome, txt) => `<li>${esc(nome)}${txt ? ` <span class="when">· ${esc(txt)}</span>` : ""}</li>`;
-  const verif = ALL.filter(c => c.verificacao).sort(byDate("verificacao"))
-    .map(c => li(c.nome, when(c.verificacao) + (c.verificacaoNota ? ` (${c.verificacaoNota})` : "")));
-  const saldo = ALL.filter(c => c.saldo).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR")).map(c => li(c.nome));
-  const promo = ALL.filter(c => c.promocao).sort(byDate("promocao")).map(c => li(c.nome, when(c.promocao)));
-  const list = items => items.length ? `<ul>${items.join("")}</ul>` : `<ul><li>Nada pendente</li></ul>`;
-  document.getElementById("side").innerHTML =
-    `<div class="block"><h3>Urgente</h3><h4>Realizar verificação</h4>${list(verif)}<h4>Colocar saldo</h4>${list(saldo)}</div>` +
-    `<div class="block"><h3>Promoções</h3>${list(promo)}</div>`;
-
-  Object.keys(DATA).forEach(kind => {
-    document.getElementById(`count-${kind}`).textContent = `${DATA[kind].length} clientes`;
-    render(kind);
-  });
-
-  /* ===== Aba Google Ads: lida ao vivo da aba "Geral" da planilha do Google ===== */
+  /* ===== Google Ads: lido ao vivo da aba "Geral" da planilha do Google ===== */
   const SHEET_CSV = "https://docs.google.com/spreadsheets/d/14wsRMmTuI7v7nT2yy6AXYKzlhBHNkznw4XXsen69xxE/gviz/tq?tqx=out:csv&sheet=Geral";
   // Posição das colunas na planilha: 0 cliente, 1 ID, 2 status, 3 orçamento/dia,
   // cada período tem 9 métricas a partir da coluna indicada, 31 alertas, 32 atualizado em.
   // Das 9 métricas (Custo, Impr., Cliques, CTR, CPC méd., CPM, Conv., Taxa conv., Custo/conv.)
   // mostramos Custo (posição 0), Conv. (6) e Custo/conv. (8), cada uma com os três períodos lado a lado.
-  const PERIODS = [["Hoje", 4], ["Ontem", 13], ["7 dias", 22]];
-  const GROUPS = [["Gasto", 0], ["Conversões", 6], ["Custo/conv.", 8]];
+  const PERIODS = [["hoje", 4], ["ontem", 13], ["7 dias", 22]];
+  const GROUPS = [["Gasto", 0], ["Conv.", 6], ["Custo/conv.", 8]];
 
   function parseCSV(text) {
     const rows = []; let row = [], cur = "", q = false;
@@ -511,115 +411,158 @@ const CONTAS_GOOGLE_ADS = [
     return rows;
   }
   const blank = v => !v || v.trim() === "" || v.trim() === "–";
-  const toNum = v => blank(v) ? null : parseFloat(v.replace(/[R$\s%.]/g, "").replace(",", "."));
 
-  // Ordenação separada para cada caixa (Recorrentes Psicólogos / Projetos Psicólogos), como na aba Clientes
-  const ads = { rows: null, loading: false, updated: "", sort: { rec: { col: null, dir: 1 }, proj: { col: null, dir: 1 } } };
-  const REC_ACCOUNTS = new Set(RECORRENTES.concat(RECORRENTES_PSICOLOGOS).map(c => c.conta).filter(Boolean));
-  const displayName = r => { const cli = CLIENT_BY_ACCOUNT[r[1].trim()]; return cli ? cli.nome : r[0].trim(); };
+  // Linha da planilha de cada conta (pelo ID), só das contas com aba particular visível (CONTAS_GOOGLE_ADS)
+  const ads = { byAccount: null, status: "loading", updated: "" };
 
-  const ADS_COLS = [
-    { label: "Conta", key: displayName, type: "text" },
-    { label: "Orçamento/dia", key: r => toNum(r[3]), type: "num", cell: r => r[3] },
-    ...GROUPS.flatMap(([g, off]) => PERIODS.map(([p, start], j) => ({
-      group: g, gstart: j === 0, label: p, full: `${g} · ${p}`,
-      key: r => toNum(r[start + off]), type: "num", cell: r => r[start + off],
-    }))),
-    { label: "Alertas", key: r => r[31], type: "text" },
-  ];
-
-  function adsCard(r) {
+  function adsStrip(c) {
+    if (!c.conta) return `<div class="ads-strip none">Sem conta no Google Ads.</div>`;
+    if (ads.status === "loading") return `<div class="ads-strip none">Carregando dados do Google Ads…</div>`;
+    if (ads.status === "error") return `<div class="ads-strip none">Não foi possível carregar os dados do Google Ads. Tente recarregar a página.</div>`;
+    const r = ads.byAccount[c.conta];
+    if (!r) return `<div class="ads-strip none">Conta sem dados na planilha.</div>`;
+    const v = x => blank(x) ? "—" : esc(x.trim());
+    let html = `<div><span class="k">Orçamento/dia</span><span class="v">${v(r[3])}</span></div>`;
+    GROUPS.forEach(([g, off]) => PERIODS.forEach(([p, start], j) => {
+      html += `<div${j === 0 ? ` class="gs"` : ""}><span class="k">${j === 0 ? `${g} · ${p}` : p}</span><span class="v">${v(r[start + off])}</span></div>`;
+    }));
     const alert = (r[31] || "").trim();
     const level = /^crítico/i.test(alert) ? "crit" : /^atenção/i.test(alert) ? "warn" : "ok";
     const when = (r[32] || "").trim().replace(/^(\d\d\/\d\d)\/\d{4}/, "$1");
-    // Mesmo nome da aba Clientes; o nome da conta e o ID ficam embaixo
-    const id = r[1].trim(), cli = CLIENT_BY_ACCOUNT[id];
-    let html = `<div class="c name" title="${esc(r[2].trim())}">${esc(cli ? cli.nome : r[0].trim())}<span class="sub">${esc(r[0].trim())} · ${esc(id)}</span></div>`;
-    html += ADS_COLS.slice(1, -1).map(c => cell(c.full || c.label, blank(c.cell(r)) ? "" : esc(c.cell(r).trim()), c.gstart ? "gstart" : "")).join("");
-    html += cell("Alertas", alert ? `<span class="alert ${level}">${esc(alert)}</span>${when ? `<span class="sub">atualizado ${esc(when)}</span>` : ""}` : "");
-    return `<article class="card" data-conta="${esc(id)}">${html}</article>`;
+    html += `<div class="gs alert-cell"><span class="k">Alerta da conta</span>` +
+      (alert ? `<span class="alert ${level}">${esc(alert)}</span>` : "—") +
+      (when ? `<span class="sub">atualizado ${esc(when)}</span>` : "") + `</div>`;
+    return `<div class="ads-strip" title="${esc(r[0].trim())} · ${esc(r[1].trim())} · ${esc((r[2] || "").trim())}">${html}</div>`;
   }
 
-  // Contas separadas como na aba Clientes: dono recorrente → Recorrentes Psicólogos; o resto → Projetos Psicólogos
-  function renderAdsBox(kind) {
-    const cols = ADS_COLS, { col, dir } = ads.sort[kind];
-    // Ordem padrão = a mesma da aba Clientes (revisão mais recente no topo)
-    const order = byReview(kind === "rec" ? RECORRENTES.concat(RECORRENTES_PSICOLOGOS) : PROJETOS).map(c => c.conta);
-    const pos = r => { const k = order.indexOf(r[1].trim()); return k < 0 ? Infinity : k; };
-    const list = ads.rows
-      .filter(r => REC_ACCOUNTS.has(r[1].trim()) === (kind === "rec"))
-      .sort((a, b) => pos(a) - pos(b))
-      .map((r, i) => ({ r, i }));
-    if (col != null) {
-      const { key, type } = cols[col];
-      const isEmpty = v => v == null || v === "" || Number.isNaN(v);
-      list.sort((a, b) => {
-        const va = key(a.r), vb = key(b.r);
-        if (isEmpty(va) || isEmpty(vb)) return (isEmpty(va) - isEmpty(vb)) || a.i - b.i;
-        const cmp = type === "num" ? va - vb : String(va).localeCompare(String(vb), "pt-BR");
-        return cmp * dir || a.i - b.i;
-      });
-    }
-    const head = cols.map((h, i) => {
+  function card(c, withAds) {
+    const plats = (c.plataformas || []).filter(p => PLATFORMS[p])
+      .map(p => `<span class="plat" title="${PLATFORMS[p].title}" role="img" aria-label="${PLATFORMS[p].title}">${PLATFORMS[p].svg}</span>`).join("");
+    let html = `<div class="c name">${esc(c.nome)}${plats}<span class="seg">${c.segmento ? esc(c.segmento) : "&nbsp;"}</span></div>`
+      + cell("Última revisão/alteração", esc(c.revisao))
+      + nextCell(c)
+      + cell("Script", esc(c.script))
+      + cell("Mensal", c.mensal != null ? money(c.mensal) : "")
+      + cell("Pagamento", c.pagamento ? `<span class="pill">${esc(c.pagamento)}</span>` : "")
+      + cell("Início", esc(c.inicio));
+    // Na observação: **trecho** = marcador amarelo (verificação/promoção); !!trecho!! = laranja (saldo/recarga)
+    const obs = c.obs ? esc(c.obs)
+      .replace(/\*\*(.+?)\*\*/g, "<mark>$1</mark>")
+      .replace(/!!(.+?)!!/g, `<mark class="urgent">$1</mark>`) : "&nbsp;";
+    html += `<p class="note">${obs}</p>`; // a linha de OBS aparece sempre, mesmo vazia
+    if (withAds) html += adsStrip(c);
+    return `<article class="card" data-cliente="${esc(c.nome)}">${html}</article>`;
+  }
+
+  // Ordem padrão: revisão mais recente no topo; mesma data → ordem alfabética; sem revisão no fim
+  function byReview(list) {
+    return list.slice().sort((a, b) =>
+      (parseDate(b.revisao) ?? -Infinity) - (parseDate(a.revisao) ?? -Infinity) ||
+      a.nome.localeCompare(b.nome, "pt-BR"));
+  }
+
+  // Ordenação de cada aba: coluna (índice) e direção (1 = crescente, -1 = decrescente)
+  const state = { rec: { col: null, dir: 1 }, recpsi: { col: null, dir: 1 }, proj: { col: null, dir: 1 } };
+
+  function sorted(view) {
+    const { col, dir } = state[view];
+    const list = byReview(VIEWS[view].data).map((c, i) => ({ c, i }));
+    if (col == null) return list.map(x => x.c);
+    const { key, type } = COLS[col];
+    const isEmpty = v => v == null || v === "";
+    list.sort((a, b) => {
+      const va = key(a.c), vb = key(b.c);
+      if (isEmpty(va) || isEmpty(vb)) return (isEmpty(va) - isEmpty(vb)) || a.i - b.i; // vazios sempre no fim
+      const cmp = type === "num" ? va - vb : String(va).localeCompare(String(vb), "pt-BR");
+      return cmp * dir || a.i - b.i;
+    });
+    return list.map(x => x.c);
+  }
+
+  /* Tabelinha lateral de cada aba: tirada dos campos verificacao / saldo / promocao dos clientes da aba.
+     Urgentes (verificação e saldo) em cima; promoções embaixo. Com data, a mais próxima primeiro. */
+  const isDate = d => /^\d\d\/\d\d\/\d{4}$/.test(d || "");
+  const dateVal = d => isDate(d) ? parseDate(d) : Infinity; // sem data vai para o fim
+  const byDate = field => (a, b) => dateVal(a[field]) - dateVal(b[field]) || a.nome.localeCompare(b.nome, "pt-BR");
+  const when = d => isDate(d) ? `até ${d.slice(0, 5)}` : d;
+  const li = (nome, txt) => `<li>${esc(nome)}${txt ? ` <span class="when">· ${esc(txt)}</span>` : ""}</li>`;
+
+  function renderSide(view) {
+    const all = VIEWS[view].data;
+    const verif = all.filter(c => c.verificacao).sort(byDate("verificacao"))
+      .map(c => li(c.nome, when(c.verificacao) + (c.verificacaoNota ? ` (${c.verificacaoNota})` : "")));
+    const saldo = all.filter(c => c.saldo).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR")).map(c => li(c.nome));
+    const promo = all.filter(c => c.promocao).sort(byDate("promocao")).map(c => li(c.nome, when(c.promocao)));
+    const side = document.getElementById("side");
+    // Aba sem nenhuma pendência: a tabelinha some
+    side.hidden = !(verif.length || saldo.length || promo.length);
+    const list = items => items.length ? `<ul>${items.join("")}</ul>` : `<ul><li>Nada pendente</li></ul>`;
+    side.innerHTML =
+      `<div class="block"><h3>Urgente</h3><h4>Realizar verificação</h4>${list(verif)}<h4>Colocar saldo</h4>${list(saldo)}</div>` +
+      `<div class="block"><h3>Promoções</h3>${list(promo)}</div>`;
+  }
+
+  function render(view) {
+    const v = VIEWS[view], { col, dir } = state[view];
+    const head = COLS.map((h, i) => {
       const sort = col === i ? (dir === 1 ? "ascending" : "descending") : "none";
       const arrow = col === i ? (dir === 1 ? "▲" : "▼") : (h.type === "num" ? "▼" : "▲");
-      return `<button type="button" class="sort${h.gstart ? " gstart" : ""}" data-ads-kind="${kind}" data-ads-col="${i}" aria-sort="${sort}" title="Ordenar por ${h.full || h.label}">${h.label}<span class="arrow">${arrow}</span></button>`;
+      return `<button type="button" class="sort" data-kind="${view}" data-col="${i}" aria-sort="${sort}" title="Ordenar por ${h.label}">${h.label}<span class="arrow">${arrow}</span></button>`;
     }).join("");
-    // Linha de cima do cabeçalho: nome de cada métrica, cobrindo as suas três colunas
-    const groups = GROUPS.map(([g], k) => `<div class="group" style="grid-column: ${3 + k * 3} / span 3">${g}</div>`).join("");
-    document.getElementById(`ads-${kind}`).innerHTML = `<div class="card head">${groups}${head}</div>` + list.map(x => adsCard(x.r)).join("");
-    document.getElementById(`count-ads-${kind}`).textContent = `${list.length} conta${list.length === 1 ? "" : "s"}`;
-  }
-  function renderAds() { renderAdsBox("rec"); renderAdsBox("proj"); }
-
-  function loadAds() {
-    if (ads.rows || ads.loading) return;
-    ads.loading = true;
-    fetch(SHEET_CSV)
-      .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
-      .then(text => {
-        // Só as contas que têm aba particular visível na planilha (lista CONTAS_GOOGLE_ADS)
-        ads.rows = parseCSV(text).slice(1).filter(r => r[1] && CONTAS_GOOGLE_ADS.includes(r[1].trim()));
-        // "Atualizado" da aba = horário mais recente entre as contas
-        const stamp = s => { const m = (s || "").match(/(\d\d)\/(\d\d)\/(\d{4}) (\d\d):(\d\d)/); return m ? +(m[3] + m[2] + m[1] + m[4] + m[5]) : 0; };
-        const latest = ads.rows.reduce((a, r) => stamp(r[32]) > stamp(a) ? r[32] : a, "");
-        const m = latest.match(/(\d\d\/\d\d\/\d{4}) (\d\d:\d\d)/);
-        ads.updated = m ? `Planilha atualizada em ${m[1]} às ${m[2]}` : "";
-        renderAds();
-        showView(currentView());
-      })
-      .catch(() => {
-        ads.loading = false;
-        ["rec", "proj"].forEach(k => { document.getElementById(`ads-${k}`).innerHTML =
-          `<p class="ads-msg">Não foi possível carregar a planilha agora. Tente recarregar a página.</p>`; });
-      });
+    const cards = document.getElementById("cards");
+    cards.classList.toggle("psi", !!v.ads);
+    document.getElementById("box").classList.toggle("wide", !!v.ads);
+    cards.innerHTML = `<div class="card head">${head}</div>` + sorted(view).map(c => card(c, v.ads)).join("");
+    document.getElementById("box-title").textContent = v.title;
+    document.getElementById("count").textContent = `${v.data.length} cliente${v.data.length === 1 ? "" : "s"}`;
   }
 
+  // 1º clique: ordena (datas e valores do maior para o menor; textos de A a Z).
+  // 2º clique: inverte. 3º clique: volta à ordem padrão.
   document.addEventListener("click", e => {
-    const b = e.target.closest(".sort[data-ads-col]");
+    const b = e.target.closest(".sort[data-kind]");
     if (!b) return;
-    const kind = b.dataset.adsKind, s = ads.sort[kind];
-    const i = Number(b.dataset.adsCol), first = ADS_COLS[i].type === "num" ? -1 : 1;
+    const view = b.dataset.kind, i = Number(b.dataset.col);
+    const s = state[view], first = COLS[i].type === "num" ? -1 : 1;
     if (s.col !== i) { s.col = i; s.dir = first; }
     else if (s.dir === first) s.dir = -first;
     else s.col = null;
-    renderAdsBox(kind);
+    render(view);
   });
 
-  /* ===== Abas: #clientes (padrão) e #google-ads ===== */
-  const currentView = () => location.hash.startsWith("#google-ads") ? "ads" : "clientes";
+  /* ===== Navegação entre as abas (#recorrentes, #recorrentes-psicologos, #projetos-psicologos) ===== */
+  function currentView() {
+    const h = location.hash;
+    if (h === "#google-ads") return "recpsi"; // link antigo da aba Google Ads
+    return Object.keys(VIEWS).find(k => VIEWS[k].hash === h) || "rec";
+  }
   function showView(view) {
-    document.querySelectorAll("[data-panel]").forEach(p => { p.hidden = p.dataset.panel !== view; });
     document.querySelectorAll("[data-view]").forEach(a => {
       if (a.dataset.view === view) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
     });
-    document.getElementById("updated").textContent =
-      view === "ads" ? (ads.updated || "Carregando…") : `Atualizado em ${ATUALIZADO_EM}`;
-    document.title = view === "ads" ? "Google Ads · Clientes" : "Clientes";
-    if (view === "ads") loadAds();
+    document.getElementById("updated").textContent = `Atualizado em ${ATUALIZADO_EM}` +
+      (VIEWS[view].ads && ads.updated ? ` · Google Ads ${ads.updated}` : "");
+    document.title = `${VIEWS[view].title} · Clientes`;
+    render(view);
+    renderSide(view);
   }
   window.addEventListener("hashchange", () => showView(currentView()));
   showView(currentView());
+
+  fetch(SHEET_CSV)
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+    .then(text => {
+      const rows = parseCSV(text).slice(1).filter(r => r[1] && CONTAS_GOOGLE_ADS.includes(r[1].trim()));
+      ads.byAccount = Object.fromEntries(rows.map(r => [r[1].trim(), r]));
+      // Horário mais recente entre as contas
+      const stamp = s => { const m = (s || "").match(/(\d\d)\/(\d\d)\/(\d{4}) (\d\d):(\d\d)/); return m ? +(m[3] + m[2] + m[1] + m[4] + m[5]) : 0; };
+      const latest = rows.reduce((a, r) => stamp(r[32]) > stamp(a) ? r[32] : a, "");
+      const m = latest.match(/(\d\d\/\d\d)\/\d{4} (\d\d:\d\d)/);
+      ads.updated = m ? `de ${m[1]} às ${m[2]}` : "";
+      ads.status = "ok";
+    })
+    .catch(() => { ads.status = "error"; })
+    .then(() => showView(currentView()));
 })();
 </script>
 </body>
