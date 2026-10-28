@@ -38,6 +38,22 @@ const PROJETOS = [
   { nome: "YASMIN",    segmento: "Psicologia", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "30/09/2026", obs: "Finalizar as verificações, ainda sem prazo definido. No momento, o orçamento está maior para atingir a promoção." },
   { nome: "THAIS",     segmento: "Psicologia", revisao: "",           script: "",    mensal: 150, pagamento: "",      inicio: "",           obs: "Ainda estamos criando o site, por isso as campanhas não começaram." },
 ];
+
+/* Aba Google Ads: os números vêm ao vivo da aba "Geral" da planilha.
+   Só aparecem as contas abaixo, que têm aba particular visível na planilha
+   (conferido em 28/10/2026). Conta nova na Geral sem estar aqui não aparece. */
+const CONTAS_GOOGLE_ADS = [
+  "775-492-4225", // Psicóloga Nara
+  "587-222-5596", // Hugo Carvalho, Psicólogo
+  "150-686-1633", // Psicóloga Danielle
+  "359-065-0990", // Nathália Souza Martins De Oliveira
+  "337-837-5511", // Thaynara Psic
+  "357-411-5648", // Alice Andrade Psic
+  "353-831-5205", // Sheila Bones
+  "756-159-1841", // Yasmim Jardim
+  "918-578-8000", // Carmem Viana Psicóloga
+  "128-846-8174", // Psicologa Clécia
+];
 </script>
 <style>
   :root {
@@ -81,6 +97,36 @@ const PROJETOS = [
     font-size: 16px; font-weight: 700; letter-spacing: .02em;
   }
   .top svg { display: block; flex: none; }
+  .top { flex-wrap: wrap; }
+
+  /* Abas do topo: Clientes / Google Ads */
+  .tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+  .tabs a {
+    padding: 5px 12px; border-radius: 999px;
+    color: var(--box); opacity: .65; text-decoration: none;
+    font-size: 14px; font-weight: 600; letter-spacing: .01em;
+  }
+  .tabs a:hover { opacity: 1; }
+  .tabs a[aria-current="page"] { opacity: 1; background: var(--box); color: var(--ink); }
+  [hidden] { display: none !important; }
+
+  /* Aba Google Ads (lida ao vivo da aba "Geral" da planilha) */
+  .ads-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; margin-bottom: 4px; }
+  .ads-head h2 { margin: 0 0 0 2px; }
+  .period { display: inline-flex; gap: 2px; padding: 2px; background: var(--surface); border: 1px solid var(--box-line); border-radius: 8px; }
+  .period button {
+    font: inherit; font-size: 12px; font-weight: 500; color: var(--soft-ink);
+    border: 0; background: transparent; padding: 4px 10px; border-radius: 6px; cursor: pointer;
+  }
+  .period button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+  .cards.ads { --cols: repeat(12, max-content) minmax(0, 1fr); overflow-x: auto; }
+  .cards.ads .c, .cards.ads .sort { padding-left: 11px; padding-right: 11px; }
+  .sub { display: block; margin-top: 1px; font-size: 11.5px; font-weight: 500; letter-spacing: 0; color: var(--label); }
+  .alert { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .alert.ok { background: var(--accent-soft); color: var(--accent-soft-ink); }
+  .alert.warn { background: #fff0d6; color: var(--warn-ink); }
+  .alert.crit { background: #fde5e2; color: var(--danger-ink); }
+  .ads-msg { grid-column: 1 / -1; margin: 0; padding: 12px 14px; background: var(--surface); border-radius: 8px; color: var(--soft-ink); }
   .sections { display: grid; grid-template-columns: minmax(0, max-content); gap: 14px; }
 
   /* Cada seção (Recorrentes / Projetos) fica dentro de uma caixa com contorno */
@@ -202,11 +248,14 @@ const PROJETOS = [
           <path d="M9 68c0-15 10-25 23-25s23 10 23 25z" fill="#fff"/>
         </g>
       </svg>
-      <span>Clientes</span>
+      <nav class="tabs" aria-label="Abas">
+        <a href="#clientes" data-view="clientes">Clientes</a>
+        <a href="#google-ads" data-view="ads">Google Ads · Pesquisa</a>
+      </nav>
       <span class="updated" id="updated"></span>
     </header>
 
-    <div class="sections">
+    <div class="sections" data-panel="clientes">
       <section>
         <h2>Recorrentes <span id="count-rec"></span></h2>
         <div class="cards" id="rec"></div>
@@ -215,6 +264,20 @@ const PROJETOS = [
       <section>
         <h2>Projetos <span id="count-proj"></span></h2>
         <div class="cards" id="proj"></div>
+      </section>
+    </div>
+
+    <div class="sections" data-panel="ads" hidden>
+      <section>
+        <div class="ads-head">
+          <h2>Campanhas de Pesquisa <span id="count-ads"></span></h2>
+          <div class="period" role="group" aria-label="Período">
+            <button type="button" data-period="hoje" aria-pressed="true">Hoje</button>
+            <button type="button" data-period="ontem" aria-pressed="false">Ontem</button>
+            <button type="button" data-period="semana" aria-pressed="false">Últimos 7 dias</button>
+          </div>
+        </div>
+        <div class="cards ads" id="ads"><p class="ads-msg">Carregando dados da planilha…</p></div>
       </section>
     </div>
   </div>
@@ -317,7 +380,7 @@ const PROJETOS = [
   // 1º clique: ordena (datas e valores do maior para o menor; textos de A a Z).
   // 2º clique: inverte. 3º clique: volta à ordem original.
   document.addEventListener("click", e => {
-    const b = e.target.closest(".sort");
+    const b = e.target.closest(".sort[data-kind]");
     if (!b) return;
     const kind = b.dataset.kind, i = Number(b.dataset.col);
     const s = state[kind], first = COLS[i].type === "num" ? -1 : 1;
@@ -327,11 +390,135 @@ const PROJETOS = [
     render(kind);
   });
 
-  document.getElementById("updated").textContent = `Atualizado em ${ATUALIZADO_EM}`;
   document.getElementById("count-rec").textContent = `${RECORRENTES.length} clientes`;
   document.getElementById("count-proj").textContent = `${PROJETOS.length} clientes`;
   render("rec");
   render("proj");
+
+  /* ===== Aba Google Ads: lida ao vivo da aba "Geral" da planilha do Google ===== */
+  const SHEET_CSV = "https://docs.google.com/spreadsheets/d/14wsRMmTuI7v7nT2yy6AXYKzlhBHNkznw4XXsen69xxE/gviz/tq?tqx=out:csv&sheet=Geral";
+  // Posição das colunas na planilha: 0 cliente, 1 ID, 2 status, 3 orçamento/dia,
+  // cada período tem 9 métricas a partir da coluna indicada, 31 alertas, 32 atualizado em.
+  const PERIOD_START = { hoje: 4, ontem: 13, semana: 22 };
+  const METRICS = ["Custo", "Impr.", "Cliques", "CTR", "CPC méd.", "CPM", "Conv.", "Taxa conv.", "Custo/conv."];
+
+  function parseCSV(text) {
+    const rows = []; let row = [], cur = "", q = false;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (q) {
+        if (ch === '"' && text[i + 1] === '"') { cur += '"'; i++; }
+        else if (ch === '"') q = false;
+        else cur += ch;
+      } else if (ch === '"') q = true;
+      else if (ch === ",") { row.push(cur); cur = ""; }
+      else if (ch === "\n") { row.push(cur); rows.push(row); row = []; cur = ""; }
+      else if (ch !== "\r") cur += ch;
+    }
+    if (cur || row.length) { row.push(cur); rows.push(row); }
+    return rows;
+  }
+  const blank = v => !v || v.trim() === "" || v.trim() === "–";
+  const toNum = v => blank(v) ? null : parseFloat(v.replace(/[R$\s%.]/g, "").replace(",", "."));
+
+  const ads = { rows: null, loading: false, period: "hoje", col: null, dir: 1, updated: "" };
+
+  function adsCols() {
+    const s = PERIOD_START[ads.period];
+    return [
+      { label: "Conta", key: r => r[0], type: "text" },
+      { label: "Orçamento/dia", key: r => toNum(r[3]), type: "num", cell: r => r[3] },
+      ...METRICS.map((m, i) => ({ label: m, key: r => toNum(r[s + i]), type: "num", cell: r => r[s + i] })),
+      { label: "Alertas", key: r => r[31], type: "text" },
+    ];
+  }
+
+  function adsCard(r) {
+    const cols = adsCols();
+    const alert = (r[31] || "").trim();
+    const level = /^crítico/i.test(alert) ? "crit" : /^atenção/i.test(alert) ? "warn" : "ok";
+    const when = (r[32] || "").trim().replace(/^(\d\d\/\d\d)\/\d{4}/, "$1");
+    let html = `<div class="c name">${esc(r[0].trim())}<span class="sub">${esc(r[1].trim())} · ${esc(r[2].trim())}</span></div>`;
+    html += cols.slice(1, -1).map(c => cell(c.label, blank(c.cell(r)) ? "" : esc(c.cell(r).trim()))).join("");
+    html += cell("Alertas", alert ? `<span class="alert ${level}">${esc(alert)}</span>${when ? `<span class="sub">atualizado ${esc(when)}</span>` : ""}` : "");
+    return `<article class="card">${html}</article>`;
+  }
+
+  function renderAds() {
+    const cols = adsCols();
+    const list = ads.rows.map((r, i) => ({ r, i }));
+    if (ads.col != null) {
+      const { key, type } = cols[ads.col];
+      const isEmpty = v => v == null || v === "" || Number.isNaN(v);
+      list.sort((a, b) => {
+        const va = key(a.r), vb = key(b.r);
+        if (isEmpty(va) || isEmpty(vb)) return (isEmpty(va) - isEmpty(vb)) || a.i - b.i;
+        const cmp = type === "num" ? va - vb : String(va).localeCompare(String(vb), "pt-BR");
+        return cmp * ads.dir || a.i - b.i;
+      });
+    }
+    const head = cols.map((h, i) => {
+      const sort = ads.col === i ? (ads.dir === 1 ? "ascending" : "descending") : "none";
+      const arrow = ads.col === i ? (ads.dir === 1 ? "▲" : "▼") : (h.type === "num" ? "▼" : "▲");
+      return `<button type="button" class="sort" data-ads-col="${i}" aria-sort="${sort}" title="Ordenar por ${h.label}">${h.label}<span class="arrow">${arrow}</span></button>`;
+    }).join("");
+    document.getElementById("ads").innerHTML = `<div class="card head">${head}</div>` + list.map(x => adsCard(x.r)).join("");
+    document.getElementById("count-ads").textContent = `${ads.rows.length} contas`;
+  }
+
+  function loadAds() {
+    if (ads.rows || ads.loading) return;
+    ads.loading = true;
+    fetch(SHEET_CSV)
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+      .then(text => {
+        // Só as contas que têm aba particular visível na planilha (lista CONTAS_GOOGLE_ADS)
+        ads.rows = parseCSV(text).slice(1).filter(r => r[1] && CONTAS_GOOGLE_ADS.includes(r[1].trim()));
+        // "Atualizado" da aba = horário mais recente entre as contas
+        const stamp = s => { const m = (s || "").match(/(\d\d)\/(\d\d)\/(\d{4}) (\d\d):(\d\d)/); return m ? +(m[3] + m[2] + m[1] + m[4] + m[5]) : 0; };
+        const latest = ads.rows.reduce((a, r) => stamp(r[32]) > stamp(a) ? r[32] : a, "");
+        const m = latest.match(/(\d\d\/\d\d\/\d{4}) (\d\d:\d\d)/);
+        ads.updated = m ? `Planilha atualizada em ${m[1]} às ${m[2]}` : "";
+        renderAds();
+        showView(currentView());
+      })
+      .catch(() => {
+        ads.loading = false;
+        document.getElementById("ads").innerHTML =
+          `<p class="ads-msg">Não foi possível carregar a planilha agora. Tente recarregar a página.</p>`;
+      });
+  }
+
+  document.addEventListener("click", e => {
+    const p = e.target.closest("[data-period]");
+    if (p) {
+      ads.period = p.dataset.period;
+      document.querySelectorAll("[data-period]").forEach(x => x.setAttribute("aria-pressed", x === p));
+      return renderAds();
+    }
+    const b = e.target.closest(".sort[data-ads-col]");
+    if (!b) return;
+    const i = Number(b.dataset.adsCol), first = adsCols()[i].type === "num" ? -1 : 1;
+    if (ads.col !== i) { ads.col = i; ads.dir = first; }
+    else if (ads.dir === first) ads.dir = -first;
+    else ads.col = null;
+    renderAds();
+  });
+
+  /* ===== Abas: #clientes (padrão) e #google-ads ===== */
+  const currentView = () => location.hash === "#google-ads" ? "ads" : "clientes";
+  function showView(view) {
+    document.querySelectorAll("[data-panel]").forEach(p => { p.hidden = p.dataset.panel !== view; });
+    document.querySelectorAll("[data-view]").forEach(a => {
+      if (a.dataset.view === view) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+    });
+    document.getElementById("updated").textContent =
+      view === "ads" ? (ads.updated || "Carregando…") : `Atualizado em ${ATUALIZADO_EM}`;
+    document.title = view === "ads" ? "Google Ads · Clientes" : "Clientes";
+    if (view === "ads") loadAds();
+  }
+  window.addEventListener("hashchange", () => showView(currentView()));
+  showView(currentView());
 })();
 </script>
 </body>
