@@ -16,9 +16,9 @@
    Datas no formato DD/MM/AAAA. A próxima revisão é calculada sozinha
    (sempre 7 dias depois da última revisão/alteração).
    "conta" é o ID da conta do Google Ads do cliente: liga o card dele à
-   linha da aba Google Ads (mesmo nome nas duas abas e ícone para ir de uma à outra).
+   linha da aba Google Ads (o mesmo nome aparece nas duas abas).
    ===================================================================== */
-const ATUALIZADO_EM = "28/10/2026 às 16:27";
+const ATUALIZADO_EM = "28/10/2026 às 16:38";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
@@ -177,17 +177,6 @@ const CONTAS_GOOGLE_ADS = [
   .c:first-child { border-left: 0; }
   .c.name { font-weight: 700; letter-spacing: .01em; }
   .seg { display: block; margin-top: 1px; font-size: 11.5px; font-weight: 500; letter-spacing: 0; color: var(--label); }
-
-  /* Ícone ao lado do nome que leva para o mesmo cliente na outra aba */
-  .jump {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 20px; height: 20px; margin-left: 6px; vertical-align: -4px;
-    border-radius: 6px; color: var(--accent); background: var(--accent-soft);
-  }
-  .jump:hover { background: var(--accent); color: #fff; }
-  .jump svg { width: 12px; height: 12px; }
-  .card.flash { animation: flash 2.2s ease-out; }
-  @keyframes flash { 0%, 40% { box-shadow: 0 0 0 2px var(--accent); } 100% { box-shadow: var(--shadow); } }
   .c.empty { color: var(--label); }
   .c.next.late { color: var(--danger-ink); font-weight: 600; }
   .c.next.today { color: var(--warn-ink); font-weight: 600; }
@@ -355,15 +344,11 @@ const CONTAS_GOOGLE_ADS = [
     { label: "Início", key: c => parseDate(c.inicio), type: "num" },
   ];
 
-  const ICON_ADS = `<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="8" width="3" height="6" rx="1" fill="currentColor"/><rect x="6.5" y="4" width="3" height="10" rx="1" fill="currentColor"/><rect x="11" y="1.5" width="3" height="12.5" rx="1" fill="currentColor"/></svg>`;
-  const ICON_CLIENT = `<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="5" r="3" fill="currentColor"/><path d="M2.5 15c0-3.3 2.5-5.5 5.5-5.5s5.5 2.2 5.5 5.5z" fill="currentColor"/></svg>`;
   // Cliente dono de cada conta do Google Ads (pelo campo "conta")
   const CLIENT_BY_ACCOUNT = Object.fromEntries(RECORRENTES.concat(PROJETOS).filter(c => c.conta).map(c => [c.conta, c]));
 
   function card(c) {
-    const jump = c.conta && CONTAS_GOOGLE_ADS.includes(c.conta)
-      ? `<a class="jump" href="#google-ads/${c.conta}" title="Ver ${esc(c.nome)} no Google Ads" aria-label="Ver ${esc(c.nome)} no Google Ads">${ICON_ADS}</a>` : "";
-    let html = `<div class="c name">${esc(c.nome)}${jump}<span class="seg">${c.segmento ? esc(c.segmento) : "&nbsp;"}</span></div>`
+    let html = `<div class="c name">${esc(c.nome)}<span class="seg">${c.segmento ? esc(c.segmento) : "&nbsp;"}</span></div>`
       + cell("Última revisão/alteração", esc(c.revisao))
       + nextCell(c)
       + cell("Script", esc(c.script))
@@ -471,8 +456,7 @@ const CONTAS_GOOGLE_ADS = [
     const when = (r[32] || "").trim().replace(/^(\d\d\/\d\d)\/\d{4}/, "$1");
     // Mesmo nome da aba Clientes; o nome da conta e o ID ficam embaixo
     const id = r[1].trim(), cli = CLIENT_BY_ACCOUNT[id];
-    const jump = cli ? `<a class="jump" href="#clientes/${encodeURIComponent(cli.nome)}" title="Ver ${esc(cli.nome)} na aba Clientes" aria-label="Ver ${esc(cli.nome)} na aba Clientes">${ICON_CLIENT}</a>` : "";
-    let html = `<div class="c name" title="${esc(r[2].trim())}">${esc(cli ? cli.nome : r[0].trim())}${jump}<span class="sub">${esc(r[0].trim())} · ${esc(id)}</span></div>`;
+    let html = `<div class="c name" title="${esc(r[2].trim())}">${esc(cli ? cli.nome : r[0].trim())}<span class="sub">${esc(r[0].trim())} · ${esc(id)}</span></div>`;
     html += ADS_COLS.slice(1, -1).map(c => cell(c.full || c.label, blank(c.cell(r)) ? "" : esc(c.cell(r).trim()), c.gstart ? "gstart" : "")).join("");
     html += cell("Alertas", alert ? `<span class="alert ${level}">${esc(alert)}</span>${when ? `<span class="sub">atualizado ${esc(when)}</span>` : ""}` : "");
     return `<article class="card" data-conta="${esc(id)}">${html}</article>`;
@@ -544,19 +528,8 @@ const CONTAS_GOOGLE_ADS = [
     renderAdsBox(kind);
   });
 
-  /* ===== Abas: #clientes (padrão) e #google-ads =====
-     "#google-ads/ID-da-conta" e "#clientes/NOME" abrem a aba e destacam o cliente. */
+  /* ===== Abas: #clientes (padrão) e #google-ads ===== */
   const currentView = () => location.hash.startsWith("#google-ads") ? "ads" : "clientes";
-  const hashTarget = () => decodeURIComponent(location.hash.split("/")[1] || "");
-  function flashTarget(view) {
-    const t = hashTarget();
-    if (!t) return;
-    const el = [...document.querySelectorAll(view === "ads" ? "[data-conta]" : "[data-cliente]")]
-      .find(e => (view === "ads" ? e.dataset.conta : e.dataset.cliente) === t);
-    if (!el) return;
-    el.scrollIntoView({ behavior: "smooth", block: "center" });
-    el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
-  }
   function showView(view) {
     document.querySelectorAll("[data-panel]").forEach(p => { p.hidden = p.dataset.panel !== view; });
     document.querySelectorAll("[data-view]").forEach(a => {
@@ -566,7 +539,6 @@ const CONTAS_GOOGLE_ADS = [
       view === "ads" ? (ads.updated || "Carregando…") : `Atualizado em ${ATUALIZADO_EM}`;
     document.title = view === "ads" ? "Google Ads · Clientes" : "Clientes";
     if (view === "ads") loadAds();
-    if (view === "clientes" || ads.rows) flashTarget(view);
   }
   window.addEventListener("hashchange", () => showView(currentView()));
   showView(currentView());
