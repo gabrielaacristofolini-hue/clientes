@@ -23,7 +23,7 @@
    Cada caixa mostra primeiro quem foi revisado mais recentemente (mesma data → ordem alfabética).
    "verificacao" (data ou "sem prazo"), "saldo: true" e "promocao" (data) alimentam a tabelinha lateral.
    ===================================================================== */
-const ATUALIZADO_EM = "28/10/2026 às 17:48";
+const ATUALIZADO_EM = "28/10/2026 às 18:54";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
@@ -115,7 +115,7 @@ const CONTAS_GOOGLE_ADS = [
   .ads-strip {
     grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: 96px 86px 74px 78px 72px 52px 56px 104px 72px 72px minmax(170px, 1fr);
+    grid-template-columns: 96px 86px 74px 78px 88px 52px 56px 104px 72px 72px minmax(170px, 1fr);
     margin: 8px 14px 0; padding-top: 7px;
     border-top: 1px dashed var(--box-line);
     font-variant-numeric: tabular-nums;
@@ -127,6 +127,24 @@ const CONTAS_GOOGLE_ADS = [
   .ads-strip .v { display: block; font-size: 13px; font-weight: 500; }
   .ads-strip .alert-cell .sub { display: inline; margin-left: 6px; }
   .ads-strip.none { display: block; color: var(--label); font-size: 12.5px; }
+  /* Linha da promoção do Google (gastar R$ 1.200 até o prazo), embaixo da faixa do Google Ads */
+  .promo {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 182px 330px 150px minmax(0, 1fr);
+    margin: 7px 14px 0; padding-top: 7px;
+    border-top: 1px dashed var(--line);
+    font-variant-numeric: tabular-nums;
+  }
+  .promo > div { min-width: 0; padding: 0 12px; border-left: 1px solid var(--line); white-space: nowrap; }
+  .promo > div:first-child { padding-left: 0; border-left: 0; }
+  .promo .k { display: block; font-size: 11px; color: var(--label); }
+  .promo .v { display: block; font-size: 13px; font-weight: 500; }
+  .promo .sub { display: inline; margin-left: 6px; }
+  .bar-row { display: flex; align-items: center; gap: 8px; height: 18px; }
+  .bar { flex: 1; height: 7px; border-radius: 999px; background: #ece9df; overflow: hidden; }
+  .bar > i { display: block; height: 100%; border-radius: inherit; background: var(--soft-ink); }
+  .bar-row .pct { font-size: 12px; font-weight: 600; color: var(--soft-ink); min-width: 34px; text-align: right; }
   /* Caixas dos psicólogos ficam um pouco mais largas para caber a faixa do Google Ads */
   .cards.psi { min-width: 1060px; }
   section.wide { overflow-x: auto; }
@@ -272,6 +290,10 @@ const CONTAS_GOOGLE_ADS = [
     .ads-strip > div, .ads-strip > .gs { padding: 0; border-left: 0; white-space: normal; }
     .ads-strip > div:first-child, .ads-strip > div:last-child { grid-column: 1 / -1; }
     .ads-strip .alert-cell .sub { display: block; margin-left: 0; }
+    .promo { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 10px; margin: 0; padding-top: 8px; }
+    .promo > div { padding: 0; border-left: 0; white-space: normal; }
+    .promo > .bar-cell { grid-column: 1 / -1; order: -1; }
+    .promo .sub { display: block; margin-left: 0; }
   }
 </style>
 </head>
@@ -379,12 +401,27 @@ const CONTAS_GOOGLE_ADS = [
 
   /* ===== Google Ads: lido ao vivo da aba "Geral" da planilha do Google ===== */
   const SHEET_CSV = "https://docs.google.com/spreadsheets/d/14wsRMmTuI7v7nT2yy6AXYKzlhBHNkznw4XXsen69xxE/gviz/tq?tqx=out:csv&sheet=Geral";
-  // Posição das colunas na planilha: 0 cliente, 1 ID, 2 status, 3 orçamento/dia,
-  // cada período tem 9 métricas a partir da coluna indicada, 31 alertas, 32 atualizado em.
+  // Colunas da planilha: 0 cliente, 1 ID, 2 status, 3 orçamento/dia; depois cada período (Hoje, Ontem,
+  // Últimos 7 dias, Todo o período) tem 9 métricas, seguidas de Alertas e Atualizado em. As colunas são
+  // achadas pelo título do cabeçalho, então a página continua certa se a planilha ganhar colunas novas.
   // Das 9 métricas (Custo, Impr., Cliques, CTR, CPC méd., CPM, Conv., Taxa conv., Custo/conv.)
-  // mostramos Custo (posição 0), Conv. (6) e Custo/conv. (8), cada uma com os três períodos lado a lado.
-  const PERIODS = [["hoje", 4], ["ontem", 13], ["7 dias", 22]];
+  // mostramos Custo (posição 0), Conv. (6) e Custo/conv. (8), cada uma com hoje / ontem / 7 dias lado a lado.
+  const PERIODS = [["hoje", "hoje"], ["ontem", "ontem"], ["7 dias", "semana"]];
   const GROUPS = [["Gasto", 0], ["Conv.", 6], ["Custo/conv.", 8]];
+  function sheetColumns(header) {
+    const h = header.map(s => (s || "").trim().toUpperCase());
+    const find = (re, fallback) => { const i = h.findIndex(s => re.test(s)); return i < 0 ? fallback : i; };
+    return {
+      hoje: find(/^HOJE/, 4), ontem: find(/^ONTEM/, 13), semana: find(/^ÚLTIMOS 7 DIAS/, 22),
+      total: find(/^TODO O PERÍODO/, -1), alerta: find(/^ALERTAS/, 40), atualizado: find(/^ATUALIZADO/, 41),
+    };
+  }
+
+  /* Promoção do Google: gastar R$ 1.200 (todo o período) até o prazo do campo "promocao".
+     O valor por dia é calculado para fechar a meta FOLGA_DIAS antes do prazo. */
+  const PROMO_META = 1200;
+  const FOLGA_DIAS = 3;
+  const toNumber = s => parseFloat(String(s || "").replace(/[^\d,-]/g, "").replace(",", ".")) || 0;
 
   function parseCSV(text) {
     const rows = []; let row = [], cur = "", q = false;
@@ -405,7 +442,7 @@ const CONTAS_GOOGLE_ADS = [
   const blank = v => !v || v.trim() === "" || v.trim() === "–";
 
   // Linha da planilha de cada conta (pelo ID), só das contas com aba particular visível (CONTAS_GOOGLE_ADS)
-  const ads = { byAccount: null, status: "loading", updated: "" };
+  const ads = { byAccount: null, col: null, status: "loading", updated: "" };
 
   function adsStrip(c) {
     if (!c.conta) return `<div class="ads-strip none">Sem conta no Google Ads.</div>`;
@@ -415,16 +452,48 @@ const CONTAS_GOOGLE_ADS = [
     if (!r) return `<div class="ads-strip none">Conta sem dados na planilha.</div>`;
     const v = x => blank(x) ? "—" : esc(x.trim());
     let html = `<div><span class="k">Orçamento/dia</span><span class="v">${v(r[3])}</span></div>`;
-    GROUPS.forEach(([g, off]) => PERIODS.forEach(([p, start], j) => {
-      html += `<div${j === 0 ? ` class="gs"` : ""}><span class="k">${j === 0 ? `${g} · ${p}` : p}</span><span class="v">${v(r[start + off])}</span></div>`;
+    const col = ads.col;
+    GROUPS.forEach(([g, off]) => PERIODS.forEach(([p, key], j) => {
+      html += `<div${j === 0 ? ` class="gs"` : ""}><span class="k">${j === 0 ? `${g} · ${p}` : p}</span><span class="v">${v(r[col[key] + off])}</span></div>`;
     }));
-    const alert = (r[31] || "").trim();
+    const alert = (r[col.alerta] || "").trim();
     const level = /^crítico/i.test(alert) ? "crit" : /^atenção/i.test(alert) ? "warn" : "ok";
-    const when = (r[32] || "").trim().replace(/^(\d\d\/\d\d)\/\d{4}/, "$1");
+    const when = (r[col.atualizado] || "").trim().replace(/^(\d\d\/\d\d)\/\d{4}/, "$1");
     html += `<div class="gs alert-cell"><span class="k">Alerta da conta</span>` +
       (alert ? `<span class="alert ${level}">${esc(alert)}</span>` : "—") +
       (when ? `<span class="sub">atualizado ${esc(when)}</span>` : "") + `</div>`;
-    return `<div class="ads-strip" title="${esc(r[0].trim())} · ${esc(r[1].trim())} · ${esc((r[2] || "").trim())}">${html}</div>`;
+    return `<div class="ads-strip" title="${esc(r[0].trim())} · ${esc(r[1].trim())} · ${esc((r[2] || "").trim())}">${html}</div>` + promoLine(c, r);
+  }
+
+  // Linha da promoção: gasto de todo o período, barrinha até R$ 1.200, prazo e quanto investir por dia
+  function promoLine(c, r) {
+    if (ads.col.total < 0) return "";
+    const gasto = toNumber(r[ads.col.total]);
+    const falta = Math.max(PROMO_META - gasto, 0);
+    const pct = Math.min(gasto / PROMO_META, 1);
+    let html = `<div><span class="k">Gasto · todo o período</span><span class="v">${money(gasto)}</span></div>` +
+      `<div class="bar-cell"><span class="k">Promoção · meta ${money(PROMO_META)}` +
+      (falta > 0 ? ` · faltam ${money(falta)}` : "") + `</span>` +
+      `<span class="bar-row"><span class="bar"><i style="width:${(pct * 100).toFixed(1)}%"></i></span>` +
+      `<span class="pct">${Math.floor(pct * 100)}%</span></span></div>`;
+
+    const prazo = isDate(c.promocao) ? parseDate(c.promocao) : null;
+    const dias = prazo == null ? null : Math.round((prazo - today()) / DAY);
+    let prazoTxt = "—", porDia = "—", porDiaSub = "";
+    if (prazo != null) {
+      prazoTxt = fmtDate(prazo).slice(0, 5) + `<span class="sub">${
+        dias > 1 ? `faltam ${dias} dias` : dias === 1 ? "amanhã" : dias === 0 ? "hoje" : "prazo encerrado"}</span>`;
+    }
+    if (falta === 0) porDia = "Meta atingida";
+    else if (dias != null && dias >= 0) {
+      // Fecha a meta FOLGA_DIAS antes do prazo; se não houver tanto tempo, usa os dias que restam
+      const diasUteis = dias - FOLGA_DIAS >= 1 ? dias - FOLGA_DIAS : Math.max(dias, 1);
+      porDia = money(falta / diasUteis);
+      porDiaSub = `<span class="sub">para fechar até ${fmtDate(today() + diasUteis * DAY).slice(0, 5)}</span>`;
+    }
+    html += `<div><span class="k">Prazo da promoção</span><span class="v">${prazoTxt}</span></div>` +
+      `<div><span class="k">Investir por dia daqui para frente</span><span class="v">${porDia}${porDiaSub}</span></div>`;
+    return `<div class="promo">${html}</div>`;
   }
 
   function card(c, withAds) {
@@ -534,11 +603,13 @@ const CONTAS_GOOGLE_ADS = [
   fetch(SHEET_CSV)
     .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
     .then(text => {
-      const rows = parseCSV(text).slice(1).filter(r => r[1] && CONTAS_GOOGLE_ADS.includes(r[1].trim()));
+      const all = parseCSV(text);
+      ads.col = sheetColumns(all[0] || []);
+      const rows = all.slice(1).filter(r => r[1] && CONTAS_GOOGLE_ADS.includes(r[1].trim()));
       ads.byAccount = Object.fromEntries(rows.map(r => [r[1].trim(), r]));
       // Horário mais recente entre as contas
       const stamp = s => { const m = (s || "").match(/(\d\d)\/(\d\d)\/(\d{4}) (\d\d):(\d\d)/); return m ? +(m[3] + m[2] + m[1] + m[4] + m[5]) : 0; };
-      const latest = rows.reduce((a, r) => stamp(r[32]) > stamp(a) ? r[32] : a, "");
+      const latest = rows.reduce((a, r) => stamp(r[ads.col.atualizado]) > stamp(a) ? r[ads.col.atualizado] : a, "");
       const m = latest.match(/(\d\d\/\d\d)\/\d{4} (\d\d:\d\d)/);
       ads.updated = m ? `de ${m[1]} às ${m[2]}` : "";
       ads.status = "ok";
