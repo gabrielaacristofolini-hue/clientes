@@ -15,9 +15,8 @@
    DADOS — é só editar aqui para atualizar o painel.
    Datas no formato DD/MM/AAAA. A próxima revisão é calculada sozinha
    (sempre 7 dias depois da última revisão/alteração).
-   TAREFAS (no fim desta parte) alimenta a lista de tarefas ao lado das caixas.
    ===================================================================== */
-const ATUALIZADO_EM = "28/10/2026 às 14:43";
+const ATUALIZADO_EM = "28/10/2026 às 14:55";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
@@ -38,33 +37,6 @@ const PROJETOS = [
   { nome: "ALICE",     segmento: "Psicologia", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "14/09/2026", obs: "Finalizar as verificações. Ainda sem prazo definido." },
   { nome: "YASMIN",    segmento: "Psicologia", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "30/09/2026", obs: "Finalizar as verificações, ainda sem prazo definido. No momento, o orçamento está maior para atingir a promoção." },
   { nome: "THAIS",     segmento: "Psicologia", revisao: "",           script: "",    mensal: 150, pagamento: "",      inicio: "",           obs: "Ainda estamos criando o site, por isso as campanhas não começaram." },
-];
-
-/* Tarefas tiradas das observações.
-   prio: "alta" (tem data; a lista ordena sozinha pela data mais próxima), "media" ou "baixa".
-   Dentro de média e baixa, vale a ordem em que estão aqui. */
-const TAREFAS = [
-  { t: "Realizar a verificação da conta até 04/11",          cliente: "NARA",       prio: "alta", prazo: "04/11/2026" },
-  { t: "Atingir a promoção de créditos do Google até 24/11",  cliente: "NARA",       prio: "alta", prazo: "24/11/2026" },
-  { t: "Concluir a verificação até 05/11",     cliente: "SHEILA",     prio: "alta", prazo: "05/11/2026" },
-  { t: "Concluir a verificação até 05/11",     cliente: "CARMEM",     prio: "alta", prazo: "05/11/2026" },
-  { t: "Finalizar as verificações até 16/11",  cliente: "CLÉCIA",     prio: "alta", prazo: "16/11/2026" },
-
-  { t: "Acompanhar o suporte na troca do perfil de pagamento", cliente: "NARA", prio: "media" },
-  { t: "Recarregar o saldo da conta",          cliente: "NATHALIA",   prio: "media" },
-  { t: "Recarregar o saldo da conta",          cliente: "SHEILA",     prio: "media" },
-  { t: "Recarregar o saldo da conta",          cliente: "THAYNARA",   prio: "media" },
-  { t: "Enviar vídeo explicando o processo",   cliente: "SHEILA",     prio: "media" },
-  { t: "Finalizar o site",                     cliente: "THAIS",      prio: "media" },
-  { t: "Finalizar as verificações",            cliente: "ALICE",      prio: "media" },
-  { t: "Finalizar as verificações",            cliente: "YASMIN",     prio: "media" },
-  { t: "Retomar as campanhas em novembro",     cliente: "ANA WARLA",  prio: "media" },
-  { t: "Retomar as campanhas em novembro",     cliente: "CARMEM",     prio: "media" },
-
-  { t: "Acompanhar o status da verificação",   cliente: "DANIELLE",   prio: "baixa" },
-  { t: "Acompanhar os contatos de BMW e Fusca", cliente: "LEOCAR",    prio: "baixa" },
-  { t: "Acompanhar as vendas e o Analytics",   cliente: "VILA 86",    prio: "baixa" },
-  { t: "Acompanhar a qualidade dos contatos",  cliente: "061 RACING", prio: "baixa" },
 ];
 </script>
 <style>
@@ -97,11 +69,9 @@ const TAREFAS = [
   .wrap { padding: 24px 40px 32px; }
   @media (max-width: 600px) { .wrap { padding: 16px; } }
 
-  /* Caixas de clientes à esquerda (uma embaixo da outra) e tarefas à direita; o conjunto fica centralizado */
-  .layout { display: grid; grid-template-columns: minmax(0, max-content) max-content; justify-content: center; align-items: start; gap: 18px; }
-  /* Cabeçalho (com "Atualizado em") em cima de tudo; tarefas ao lado das caixas */
+  /* Caixas de clientes uma embaixo da outra, com o cabeçalho em cima; o conjunto fica centralizado */
+  .layout { display: grid; grid-template-columns: minmax(0, max-content); justify-content: center; align-items: start; gap: 18px; }
   .top { grid-column: 1 / -1; }
-  .tasks { grid-column: 2; grid-row: 2; }
 
   .top {
     display: flex; align-items: center; gap: 10px;
@@ -112,31 +82,6 @@ const TAREFAS = [
   }
   .top svg { display: block; flex: none; }
   .sections { display: grid; grid-template-columns: minmax(0, max-content); gap: 14px; }
-  @media (max-width: 1540px) {
-    .layout { grid-template-columns: minmax(0, max-content); }
-    .tasks { grid-column: auto; grid-row: auto; }
-    .sections { justify-content: center; }
-  }
-
-  /* Lista de tarefas */
-  .task-list { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 14px; box-shadow: var(--shadow); }
-  .task-list ol { margin: 0; padding: 4px 0; list-style: none; font-size: 13px; }
-  .task-list .num { flex: none; width: 26px; color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; }
-  .task-list li { padding: 5px 0; border-top: 1px solid var(--line); }
-  .task-list li:first-child { border-top: 0; }
-  .task-list li { display: flex; align-items: baseline; white-space: nowrap; } /* cada tarefa numa linha só */
-  @media (max-width: 600px) { .task-list li { white-space: normal; } }
-  .task-list .who { color: var(--label); font-size: 11.5px; font-weight: 600; white-space: nowrap; }
-  .task-list .prio {
-    display: flex; align-items: center; gap: 6px;
-    margin: 10px 0 2px; padding-top: 10px; border-top: 1px solid var(--box-line);
-    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
-  }
-  .task-list .prio:first-child { margin-top: 4px; padding-top: 0; border-top: 0; }
-  .task-list .prio::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
-  .task-list .prio.alta { color: var(--danger-ink); }
-  .task-list .prio.media { color: var(--warn-ink); }
-  .task-list .prio.baixa { color: var(--label); }
 
   /* Cada seção (Recorrentes / Projetos) fica dentro de uma caixa com contorno */
   section {
@@ -272,12 +217,6 @@ const TAREFAS = [
         <div class="cards" id="proj"></div>
       </section>
     </div>
-
-    <section class="tasks">
-      <h2>Tarefas <span id="count-tasks"></span></h2>
-      <div class="task-list" id="tasks"></div>
-    </section>
-
   </div>
 </div>
 
@@ -393,21 +332,6 @@ const TAREFAS = [
   document.getElementById("count-proj").textContent = `${PROJETOS.length} clientes`;
   render("rec");
   render("proj");
-
-  // Tarefas: uma lista única por prioridade (alta pela data mais próxima), numeração contínua,
-  // com o cliente entre parênteses no fim de cada linha
-  const PRIOS = [["alta", "Alta prioridade"], ["media", "Média prioridade"], ["baixa", "Baixa prioridade"]];
-  let n = 0;
-  document.getElementById("tasks").innerHTML = PRIOS.map(([p, label]) => {
-    let list = TAREFAS.map((x, i) => ({ ...x, i })).filter(x => x.prio === p);
-    if (p === "alta") list.sort((a, b) => (parseDate(a.prazo) ?? Infinity) - (parseDate(b.prazo) ?? Infinity) || a.i - b.i);
-    if (!list.length) return "";
-    return `<h3 class="prio ${p}">${label}</h3><ol>${list.map(x =>
-      `<li><span class="num">${String(++n).padStart(2, "0")}</span><span>${esc(x.t)} <span class="who">(${esc(x.cliente)})</span></span></li>`
-    ).join("")}</ol>`;
-  }).join("");
-  const total = n;
-  document.getElementById("count-tasks").textContent = `${total} tarefa${total === 1 ? "" : "s"}`;
 })();
 </script>
 </body>
