@@ -111,16 +111,17 @@ const CONTAS_GOOGLE_ADS = [
   [hidden] { display: none !important; }
 
   /* Aba Google Ads (lida ao vivo da aba "Geral" da planilha) */
-  .ads-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; margin-bottom: 4px; }
-  .ads-head h2 { margin: 0 0 0 2px; }
-  .period { display: inline-flex; gap: 2px; padding: 2px; background: var(--surface); border: 1px solid var(--box-line); border-radius: 8px; }
-  .period button {
-    font: inherit; font-size: 12px; font-weight: 500; color: var(--soft-ink);
-    border: 0; background: transparent; padding: 4px 10px; border-radius: 6px; cursor: pointer;
-  }
-  .period button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+  /* Cada métrica tem Hoje, Ontem e 7 dias lado a lado */
   .cards.ads { --cols: repeat(12, max-content) minmax(0, 1fr); overflow-x: auto; }
-  .cards.ads .c, .cards.ads .sort { padding-left: 11px; padding-right: 11px; }
+  .cards.ads .c, .cards.ads .sort { padding-left: 9px; padding-right: 9px; }
+  .cards.ads .card.head { row-gap: 0; }
+  .cards.ads .group {
+    grid-row: 1; margin: 0 0 1px; padding: 2px 9px 3px;
+    border-left: 2px solid var(--box-line); border-bottom: 1px solid var(--box-line);
+    font-size: 11px; font-weight: 700; color: var(--soft-ink); text-transform: uppercase; letter-spacing: .05em; text-align: center;
+  }
+  .cards.ads .card.head .sort { grid-row: 2; }
+  .cards.ads .gstart { border-left: 2px solid var(--box-line); }
   .sub { display: block; margin-top: 1px; font-size: 11.5px; font-weight: 500; letter-spacing: 0; color: var(--label); }
   .alert { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
   .alert.ok { background: var(--accent-soft); color: var(--accent-soft-ink); }
@@ -269,14 +270,7 @@ const CONTAS_GOOGLE_ADS = [
 
     <div class="sections" data-panel="ads" hidden>
       <section>
-        <div class="ads-head">
-          <h2>Campanhas de Pesquisa <span id="count-ads"></span></h2>
-          <div class="period" role="group" aria-label="Período">
-            <button type="button" data-period="hoje" aria-pressed="true">Hoje</button>
-            <button type="button" data-period="ontem" aria-pressed="false">Ontem</button>
-            <button type="button" data-period="semana" aria-pressed="false">Últimos 7 dias</button>
-          </div>
-        </div>
+        <h2>Campanhas de Pesquisa <span id="count-ads"></span></h2>
         <div class="cards ads" id="ads"><p class="ads-msg">Carregando dados da planilha…</p></div>
       </section>
     </div>
@@ -399,8 +393,10 @@ const CONTAS_GOOGLE_ADS = [
   const SHEET_CSV = "https://docs.google.com/spreadsheets/d/14wsRMmTuI7v7nT2yy6AXYKzlhBHNkznw4XXsen69xxE/gviz/tq?tqx=out:csv&sheet=Geral";
   // Posição das colunas na planilha: 0 cliente, 1 ID, 2 status, 3 orçamento/dia,
   // cada período tem 9 métricas a partir da coluna indicada, 31 alertas, 32 atualizado em.
-  const PERIOD_START = { hoje: 4, ontem: 13, semana: 22 };
-  const METRICS = ["Custo", "Impr.", "Cliques", "CTR", "CPC méd.", "CPM", "Conv.", "Taxa conv.", "Custo/conv."];
+  // Das 9 métricas (Custo, Impr., Cliques, CTR, CPC méd., CPM, Conv., Taxa conv., Custo/conv.)
+  // mostramos Custo (posição 0), Conv. (6) e Custo/conv. (8), cada uma com os três períodos lado a lado.
+  const PERIODS = [["Hoje", 4], ["Ontem", 13], ["7 dias", 22]];
+  const GROUPS = [["Gasto", 0], ["Conversões", 6], ["Custo/conv.", 8]];
 
   function parseCSV(text) {
     const rows = []; let row = [], cur = "", q = false;
@@ -421,31 +417,30 @@ const CONTAS_GOOGLE_ADS = [
   const blank = v => !v || v.trim() === "" || v.trim() === "–";
   const toNum = v => blank(v) ? null : parseFloat(v.replace(/[R$\s%.]/g, "").replace(",", "."));
 
-  const ads = { rows: null, loading: false, period: "hoje", col: null, dir: 1, updated: "" };
+  const ads = { rows: null, loading: false, col: null, dir: 1, updated: "" };
 
-  function adsCols() {
-    const s = PERIOD_START[ads.period];
-    return [
-      { label: "Conta", key: r => r[0], type: "text" },
-      { label: "Orçamento/dia", key: r => toNum(r[3]), type: "num", cell: r => r[3] },
-      ...METRICS.map((m, i) => ({ label: m, key: r => toNum(r[s + i]), type: "num", cell: r => r[s + i] })),
-      { label: "Alertas", key: r => r[31], type: "text" },
-    ];
-  }
+  const ADS_COLS = [
+    { label: "Conta", key: r => r[0], type: "text" },
+    { label: "Orçamento/dia", key: r => toNum(r[3]), type: "num", cell: r => r[3] },
+    ...GROUPS.flatMap(([g, off]) => PERIODS.map(([p, start], j) => ({
+      group: g, gstart: j === 0, label: p, full: `${g} · ${p}`,
+      key: r => toNum(r[start + off]), type: "num", cell: r => r[start + off],
+    }))),
+    { label: "Alertas", key: r => r[31], type: "text" },
+  ];
 
   function adsCard(r) {
-    const cols = adsCols();
     const alert = (r[31] || "").trim();
     const level = /^crítico/i.test(alert) ? "crit" : /^atenção/i.test(alert) ? "warn" : "ok";
     const when = (r[32] || "").trim().replace(/^(\d\d\/\d\d)\/\d{4}/, "$1");
     let html = `<div class="c name">${esc(r[0].trim())}<span class="sub">${esc(r[1].trim())} · ${esc(r[2].trim())}</span></div>`;
-    html += cols.slice(1, -1).map(c => cell(c.label, blank(c.cell(r)) ? "" : esc(c.cell(r).trim()))).join("");
+    html += ADS_COLS.slice(1, -1).map(c => cell(c.full || c.label, blank(c.cell(r)) ? "" : esc(c.cell(r).trim()), c.gstart ? "gstart" : "")).join("");
     html += cell("Alertas", alert ? `<span class="alert ${level}">${esc(alert)}</span>${when ? `<span class="sub">atualizado ${esc(when)}</span>` : ""}` : "");
     return `<article class="card">${html}</article>`;
   }
 
   function renderAds() {
-    const cols = adsCols();
+    const cols = ADS_COLS;
     const list = ads.rows.map((r, i) => ({ r, i }));
     if (ads.col != null) {
       const { key, type } = cols[ads.col];
@@ -460,9 +455,11 @@ const CONTAS_GOOGLE_ADS = [
     const head = cols.map((h, i) => {
       const sort = ads.col === i ? (ads.dir === 1 ? "ascending" : "descending") : "none";
       const arrow = ads.col === i ? (ads.dir === 1 ? "▲" : "▼") : (h.type === "num" ? "▼" : "▲");
-      return `<button type="button" class="sort" data-ads-col="${i}" aria-sort="${sort}" title="Ordenar por ${h.label}">${h.label}<span class="arrow">${arrow}</span></button>`;
+      return `<button type="button" class="sort${h.gstart ? " gstart" : ""}" data-ads-col="${i}" aria-sort="${sort}" title="Ordenar por ${h.full || h.label}">${h.label}<span class="arrow">${arrow}</span></button>`;
     }).join("");
-    document.getElementById("ads").innerHTML = `<div class="card head">${head}</div>` + list.map(x => adsCard(x.r)).join("");
+    // Linha de cima do cabeçalho: nome de cada métrica, cobrindo as suas três colunas
+    const groups = GROUPS.map(([g], k) => `<div class="group" style="grid-column: ${3 + k * 3} / span 3">${g}</div>`).join("");
+    document.getElementById("ads").innerHTML = `<div class="card head">${groups}${head}</div>` + list.map(x => adsCard(x.r)).join("");
     document.getElementById("count-ads").textContent = `${ads.rows.length} contas`;
   }
 
@@ -490,15 +487,9 @@ const CONTAS_GOOGLE_ADS = [
   }
 
   document.addEventListener("click", e => {
-    const p = e.target.closest("[data-period]");
-    if (p) {
-      ads.period = p.dataset.period;
-      document.querySelectorAll("[data-period]").forEach(x => x.setAttribute("aria-pressed", x === p));
-      return renderAds();
-    }
     const b = e.target.closest(".sort[data-ads-col]");
     if (!b) return;
-    const i = Number(b.dataset.adsCol), first = adsCols()[i].type === "num" ? -1 : 1;
+    const i = Number(b.dataset.adsCol), first = ADS_COLS[i].type === "num" ? -1 : 1;
     if (ads.col !== i) { ads.col = i; ads.dir = first; }
     else if (ads.dir === first) ads.dir = -first;
     else ads.col = null;
