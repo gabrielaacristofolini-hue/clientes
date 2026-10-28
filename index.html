@@ -17,10 +17,11 @@
    (sempre 7 dias depois da última revisão/alteração).
    "conta" é o ID da conta do Google Ads do cliente: liga o card dele à
    linha da aba Google Ads (o mesmo nome aparece nas duas abas).
-   Na observação, um trecho entre **asteriscos** aparece destacado.
+   Na observação: **trecho** fica com marcador amarelo (verificação, promoção) e
+   !!trecho!! com marcador laranja (saldo, recarga: o que é urgente).
    "plataformas": onde o cliente roda anúncios ("google", "meta" ou os dois).
    ===================================================================== */
-const ATUALIZADO_EM = "28/10/2026 às 16:48";
+const ATUALIZADO_EM = "28/10/2026 às 16:50";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
@@ -28,15 +29,15 @@ const RECORRENTES = [
   { nome: "ANA WARLA",  segmento: "Estética",                     plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Conta pausada. A previsão é retomar em novembro." },
   { nome: "061 RACING", segmento: "Mecânica de alta performance", plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Acompanhar a qualidade dos contatos recebidos." },
   { nome: "NARA",       segmento: "Psicologia",                   plataformas: ["google"], conta: "775-492-4225", revisao: "28/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "30/09/2026", obs: "**Verificação da conta até 04/11** e **promoção de créditos do Google até 24/11**. A dona da conta foi furtada e perdeu o acesso; estamos com o suporte para trocar o perfil de pagamento. Se der certo, colocamos um cartão novo, sem vínculo com a Bárbara, e conseguimos fazer a verificação. Se não der, seguimos com acesso à conta, mas sem alterar o pagamento, e a verificação fica impossível sem o acesso dela." },
-  { nome: "NATHALIA",   segmento: "Psicologia",                   plataformas: ["google"], conta: "359-065-0990", revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "23/09/2026", obs: "Conta sem saldo. Precisamos fazer uma recarga." },
+  { nome: "NATHALIA",   segmento: "Psicologia",                   plataformas: ["google"], conta: "359-065-0990", revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "23/09/2026", obs: "!!Conta sem saldo. Precisamos fazer uma recarga.!!" },
   { nome: "CLÉCIA",     segmento: "Psicologia",                   plataformas: ["google"], conta: "128-846-8174", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "22/09/2026", obs: "**Finalizar as verificações até 16/11.**" },
-  { nome: "HUGO",       segmento: "Psicologia",                   plataformas: ["google"], conta: "587-222-5596", revisao: "28/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "29/09/2026", obs: "Otimização geral em 28/10: novos grupos de anúncios e palavras-chave, ajustes na segmentação e nos anúncios, e negativação de termos de pesquisa. Pendente: colocar saldo nas campanhas. **Prazo da promoção: 20/11.**" },
+  { nome: "HUGO",       segmento: "Psicologia",                   plataformas: ["google"], conta: "587-222-5596", revisao: "28/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "29/09/2026", obs: "Otimização geral em 28/10: novos grupos de anúncios e palavras-chave, ajustes na segmentação e nos anúncios, e negativação de termos de pesquisa. !!Pendente: colocar saldo nas campanhas.!! **Prazo da promoção: 20/11.**" },
 ];
 
 const PROJETOS = [
-  { nome: "SHEILA",    segmento: "Psicologia", plataformas: ["google"], conta: "353-831-5205", revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "24/09/2026", obs: "**Verificação até 05/11.** Enviar um vídeo explicando o processo. No momento, a conta está pausada por falta de saldo." },
+  { nome: "SHEILA",    segmento: "Psicologia", plataformas: ["google"], conta: "353-831-5205", revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "24/09/2026", obs: "**Verificação até 05/11.** Enviar um vídeo explicando o processo. !!No momento, a conta está pausada por falta de saldo.!!" },
   { nome: "CARMEM",    segmento: "Psicologia", plataformas: ["google"], conta: "918-578-8000", revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "",      inicio: "05/10/2026", obs: "Campanhas pausadas, com retorno previsto para novembro. **Verificação até 05/11.**" },
-  { nome: "THAYNARA",  segmento: "Psicologia", plataformas: ["google"], conta: "337-837-5511", revisao: "20/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "03/09/2026", obs: "Conta pausada por falta de saldo. Precisamos fazer uma recarga." },
+  { nome: "THAYNARA",  segmento: "Psicologia", plataformas: ["google"], conta: "337-837-5511", revisao: "20/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "03/09/2026", obs: "!!Conta pausada por falta de saldo. Precisamos fazer uma recarga.!!" },
   { nome: "DANIELLE",  segmento: "Psicologia", plataformas: ["google"], conta: "150-686-1633", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "14/09/2026", obs: "Conta pausada. A verificação está em andamento; acompanhar o status." },
   { nome: "ALICE",     segmento: "Psicologia", plataformas: ["google"], conta: "357-411-5648", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "14/09/2026", obs: "Finalizar as verificações. Ainda sem prazo definido." },
   { nome: "YASMIN",    segmento: "Psicologia", plataformas: ["google"], conta: "756-159-1841", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "30/09/2026", obs: "Finalizar as verificações, ainda sem prazo definido. No momento, o orçamento está maior para atingir a promoção." },
@@ -194,14 +195,9 @@ const CONTAS_GOOGLE_ADS = [
   .c:first-child { border-left: 0; }
   .c.name { font-weight: 700; letter-spacing: .01em; }
   .seg { display: block; margin-top: 1px; font-size: 11.5px; font-weight: 500; letter-spacing: 0; color: var(--label); }
-  /* Etiquetas de plataforma ao lado do nome */
-  .plat {
-    display: inline-block; margin-left: 6px; padding: 0 6px; vertical-align: 1px;
-    border-radius: 4px; font-size: 10.5px; font-weight: 600; letter-spacing: .02em; line-height: 1.6;
-  }
-  .plat + .plat { margin-left: 3px; }
-  .plat.google { background: #e6effd; color: #1f4fa8; }
-  .plat.meta { background: #eee8fb; color: #5a3aa8; }
+  /* Símbolo da plataforma (Google / Meta) ao lado do nome */
+  .plat { display: inline-block; width: 14px; height: 14px; margin-left: 6px; vertical-align: -2px; }
+  .plat + .plat { margin-left: 4px; }
   .c.empty { color: var(--label); }
   .c.next.late { color: var(--danger-ink); font-weight: 600; }
   .c.next.today { color: var(--warn-ink); font-weight: 600; }
@@ -237,6 +233,7 @@ const CONTAS_GOOGLE_ADS = [
     white-space: pre-line;
     overflow-wrap: anywhere;
   }
+  .note mark.urgent, .task-col mark.urgent { background: #fde0c2; }
   .note mark {
     padding: 0 4px; border-radius: 3px;
     background: #fdf1c7; color: inherit;
@@ -394,10 +391,14 @@ const CONTAS_GOOGLE_ADS = [
   // Cliente dono de cada conta do Google Ads (pelo campo "conta")
   const CLIENT_BY_ACCOUNT = Object.fromEntries(RECORRENTES.concat(PROJETOS).filter(c => c.conta).map(c => [c.conta, c]));
 
-  const PLATFORM_LABEL = { google: "Google", meta: "Meta" };
+  const PLATFORMS = {
+    google: { title: "Google Ads", svg: `<svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>` },
+    meta: { title: "Meta Ads", svg: `<svg viewBox="0 0 24 24"><path d="M12 12c-2-3-3.6-5.2-5.6-5.2S2.8 9 2.8 12s1.6 5.2 3.6 5.2S10 15 12 12s3.6-5.2 5.6-5.2 3.6 2.2 3.6 5.2-1.6 5.2-3.6 5.2S14 15 12 12z" fill="none" stroke="#0866FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
+  };
 
   function card(c) {
-    const plats = (c.plataformas || []).map(p => `<span class="plat ${p}">${PLATFORM_LABEL[p] || esc(p)}</span>`).join("");
+    const plats = (c.plataformas || []).filter(p => PLATFORMS[p])
+      .map(p => `<span class="plat" title="${PLATFORMS[p].title}" role="img" aria-label="${PLATFORMS[p].title}">${PLATFORMS[p].svg}</span>`).join("");
     let html = `<div class="c name">${esc(c.nome)}${plats}<span class="seg">${c.segmento ? esc(c.segmento) : "&nbsp;"}</span></div>`
       + cell("Última revisão/alteração", esc(c.revisao))
       + nextCell(c)
@@ -405,8 +406,10 @@ const CONTAS_GOOGLE_ADS = [
       + cell("Mensal", c.mensal != null ? money(c.mensal) : "")
       + cell("Pagamento", c.pagamento ? `<span class="pill">${esc(c.pagamento)}</span>` : "")
       + cell("Início", esc(c.inicio));
-    // Trecho entre **asteriscos** na observação aparece destacado
-    const obs = c.obs ? esc(c.obs).replace(/\*\*(.+?)\*\*/g, "<mark>$1</mark>") : "&nbsp;";
+    // Na observação: **trecho** = marcador amarelo (verificação/promoção); !!trecho!! = laranja (saldo/recarga)
+    const obs = c.obs ? esc(c.obs)
+      .replace(/\*\*(.+?)\*\*/g, "<mark>$1</mark>")
+      .replace(/!!(.+?)!!/g, `<mark class="urgent">$1</mark>`) : "&nbsp;";
     html += `<p class="note">${obs}</p>`; // a linha de OBS aparece sempre, mesmo vazia
     return `<article class="card" data-cliente="${esc(c.nome)}">${html}</article>`;
   }
@@ -466,7 +469,9 @@ const CONTAS_GOOGLE_ADS = [
     const list = TAREFAS.map((x, i) => ({ ...x, i })).filter(x => x.tipo === tipo)
       .sort((a, b) => (parseDate(a.prazo) ?? Infinity) - (parseDate(b.prazo) ?? Infinity) || a.i - b.i);
     const items = list.map(x => `<li><span class="num">${String(++n).padStart(2, "0")}</span>` +
-      `<span class="who">${esc(x.cliente)}</span>${x.prazo ? `<mark>até ${esc(x.prazo.slice(0, 5))}</mark>` : ""}</li>`).join("");
+      `<span class="who">${esc(x.cliente)}</span>` +
+      (x.prazo ? `<mark>até ${esc(x.prazo.slice(0, 5))}</mark>` : x.tipo === "recarga" ? `<mark class="urgent">colocar saldo</mark>` : "") +
+      `</li>`).join("");
     return `<div class="task-col"><h3>${label}</h3><ol>${items || `<li class="none">Nada pendente</li>`}</ol></div>`;
   }).join("");
   document.getElementById("count-tasks").textContent = `${n} tarefa${n === 1 ? "" : "s"}`;
