@@ -19,7 +19,7 @@
    linha da aba Google Ads (o mesmo nome aparece nas duas abas).
    Na observação, um trecho entre **asteriscos** aparece destacado.
    ===================================================================== */
-const ATUALIZADO_EM = "28/10/2026 às 16:43";
+const ATUALIZADO_EM = "28/10/2026 às 16:46";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
@@ -40,6 +40,21 @@ const PROJETOS = [
   { nome: "ALICE",     segmento: "Psicologia", conta: "357-411-5648", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "14/09/2026", obs: "Finalizar as verificações. Ainda sem prazo definido." },
   { nome: "YASMIN",    segmento: "Psicologia", conta: "756-159-1841", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "30/09/2026", obs: "Finalizar as verificações, ainda sem prazo definido. No momento, o orçamento está maior para atingir a promoção." },
   { nome: "THAIS",     segmento: "Psicologia", revisao: "",           script: "",    mensal: 150, pagamento: "",      inicio: "",           obs: "Ainda estamos criando o site, por isso as campanhas não começaram." },
+];
+
+/* Tarefas (embaixo das caixas de clientes): só verificação, prazo da promoção e recarga.
+   Com prazo, a lista ordena sozinha pela data mais próxima. */
+const TAREFAS = [
+  { tipo: "verificacao", cliente: "NARA",     prazo: "04/11/2026" },
+  { tipo: "verificacao", cliente: "SHEILA",   prazo: "05/11/2026" },
+  { tipo: "verificacao", cliente: "CARMEM",   prazo: "05/11/2026" },
+  { tipo: "verificacao", cliente: "CLÉCIA",   prazo: "16/11/2026" },
+  { tipo: "promocao",    cliente: "HUGO",     prazo: "20/11/2026" },
+  { tipo: "promocao",    cliente: "NARA",     prazo: "24/11/2026" },
+  { tipo: "recarga",     cliente: "HUGO" },
+  { tipo: "recarga",     cliente: "NATHALIA" },
+  { tipo: "recarga",     cliente: "SHEILA" },
+  { tipo: "recarga",     cliente: "THAYNARA" },
 ];
 
 /* Aba Google Ads: os números vêm ao vivo da aba "Geral" da planilha.
@@ -224,6 +239,19 @@ const CONTAS_GOOGLE_ADS = [
     text-transform: uppercase; letter-spacing: .05em;
   }
 
+  /* Tarefas: três colunas curtas (Verificação | Promoção | Recarga), cada tarefa numa linha */
+  .tasks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .task-col { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 14px 6px; box-shadow: var(--shadow); }
+  .task-col h3 { margin: 0 0 2px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--soft-ink); }
+  .task-col ol { margin: 0; padding: 0; list-style: none; }
+  .task-col li { display: flex; align-items: baseline; gap: 8px; padding: 4px 0; border-top: 1px solid var(--line); white-space: nowrap; }
+  .task-col li:first-of-type { border-top: 0; }
+  .task-col .num { color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .task-col .who { font-weight: 600; }
+  .task-col mark { padding: 0 4px; border-radius: 3px; background: #fdf1c7; color: inherit; font-variant-numeric: tabular-nums; }
+  .task-col .none { color: var(--label); }
+  @media (max-width: 700px) { .tasks { grid-template-columns: 1fr; } }
+
   .top .updated { margin-left: auto; padding: 3px 10px; border: 1px solid rgba(252, 244, 216, .25); border-radius: 999px; font-size: 12.5px; font-weight: 500; letter-spacing: 0; }
 
   /* Telas menores: cada cliente vira um bloco, com rótulos em cada campo */
@@ -280,6 +308,11 @@ const CONTAS_GOOGLE_ADS = [
       <section>
         <h2>Projetos <span id="count-proj"></span></h2>
         <div class="cards" id="proj"></div>
+      </section>
+
+      <section>
+        <h2>Tarefas <span id="count-tasks"></span></h2>
+        <div class="tasks" id="tasks"></div>
       </section>
     </div>
 
@@ -413,6 +446,18 @@ const CONTAS_GOOGLE_ADS = [
   document.getElementById("count-proj").textContent = `${PROJETOS.length} clientes`;
   render("rec");
   render("proj");
+
+  // Tarefas: numeração contínua (01, 02…) nas três colunas; com prazo, ordena pela data mais próxima
+  const TASK_TYPES = [["verificacao", "Verificação"], ["promocao", "Prazo da promoção"], ["recarga", "Recarga"]];
+  let n = 0;
+  document.getElementById("tasks").innerHTML = TASK_TYPES.map(([tipo, label]) => {
+    const list = TAREFAS.map((x, i) => ({ ...x, i })).filter(x => x.tipo === tipo)
+      .sort((a, b) => (parseDate(a.prazo) ?? Infinity) - (parseDate(b.prazo) ?? Infinity) || a.i - b.i);
+    const items = list.map(x => `<li><span class="num">${String(++n).padStart(2, "0")}</span>` +
+      `<span class="who">${esc(x.cliente)}</span>${x.prazo ? `<mark>até ${esc(x.prazo.slice(0, 5))}</mark>` : ""}</li>`).join("");
+    return `<div class="task-col"><h3>${label}</h3><ol>${items || `<li class="none">Nada pendente</li>`}</ol></div>`;
+  }).join("");
+  document.getElementById("count-tasks").textContent = `${n} tarefa${n === 1 ? "" : "s"}`;
 
   /* ===== Aba Google Ads: lida ao vivo da aba "Geral" da planilha do Google ===== */
   const SHEET_CSV = "https://docs.google.com/spreadsheets/d/14wsRMmTuI7v7nT2yy6AXYKzlhBHNkznw4XXsen69xxE/gviz/tq?tqx=out:csv&sheet=Geral";
