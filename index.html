@@ -23,7 +23,7 @@
    Cada caixa mostra primeiro quem foi revisado mais recentemente (mesma data → ordem alfabética).
    "verificacao" (data ou "sem prazo"), "saldo: true" e "promocao" (data) alimentam a tabelinha lateral.
    ===================================================================== */
-const ATUALIZADO_EM = "28/10/2026 às 17:47";
+const ATUALIZADO_EM = "28/10/2026 às 17:48";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
@@ -131,8 +131,10 @@ const CONTAS_GOOGLE_ADS = [
   .cards.psi { min-width: 1060px; }
   section.wide { overflow-x: auto; }
   .sub { display: block; margin-top: 1px; font-size: 11.5px; font-weight: 500; letter-spacing: 0; color: var(--label); }
-  .alert { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
-  .alert.ok { background: var(--accent-soft); color: var(--accent-soft-ink); }
+  /* Alerta da conta: só "Crítico" e "Atenção" ganham cor; o resto (ex.: "Tudo certo") é texto normal */
+  .alert { display: inline-block; font-size: 12.5px; font-weight: 500; }
+  .alert.ok { color: var(--soft-ink); }
+  .alert.warn, .alert.crit { padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
   .alert.warn { background: #fff0d6; color: var(--warn-ink); }
   .alert.crit { background: #fde5e2; color: var(--danger-ink); }
   /* Uma caixa por grupo (Recorrentes, Recorrentes · Psicólogos, Projetos · Psicólogos), uma embaixo
@@ -206,8 +208,6 @@ const CONTAS_GOOGLE_ADS = [
   .plat { display: inline-block; width: 14px; height: 14px; margin-left: 6px; vertical-align: -2px; }
   .plat + .plat { margin-left: 4px; }
   .c.empty { color: var(--label); }
-  .c.next.late { color: var(--danger-ink); font-weight: 600; }
-  .c.next.today { color: var(--warn-ink); font-weight: 600; }
 
   /* Títulos das colunas: clicar ordena */
   .sort {
@@ -223,11 +223,6 @@ const CONTAS_GOOGLE_ADS = [
   .sort:hover .arrow { opacity: .4; }
   .sort[aria-sort="ascending"] .arrow, .sort[aria-sort="descending"] .arrow { opacity: 1; }
 
-  .pill {
-    display: inline-block; padding: 0 8px; border-radius: 999px;
-    background: var(--accent-soft); color: var(--accent-soft-ink);
-    font-size: 12px; font-weight: 600;
-  }
 
   .note {
     grid-column: 1 / -1;
