@@ -15,27 +15,29 @@
    DADOS — é só editar aqui para atualizar o painel.
    Datas no formato DD/MM/AAAA. A próxima revisão é calculada sozinha
    (sempre 7 dias depois da última revisão/alteração).
+   "conta" é o ID da conta do Google Ads do cliente: liga o card dele à
+   linha da aba Google Ads (mesmo nome nas duas abas e ícone para ir de uma à outra).
    ===================================================================== */
-const ATUALIZADO_EM = "28/10/2026 às 14:55";
+const ATUALIZADO_EM = "28/10/2026 às 16:27";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
   { nome: "VILA 86",    segmento: "Moda streetwear",              revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Acompanhar as vendas e os dados do Analytics." },
   { nome: "ANA WARLA",  segmento: "Estética",                     revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Conta pausada. A previsão é retomar em novembro." },
   { nome: "061 RACING", segmento: "Mecânica de alta performance", revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Acompanhar a qualidade dos contatos recebidos." },
-  { nome: "NARA",       segmento: "Psicologia",                   revisao: "28/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "30/09/2026", obs: "Verificação da conta até 04/11 e promoção de créditos do Google até 24/11. A dona da conta foi furtada e perdeu o acesso; estamos com o suporte para trocar o perfil de pagamento. Se der certo, colocamos um cartão novo, sem vínculo com a Bárbara, e conseguimos fazer a verificação. Se não der, seguimos com acesso à conta, mas sem alterar o pagamento, e a verificação fica impossível sem o acesso dela." },
-  { nome: "NATHALIA",   segmento: "Psicologia",                   revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "23/09/2026", obs: "Conta sem saldo. Precisamos fazer uma recarga." },
-  { nome: "CLÉCIA",     segmento: "Psicologia",                   revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "22/09/2026", obs: "Finalizar as verificações até 16/11." },
-  { nome: "HUGO",       segmento: "Psicologia",                   revisao: "22/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "29/09/2026", obs: "" },
+  { nome: "NARA",       segmento: "Psicologia",                   conta: "775-492-4225", revisao: "28/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "30/09/2026", obs: "Verificação da conta até 04/11 e promoção de créditos do Google até 24/11. A dona da conta foi furtada e perdeu o acesso; estamos com o suporte para trocar o perfil de pagamento. Se der certo, colocamos um cartão novo, sem vínculo com a Bárbara, e conseguimos fazer a verificação. Se não der, seguimos com acesso à conta, mas sem alterar o pagamento, e a verificação fica impossível sem o acesso dela." },
+  { nome: "NATHALIA",   segmento: "Psicologia",                   conta: "359-065-0990", revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "23/09/2026", obs: "Conta sem saldo. Precisamos fazer uma recarga." },
+  { nome: "CLÉCIA",     segmento: "Psicologia",                   conta: "128-846-8174", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "22/09/2026", obs: "Finalizar as verificações até 16/11." },
+  { nome: "HUGO",       segmento: "Psicologia",                   conta: "587-222-5596", revisao: "22/10/2026", script: "SIM", mensal: 150, pagamento: "", inicio: "29/09/2026", obs: "" },
 ];
 
 const PROJETOS = [
-  { nome: "SHEILA",    segmento: "Psicologia", revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "24/09/2026", obs: "Verificação até 05/11. Enviar um vídeo explicando o processo. No momento, a conta está pausada por falta de saldo." },
-  { nome: "CARMEM",    segmento: "Psicologia", revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "",      inicio: "05/10/2026", obs: "Campanhas pausadas, com retorno previsto para novembro. Verificação até 05/11." },
-  { nome: "THAYNARA",  segmento: "Psicologia", revisao: "20/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "03/09/2026", obs: "Conta pausada por falta de saldo. Precisamos fazer uma recarga." },
-  { nome: "DANIELLE",  segmento: "Psicologia", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "14/09/2026", obs: "Conta pausada. A verificação está em andamento; acompanhar o status." },
-  { nome: "ALICE",     segmento: "Psicologia", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "14/09/2026", obs: "Finalizar as verificações. Ainda sem prazo definido." },
-  { nome: "YASMIN",    segmento: "Psicologia", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "30/09/2026", obs: "Finalizar as verificações, ainda sem prazo definido. No momento, o orçamento está maior para atingir a promoção." },
+  { nome: "SHEILA",    segmento: "Psicologia", conta: "353-831-5205", revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "24/09/2026", obs: "Verificação até 05/11. Enviar um vídeo explicando o processo. No momento, a conta está pausada por falta de saldo." },
+  { nome: "CARMEM",    segmento: "Psicologia", conta: "918-578-8000", revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "",      inicio: "05/10/2026", obs: "Campanhas pausadas, com retorno previsto para novembro. Verificação até 05/11." },
+  { nome: "THAYNARA",  segmento: "Psicologia", conta: "337-837-5511", revisao: "20/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "03/09/2026", obs: "Conta pausada por falta de saldo. Precisamos fazer uma recarga." },
+  { nome: "DANIELLE",  segmento: "Psicologia", conta: "150-686-1633", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "14/09/2026", obs: "Conta pausada. A verificação está em andamento; acompanhar o status." },
+  { nome: "ALICE",     segmento: "Psicologia", conta: "357-411-5648", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "14/09/2026", obs: "Finalizar as verificações. Ainda sem prazo definido." },
+  { nome: "YASMIN",    segmento: "Psicologia", conta: "756-159-1841", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "30/09/2026", obs: "Finalizar as verificações, ainda sem prazo definido. No momento, o orçamento está maior para atingir a promoção." },
   { nome: "THAIS",     segmento: "Psicologia", revisao: "",           script: "",    mensal: 150, pagamento: "",      inicio: "",           obs: "Ainda estamos criando o site, por isso as campanhas não começaram." },
 ];
 
@@ -112,7 +114,8 @@ const CONTAS_GOOGLE_ADS = [
 
   /* Aba Google Ads (lida ao vivo da aba "Geral" da planilha) */
   /* Cada métrica tem Hoje, Ontem e 7 dias lado a lado */
-  .cards.ads { --cols: repeat(12, max-content) minmax(0, 1fr); overflow-x: auto; }
+  /* Larguras fixas para as colunas das duas caixas ficarem alinhadas entre si */
+  .cards.ads { --cols: 300px 118px repeat(3, 94px) repeat(3, 72px) repeat(3, 94px) 236px minmax(0, 1fr); overflow-x: auto; }
   .cards.ads .c, .cards.ads .sort { padding-left: 9px; padding-right: 9px; }
   .cards.ads .card.head { row-gap: 0; }
   .cards.ads .group {
@@ -174,6 +177,17 @@ const CONTAS_GOOGLE_ADS = [
   .c:first-child { border-left: 0; }
   .c.name { font-weight: 700; letter-spacing: .01em; }
   .seg { display: block; margin-top: 1px; font-size: 11.5px; font-weight: 500; letter-spacing: 0; color: var(--label); }
+
+  /* Ícone ao lado do nome que leva para o mesmo cliente na outra aba */
+  .jump {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; margin-left: 6px; vertical-align: -4px;
+    border-radius: 6px; color: var(--accent); background: var(--accent-soft);
+  }
+  .jump:hover { background: var(--accent); color: #fff; }
+  .jump svg { width: 12px; height: 12px; }
+  .card.flash { animation: flash 2.2s ease-out; }
+  @keyframes flash { 0%, 40% { box-shadow: 0 0 0 2px var(--accent); } 100% { box-shadow: var(--shadow); } }
   .c.empty { color: var(--label); }
   .c.next.late { color: var(--danger-ink); font-weight: 600; }
   .c.next.today { color: var(--warn-ink); font-weight: 600; }
@@ -234,6 +248,13 @@ const CONTAS_GOOGLE_ADS = [
       font-size: 11.5px; font-weight: 500; color: var(--label);
     }
     .note { margin: 0; padding-top: 8px; }
+
+    /* Google Ads no celular: nome e orçamento em cima, depois uma linha por métrica (Hoje | Ontem | 7 dias) */
+    .cards.ads .card.head { display: none; }
+    .cards.ads .card { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .cards.ads .c, .cards.ads .c:nth-child(2), .cards.ads .c:nth-child(3) { grid-column: span 1; padding: 0; border-left: 0; white-space: normal; }
+    .cards.ads .c.name, .cards.ads .c:nth-child(2), .cards.ads .c:last-child { grid-column: 1 / -1; }
+    .cards.ads .c[data-label]::before { font-size: 11px; }
   }
 </style>
 </head>
@@ -270,8 +291,13 @@ const CONTAS_GOOGLE_ADS = [
 
     <div class="sections" data-panel="ads" hidden>
       <section>
-        <h2>Campanhas de Pesquisa <span id="count-ads"></span></h2>
-        <div class="cards ads" id="ads"><p class="ads-msg">Carregando dados da planilha…</p></div>
+        <h2>Recorrentes · Campanhas de Pesquisa <span id="count-ads-rec"></span></h2>
+        <div class="cards ads" id="ads-rec"><p class="ads-msg">Carregando dados da planilha…</p></div>
+      </section>
+
+      <section>
+        <h2>Projetos · Campanhas de Pesquisa <span id="count-ads-proj"></span></h2>
+        <div class="cards ads" id="ads-proj"><p class="ads-msg">Carregando dados da planilha…</p></div>
       </section>
     </div>
   </div>
@@ -329,8 +355,15 @@ const CONTAS_GOOGLE_ADS = [
     { label: "Início", key: c => parseDate(c.inicio), type: "num" },
   ];
 
+  const ICON_ADS = `<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="8" width="3" height="6" rx="1" fill="currentColor"/><rect x="6.5" y="4" width="3" height="10" rx="1" fill="currentColor"/><rect x="11" y="1.5" width="3" height="12.5" rx="1" fill="currentColor"/></svg>`;
+  const ICON_CLIENT = `<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="5" r="3" fill="currentColor"/><path d="M2.5 15c0-3.3 2.5-5.5 5.5-5.5s5.5 2.2 5.5 5.5z" fill="currentColor"/></svg>`;
+  // Cliente dono de cada conta do Google Ads (pelo campo "conta")
+  const CLIENT_BY_ACCOUNT = Object.fromEntries(RECORRENTES.concat(PROJETOS).filter(c => c.conta).map(c => [c.conta, c]));
+
   function card(c) {
-    let html = `<div class="c name">${esc(c.nome)}<span class="seg">${c.segmento ? esc(c.segmento) : "&nbsp;"}</span></div>`
+    const jump = c.conta && CONTAS_GOOGLE_ADS.includes(c.conta)
+      ? `<a class="jump" href="#google-ads/${c.conta}" title="Ver ${esc(c.nome)} no Google Ads" aria-label="Ver ${esc(c.nome)} no Google Ads">${ICON_ADS}</a>` : "";
+    let html = `<div class="c name">${esc(c.nome)}${jump}<span class="seg">${c.segmento ? esc(c.segmento) : "&nbsp;"}</span></div>`
       + cell("Última revisão/alteração", esc(c.revisao))
       + nextCell(c)
       + cell("Script", esc(c.script))
@@ -338,7 +371,7 @@ const CONTAS_GOOGLE_ADS = [
       + cell("Pagamento", c.pagamento ? `<span class="pill">${esc(c.pagamento)}</span>` : "")
       + cell("Início", esc(c.inicio));
     html += `<p class="note">${c.obs ? esc(c.obs) : "&nbsp;"}</p>`; // a linha de OBS aparece sempre, mesmo vazia
-    return `<article class="card">${html}</article>`;
+    return `<article class="card" data-cliente="${esc(c.nome)}">${html}</article>`;
   }
 
   // Ordenação de cada seção: coluna (índice) e direção (1 = crescente, -1 = decrescente)
@@ -417,10 +450,13 @@ const CONTAS_GOOGLE_ADS = [
   const blank = v => !v || v.trim() === "" || v.trim() === "–";
   const toNum = v => blank(v) ? null : parseFloat(v.replace(/[R$\s%.]/g, "").replace(",", "."));
 
-  const ads = { rows: null, loading: false, col: null, dir: 1, updated: "" };
+  // Ordenação separada para cada caixa (Recorrentes / Projetos), como na aba Clientes
+  const ads = { rows: null, loading: false, updated: "", sort: { rec: { col: null, dir: 1 }, proj: { col: null, dir: 1 } } };
+  const REC_ACCOUNTS = new Set(RECORRENTES.map(c => c.conta).filter(Boolean));
+  const displayName = r => { const cli = CLIENT_BY_ACCOUNT[r[1].trim()]; return cli ? cli.nome : r[0].trim(); };
 
   const ADS_COLS = [
-    { label: "Conta", key: r => r[0], type: "text" },
+    { label: "Conta", key: displayName, type: "text" },
     { label: "Orçamento/dia", key: r => toNum(r[3]), type: "num", cell: r => r[3] },
     ...GROUPS.flatMap(([g, off]) => PERIODS.map(([p, start], j) => ({
       group: g, gstart: j === 0, label: p, full: `${g} · ${p}`,
@@ -433,35 +469,46 @@ const CONTAS_GOOGLE_ADS = [
     const alert = (r[31] || "").trim();
     const level = /^crítico/i.test(alert) ? "crit" : /^atenção/i.test(alert) ? "warn" : "ok";
     const when = (r[32] || "").trim().replace(/^(\d\d\/\d\d)\/\d{4}/, "$1");
-    let html = `<div class="c name">${esc(r[0].trim())}<span class="sub">${esc(r[1].trim())} · ${esc(r[2].trim())}</span></div>`;
+    // Mesmo nome da aba Clientes; o nome da conta e o ID ficam embaixo
+    const id = r[1].trim(), cli = CLIENT_BY_ACCOUNT[id];
+    const jump = cli ? `<a class="jump" href="#clientes/${encodeURIComponent(cli.nome)}" title="Ver ${esc(cli.nome)} na aba Clientes" aria-label="Ver ${esc(cli.nome)} na aba Clientes">${ICON_CLIENT}</a>` : "";
+    let html = `<div class="c name" title="${esc(r[2].trim())}">${esc(cli ? cli.nome : r[0].trim())}${jump}<span class="sub">${esc(r[0].trim())} · ${esc(id)}</span></div>`;
     html += ADS_COLS.slice(1, -1).map(c => cell(c.full || c.label, blank(c.cell(r)) ? "" : esc(c.cell(r).trim()), c.gstart ? "gstart" : "")).join("");
     html += cell("Alertas", alert ? `<span class="alert ${level}">${esc(alert)}</span>${when ? `<span class="sub">atualizado ${esc(when)}</span>` : ""}` : "");
-    return `<article class="card">${html}</article>`;
+    return `<article class="card" data-conta="${esc(id)}">${html}</article>`;
   }
 
-  function renderAds() {
-    const cols = ADS_COLS;
-    const list = ads.rows.map((r, i) => ({ r, i }));
-    if (ads.col != null) {
-      const { key, type } = cols[ads.col];
+  // Contas separadas como na aba Clientes: dono recorrente → Recorrentes; o resto → Projetos
+  function renderAdsBox(kind) {
+    const cols = ADS_COLS, { col, dir } = ads.sort[kind];
+    // Ordem padrão = a mesma da aba Clientes
+    const order = (kind === "rec" ? RECORRENTES : PROJETOS).map(c => c.conta);
+    const pos = r => { const k = order.indexOf(r[1].trim()); return k < 0 ? Infinity : k; };
+    const list = ads.rows
+      .filter(r => REC_ACCOUNTS.has(r[1].trim()) === (kind === "rec"))
+      .sort((a, b) => pos(a) - pos(b))
+      .map((r, i) => ({ r, i }));
+    if (col != null) {
+      const { key, type } = cols[col];
       const isEmpty = v => v == null || v === "" || Number.isNaN(v);
       list.sort((a, b) => {
         const va = key(a.r), vb = key(b.r);
         if (isEmpty(va) || isEmpty(vb)) return (isEmpty(va) - isEmpty(vb)) || a.i - b.i;
         const cmp = type === "num" ? va - vb : String(va).localeCompare(String(vb), "pt-BR");
-        return cmp * ads.dir || a.i - b.i;
+        return cmp * dir || a.i - b.i;
       });
     }
     const head = cols.map((h, i) => {
-      const sort = ads.col === i ? (ads.dir === 1 ? "ascending" : "descending") : "none";
-      const arrow = ads.col === i ? (ads.dir === 1 ? "▲" : "▼") : (h.type === "num" ? "▼" : "▲");
-      return `<button type="button" class="sort${h.gstart ? " gstart" : ""}" data-ads-col="${i}" aria-sort="${sort}" title="Ordenar por ${h.full || h.label}">${h.label}<span class="arrow">${arrow}</span></button>`;
+      const sort = col === i ? (dir === 1 ? "ascending" : "descending") : "none";
+      const arrow = col === i ? (dir === 1 ? "▲" : "▼") : (h.type === "num" ? "▼" : "▲");
+      return `<button type="button" class="sort${h.gstart ? " gstart" : ""}" data-ads-kind="${kind}" data-ads-col="${i}" aria-sort="${sort}" title="Ordenar por ${h.full || h.label}">${h.label}<span class="arrow">${arrow}</span></button>`;
     }).join("");
     // Linha de cima do cabeçalho: nome de cada métrica, cobrindo as suas três colunas
     const groups = GROUPS.map(([g], k) => `<div class="group" style="grid-column: ${3 + k * 3} / span 3">${g}</div>`).join("");
-    document.getElementById("ads").innerHTML = `<div class="card head">${groups}${head}</div>` + list.map(x => adsCard(x.r)).join("");
-    document.getElementById("count-ads").textContent = `${ads.rows.length} contas`;
+    document.getElementById(`ads-${kind}`).innerHTML = `<div class="card head">${groups}${head}</div>` + list.map(x => adsCard(x.r)).join("");
+    document.getElementById(`count-ads-${kind}`).textContent = `${list.length} conta${list.length === 1 ? "" : "s"}`;
   }
+  function renderAds() { renderAdsBox("rec"); renderAdsBox("proj"); }
 
   function loadAds() {
     if (ads.rows || ads.loading) return;
@@ -481,23 +528,35 @@ const CONTAS_GOOGLE_ADS = [
       })
       .catch(() => {
         ads.loading = false;
-        document.getElementById("ads").innerHTML =
-          `<p class="ads-msg">Não foi possível carregar a planilha agora. Tente recarregar a página.</p>`;
+        ["rec", "proj"].forEach(k => { document.getElementById(`ads-${k}`).innerHTML =
+          `<p class="ads-msg">Não foi possível carregar a planilha agora. Tente recarregar a página.</p>`; });
       });
   }
 
   document.addEventListener("click", e => {
     const b = e.target.closest(".sort[data-ads-col]");
     if (!b) return;
+    const kind = b.dataset.adsKind, s = ads.sort[kind];
     const i = Number(b.dataset.adsCol), first = ADS_COLS[i].type === "num" ? -1 : 1;
-    if (ads.col !== i) { ads.col = i; ads.dir = first; }
-    else if (ads.dir === first) ads.dir = -first;
-    else ads.col = null;
-    renderAds();
+    if (s.col !== i) { s.col = i; s.dir = first; }
+    else if (s.dir === first) s.dir = -first;
+    else s.col = null;
+    renderAdsBox(kind);
   });
 
-  /* ===== Abas: #clientes (padrão) e #google-ads ===== */
-  const currentView = () => location.hash === "#google-ads" ? "ads" : "clientes";
+  /* ===== Abas: #clientes (padrão) e #google-ads =====
+     "#google-ads/ID-da-conta" e "#clientes/NOME" abrem a aba e destacam o cliente. */
+  const currentView = () => location.hash.startsWith("#google-ads") ? "ads" : "clientes";
+  const hashTarget = () => decodeURIComponent(location.hash.split("/")[1] || "");
+  function flashTarget(view) {
+    const t = hashTarget();
+    if (!t) return;
+    const el = [...document.querySelectorAll(view === "ads" ? "[data-conta]" : "[data-cliente]")]
+      .find(e => (view === "ads" ? e.dataset.conta : e.dataset.cliente) === t);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
+  }
   function showView(view) {
     document.querySelectorAll("[data-panel]").forEach(p => { p.hidden = p.dataset.panel !== view; });
     document.querySelectorAll("[data-view]").forEach(a => {
@@ -507,6 +566,7 @@ const CONTAS_GOOGLE_ADS = [
       view === "ads" ? (ads.updated || "Carregando…") : `Atualizado em ${ATUALIZADO_EM}`;
     document.title = view === "ads" ? "Google Ads · Clientes" : "Clientes";
     if (view === "ads") loadAds();
+    if (view === "clientes" || ads.rows) flashTarget(view);
   }
   window.addEventListener("hashchange", () => showView(currentView()));
   showView(currentView());
