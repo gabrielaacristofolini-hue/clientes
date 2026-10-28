@@ -21,7 +21,7 @@
    !!trecho!! com marcador laranja (saldo, recarga: o que é urgente).
    "plataformas": onde o cliente roda anúncios ("google", "meta" ou os dois).
    ===================================================================== */
-const ATUALIZADO_EM = "28/10/2026 às 17:07";
+const ATUALIZADO_EM = "28/10/2026 às 17:24";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
@@ -36,7 +36,7 @@ const RECORRENTES = [
 
 const PROJETOS = [
   { nome: "SHEILA",    segmento: "Psicologia", plataformas: ["google"], conta: "353-831-5205", revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "24/09/2026", obs: "**Verificação até 05/11.** Enviar um vídeo explicando o processo. !!No momento, a conta está pausada por falta de saldo.!!" },
-  { nome: "CARMEM",    segmento: "Psicologia", plataformas: ["google"], conta: "918-578-8000", revisao: "26/10/2026", script: "SIM", mensal: 150, pagamento: "",      inicio: "05/10/2026", obs: "Campanhas pausadas, com retorno previsto para novembro. **Verificação até 05/11.**" },
+  { nome: "CARMEM",    segmento: "Psicologia", plataformas: ["google"], conta: "918-578-8000", revisao: "28/10/2026", script: "SIM", mensal: 150, pagamento: "",      inicio: "05/10/2026", obs: "Campanhas pausadas; ela volta no início de novembro e, na volta, já fazemos a verificação. **Verificação até 11/11.** **Promoção até 27/11.**" },
   { nome: "THAYNARA",  segmento: "Psicologia", plataformas: ["google"], conta: "337-837-5511", revisao: "20/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "03/09/2026", obs: "!!Conta pausada por falta de saldo. Precisamos fazer uma recarga.!!" },
   { nome: "DANIELLE",  segmento: "Psicologia", plataformas: ["google"], conta: "150-686-1633", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "14/09/2026", obs: "Conta pausada. A verificação está em andamento; acompanhar o status." },
   { nome: "ALICE",     segmento: "Psicologia", plataformas: ["google"], conta: "357-411-5648", revisao: "19/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "14/09/2026", obs: "Finalizar as verificações. Ainda sem prazo definido." },
@@ -49,12 +49,13 @@ const PROJETOS = [
 const TAREFAS = [
   { tipo: "verificacao", cliente: "NARA",     prazo: "04/11/2026" },
   { tipo: "verificacao", cliente: "SHEILA",   prazo: "05/11/2026" },
-  { tipo: "verificacao", cliente: "CARMEM",   prazo: "05/11/2026" },
+  { tipo: "verificacao", cliente: "CARMEM",   prazo: "11/11/2026" },
   { tipo: "verificacao", cliente: "CLÉCIA",   prazo: "16/11/2026" },
   { tipo: "verificacao", cliente: "YASMIN",   prazo: "20/11/2026" },
   { tipo: "promocao",    cliente: "YASMIN",   prazo: "14/11/2026" },
   { tipo: "promocao",    cliente: "HUGO",     prazo: "20/11/2026" },
   { tipo: "promocao",    cliente: "NARA",     prazo: "24/11/2026" },
+  { tipo: "promocao",    cliente: "CARMEM",   prazo: "27/11/2026" },
   { tipo: "recarga",     cliente: "HUGO" },
   { tipo: "recarga",     cliente: "NATHALIA" },
   { tipo: "recarga",     cliente: "SHEILA" },
