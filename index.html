@@ -17,13 +17,13 @@
    (sempre 7 dias depois da última revisão/alteração).
    "conta" é o ID da conta do Google Ads do cliente: traz para o card dele os
    dados da aba "Geral" da planilha (orçamento, gasto, conversões, alerta).
-   Na observação: **trecho** fica com marcador amarelo (verificação, promoção) e
-   !!trecho!! com marcador laranja (saldo, recarga: o que é urgente).
+   Na observação, **trecho** (verificação, promoção) e !!trecho!! (saldo, recarga) marcam
+   o texto; os marcadores coloridos estão desligados por enquanto (aparece texto normal).
    "plataformas": onde o cliente roda anúncios ("google", "meta" ou os dois).
    Cada caixa mostra primeiro quem foi revisado mais recentemente (mesma data → ordem alfabética).
    "verificacao" (data ou "sem prazo"), "saldo: true" e "promocao" (data) alimentam a tabelinha lateral.
    ===================================================================== */
-const ATUALIZADO_EM = "28/10/2026 às 17:39";
+const ATUALIZADO_EM = "28/10/2026 às 17:44";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
@@ -108,15 +108,6 @@ const CONTAS_GOOGLE_ADS = [
   .top svg { display: block; flex: none; }
   .top { flex-wrap: wrap; }
 
-  /* Abas do topo: Recorrentes / Recorrentes · Psicólogos / Projetos · Psicólogos */
-  .tabs { display: flex; gap: 4px; flex-wrap: wrap; }
-  .tabs a {
-    padding: 5px 12px; border-radius: 999px;
-    color: var(--box); opacity: .65; text-decoration: none;
-    font-size: 14px; font-weight: 600; letter-spacing: .01em;
-  }
-  .tabs a:hover { opacity: 1; }
-  .tabs a[aria-current="page"] { opacity: 1; background: var(--box); color: var(--ink); }
   [hidden] { display: none !important; }
 
   /* Dados do Google Ads no card de cada psicólogo (lidos ao vivo da aba "Geral" da planilha):
@@ -144,18 +135,21 @@ const CONTAS_GOOGLE_ADS = [
   .alert.ok { background: var(--accent-soft); color: var(--accent-soft-ink); }
   .alert.warn { background: #fff0d6; color: var(--warn-ink); }
   .alert.crit { background: #fde5e2; color: var(--danger-ink); }
-  .sections { display: grid; grid-template-columns: minmax(0, max-content); gap: 14px; }
 
-  /* Aba Clientes: caixas à esquerda e a tabelinha de pendências à direita (embaixo em telas menores) */
-  .clientes-wrap { display: grid; grid-template-columns: minmax(0, max-content) 230px; gap: 18px; align-items: start; }
-  @media (max-width: 1460px) { .clientes-wrap { grid-template-columns: minmax(0, max-content); } }
-  .clientes-wrap:has(> .side[hidden]) { grid-template-columns: minmax(0, max-content); }
+  /* Uma caixa por grupo (Recorrentes, Recorrentes · Psicólogos, Projetos · Psicólogos), uma embaixo
+     da outra e com a mesma largura; a tabelinha de pendências de cada grupo fica ao lado da sua caixa
+     (embaixo dela em telas menores) */
+  .groups { display: grid; grid-template-columns: minmax(0, max-content) 230px; justify-content: center; align-items: start; gap: 22px 18px; }
+  .groups > section { grid-column: 1; }
+  .groups > .side { grid-column: 2; }
+  @media (max-width: 1460px) {
+    .groups { grid-template-columns: minmax(0, max-content); }
+    .groups > .side { grid-column: 1; margin-top: -12px; }
+  }
   .side {
-    position: sticky; top: 16px;
     background: var(--surface); border: 1px solid var(--box-line); border-radius: 12px;
     padding: 12px 16px 10px; font-size: 13px; color: var(--soft-ink);
   }
-  @media (max-width: 1460px) { .side { position: static; } }
   .side h3 { margin: 0 0 4px; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: var(--label); }
   .side h4 { margin: 8px 0 2px; font-size: 12.5px; font-weight: 500; color: var(--ink); }
   .side h3 + h4 { margin-top: 2px; }
@@ -179,7 +173,6 @@ const CONTAS_GOOGLE_ADS = [
     text-transform: uppercase; letter-spacing: .08em;
   }
   section h2 span { color: var(--label); font-weight: 500; text-transform: none; letter-spacing: 0; }
-  section h2 span.t { color: inherit; font-weight: inherit; text-transform: inherit; letter-spacing: inherit; }
 
   /* As colunas são compartilhadas por todos os cards da seção (subgrid),
      então cada coluna tem a largura do seu maior conteúdo e nada quebra linha. */
@@ -300,23 +293,29 @@ const CONTAS_GOOGLE_ADS = [
           <path d="M9 68c0-15 10-25 23-25s23 10 23 25z" fill="#fff"/>
         </g>
       </svg>
-      <nav class="tabs" aria-label="Abas">
-        <a href="#recorrentes" data-view="rec">Recorrentes</a>
-        <a href="#recorrentes-psicologos" data-view="recpsi">Recorrentes · Psicólogos</a>
-        <a href="#projetos-psicologos" data-view="proj">Projetos · Psicólogos</a>
-      </nav>
+      <span>Clientes</span>
       <span class="updated" id="updated"></span>
     </header>
 
-    <div class="clientes-wrap">
-      <div class="sections">
-        <section id="box">
-          <h2><span id="box-title" class="t"></span> <span id="count"></span></h2>
-          <div class="cards" id="cards"></div>
-        </section>
-      </div>
+    <!-- Uma caixa por grupo, uma embaixo da outra; a tabelinha de pendências de cada grupo fica ao lado -->
+    <div class="groups">
+      <section id="box-rec">
+        <h2>Recorrentes <span id="count-rec"></span></h2>
+        <div class="cards" id="cards-rec"></div>
+      </section>
+      <aside class="side" id="side-rec" aria-label="Pendências · Recorrentes"></aside>
 
-      <aside class="side" id="side" aria-label="Pendências"></aside>
+      <section id="box-recpsi">
+        <h2>Recorrentes · Psicólogos <span id="count-recpsi"></span></h2>
+        <div class="cards" id="cards-recpsi"></div>
+      </section>
+      <aside class="side" id="side-recpsi" aria-label="Pendências · Recorrentes Psicólogos"></aside>
+
+      <section id="box-proj">
+        <h2>Projetos · Psicólogos <span id="count-proj"></span></h2>
+        <div class="cards" id="cards-proj"></div>
+      </section>
+      <aside class="side" id="side-proj" aria-label="Pendências · Projetos Psicólogos"></aside>
     </div>
   </div>
 </div>
@@ -361,11 +360,11 @@ const CONTAS_GOOGLE_ADS = [
     return cell("Próxima revisão", fmtDate(next), cls, title);
   }
 
-  /* ===== Abas: uma para cada grupo de clientes ===== */
+  /* ===== Grupos de clientes (uma caixa para cada, uma embaixo da outra) ===== */
   const VIEWS = {
-    rec:    { title: "Recorrentes",              hash: "#recorrentes",            data: RECORRENTES },
-    recpsi: { title: "Recorrentes · Psicólogos", hash: "#recorrentes-psicologos", data: RECORRENTES_PSICOLOGOS, ads: true },
-    proj:   { title: "Projetos · Psicólogos",    hash: "#projetos-psicologos",    data: PROJETOS,               ads: true },
+    rec:    { title: "Recorrentes",              data: RECORRENTES },
+    recpsi: { title: "Recorrentes · Psicólogos", data: RECORRENTES_PSICOLOGOS, ads: true },
+    proj:   { title: "Projetos · Psicólogos",    data: PROJETOS,               ads: true },
   };
 
   /* Colunas (iguais em todas as abas). O tipo define o primeiro clique:
@@ -445,10 +444,11 @@ const CONTAS_GOOGLE_ADS = [
       + cell("Mensal", c.mensal != null ? money(c.mensal) : "")
       + cell("Pagamento", c.pagamento ? `<span class="pill">${esc(c.pagamento)}</span>` : "")
       + cell("Início", esc(c.inicio));
-    // Na observação: **trecho** = marcador amarelo (verificação/promoção); !!trecho!! = laranja (saldo/recarga)
+    // Marcadores desligados por enquanto: **trecho** e !!trecho!! aparecem como texto normal.
+    // Para voltar, troque "$1" por "<mark>$1</mark>" (amarelo) e por `<mark class="urgent">$1</mark>` (laranja).
     const obs = c.obs ? esc(c.obs)
-      .replace(/\*\*(.+?)\*\*/g, "<mark>$1</mark>")
-      .replace(/!!(.+?)!!/g, `<mark class="urgent">$1</mark>`) : "&nbsp;";
+      .replace(/\*\*(.+?)\*\*/g, "$1")
+      .replace(/!!(.+?)!!/g, "$1") : "&nbsp;";
     html += `<p class="note">${obs}</p>`; // a linha de OBS aparece sempre, mesmo vazia
     if (withAds) html += adsStrip(c);
     return `<article class="card" data-cliente="${esc(c.nome)}">${html}</article>`;
@@ -461,7 +461,7 @@ const CONTAS_GOOGLE_ADS = [
       a.nome.localeCompare(b.nome, "pt-BR"));
   }
 
-  // Ordenação de cada aba: coluna (índice) e direção (1 = crescente, -1 = decrescente)
+  // Ordenação de cada grupo: coluna (índice) e direção (1 = crescente, -1 = decrescente)
   const state = { rec: { col: null, dir: 1 }, recpsi: { col: null, dir: 1 }, proj: { col: null, dir: 1 } };
 
   function sorted(view) {
@@ -479,7 +479,7 @@ const CONTAS_GOOGLE_ADS = [
     return list.map(x => x.c);
   }
 
-  /* Tabelinha lateral de cada aba: tirada dos campos verificacao / saldo / promocao dos clientes da aba.
+  /* Tabelinha ao lado de cada caixa: tirada dos campos verificacao / saldo / promocao dos clientes do grupo.
      Urgentes (verificação e saldo) em cima; promoções embaixo. Com data, a mais próxima primeiro. */
   const isDate = d => /^\d\d\/\d\d\/\d{4}$/.test(d || "");
   const dateVal = d => isDate(d) ? parseDate(d) : Infinity; // sem data vai para o fim
@@ -493,8 +493,8 @@ const CONTAS_GOOGLE_ADS = [
       .map(c => li(c.nome, when(c.verificacao) + (c.verificacaoNota ? ` (${c.verificacaoNota})` : "")));
     const saldo = all.filter(c => c.saldo).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR")).map(c => li(c.nome));
     const promo = all.filter(c => c.promocao).sort(byDate("promocao")).map(c => li(c.nome, when(c.promocao)));
-    const side = document.getElementById("side");
-    // Aba sem nenhuma pendência: a tabelinha some
+    const side = document.getElementById(`side-${view}`);
+    // Grupo sem nenhuma pendência: a tabelinha dele some
     side.hidden = !(verif.length || saldo.length || promo.length);
     const list = items => items.length ? `<ul>${items.join("")}</ul>` : `<ul><li>Nada pendente</li></ul>`;
     side.innerHTML =
@@ -509,12 +509,11 @@ const CONTAS_GOOGLE_ADS = [
       const arrow = col === i ? (dir === 1 ? "▲" : "▼") : (h.type === "num" ? "▼" : "▲");
       return `<button type="button" class="sort" data-kind="${view}" data-col="${i}" aria-sort="${sort}" title="Ordenar por ${h.label}">${h.label}<span class="arrow">${arrow}</span></button>`;
     }).join("");
-    const cards = document.getElementById("cards");
+    const cards = document.getElementById(`cards-${view}`);
     cards.classList.toggle("psi", !!v.ads);
-    document.getElementById("box").classList.toggle("wide", !!v.ads);
+    document.getElementById(`box-${view}`).classList.toggle("wide", !!v.ads);
     cards.innerHTML = `<div class="card head">${head}</div>` + sorted(view).map(c => card(c, v.ads)).join("");
-    document.getElementById("box-title").textContent = v.title;
-    document.getElementById("count").textContent = `${v.data.length} cliente${v.data.length === 1 ? "" : "s"}`;
+    document.getElementById(`count-${view}`).textContent = `${v.data.length} cliente${v.data.length === 1 ? "" : "s"}`;
   }
 
   // 1º clique: ordena (datas e valores do maior para o menor; textos de A a Z).
@@ -530,24 +529,13 @@ const CONTAS_GOOGLE_ADS = [
     render(view);
   });
 
-  /* ===== Navegação entre as abas (#recorrentes, #recorrentes-psicologos, #projetos-psicologos) ===== */
-  function currentView() {
-    const h = location.hash;
-    if (h === "#google-ads") return "recpsi"; // link antigo da aba Google Ads
-    return Object.keys(VIEWS).find(k => VIEWS[k].hash === h) || "rec";
-  }
-  function showView(view) {
-    document.querySelectorAll("[data-view]").forEach(a => {
-      if (a.dataset.view === view) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
-    });
+  // Desenha os três grupos (de novo quando os dados do Google Ads chegam)
+  function renderAll() {
     document.getElementById("updated").textContent = `Atualizado em ${ATUALIZADO_EM}` +
-      (VIEWS[view].ads && ads.updated ? ` · Google Ads ${ads.updated}` : "");
-    document.title = `${VIEWS[view].title} · Clientes`;
-    render(view);
-    renderSide(view);
+      (ads.updated ? ` · Google Ads ${ads.updated}` : "");
+    Object.keys(VIEWS).forEach(view => { render(view); renderSide(view); });
   }
-  window.addEventListener("hashchange", () => showView(currentView()));
-  showView(currentView());
+  renderAll();
 
   fetch(SHEET_CSV)
     .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
@@ -562,7 +550,7 @@ const CONTAS_GOOGLE_ADS = [
       ads.status = "ok";
     })
     .catch(() => { ads.status = "error"; })
-    .then(() => showView(currentView()));
+    .then(renderAll);
 })();
 </script>
 </body>
