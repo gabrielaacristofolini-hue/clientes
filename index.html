@@ -21,9 +21,9 @@
    o texto; os marcadores coloridos estão desligados por enquanto (aparece texto normal).
    "plataformas": onde o cliente roda anúncios ("google", "meta" ou os dois).
    Cada caixa mostra primeiro quem foi revisado mais recentemente (mesma data → ordem alfabética).
-   "verificacao" (data ou "sem prazo"), "saldo: true" e "promocao" (data) alimentam a tabelinha lateral.
+   "verificacao" (data ou "sem prazo"), "saldo: true" e "promocao" (data) marcam os prazos; a lista de tarefas à direita vem de TAREFAS.
    ===================================================================== */
-const ATUALIZADO_EM = "29/10/2026 às 15:37";
+const ATUALIZADO_EM = "29/10/2026 às 15:39";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
@@ -46,6 +46,15 @@ const PROJETOS = [
   { nome: "ALICE",     segmento: "Psicologia", plataformas: ["google"], conta: "357-411-5648", verificacao: "sem prazo", promocao: "12/11/2026", revisao: "29/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "14/09/2026", obs: "Otimização em 29/10: orçamento reduzido para não gastar além do necessário e ainda assim garantir os créditos da promoção; ajustes nas palavras-chave e nos termos de pesquisa. **Promoção até 12/11**, já perto da meta. **Verificação pendente, ainda sem prazo:** por enquanto, a conta não mostra nenhum prazo." },
   { nome: "YASMIN",    segmento: "Psicologia", plataformas: ["google"], conta: "756-159-1841", verificacao: "20/11/2026", promocao: "14/11/2026", revisao: "28/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "30/09/2026", obs: "Ajustes em 28/10 nos anúncios, palavras-chave e termos de pesquisa, para manter o que está convertendo. **Promoção até 14/11.** **Verificação até 20/11** (só confirmar o telefone). No momento, o orçamento está maior para atingir a promoção." },
   { nome: "THAIS",     segmento: "Psicologia", plataformas: ["google"], revisao: "",           script: "",    mensal: 150, pagamento: "",      inicio: "",           obs: "Primeira versão do site pronta e enviada para avaliação. Pendente: criar a conta do Google, registrar o domínio e subir o site nele. As campanhas ainda não começaram." },
+];
+
+/* Lista de tarefas à direita, montada à mão conforme os pedidos.
+   Cada cliente tem seus itens: [tarefa, detalhe] (o detalhe aparece em cinza depois de "·"). */
+const TAREFAS = [
+  { cliente: "SHEILA", itens: [
+    ["Realizar recarga", "sem saldo na conta atualmente"],
+    ["Realizar verificação", "até 05/11"],
+  ] },
 ];
 
 /* Google Ads: os números vêm ao vivo da aba "Geral" da planilha.
@@ -156,7 +165,7 @@ const CONTAS_GOOGLE_ADS = [
   .alert.warn { background: #fff0d6; color: var(--warn-ink); }
   .alert.crit { background: #fde5e2; color: var(--danger-ink); }
   /* Uma caixa por grupo (Recorrentes, Recorrentes · Psicólogos, Projetos · Psicólogos), uma embaixo
-     da outra e com a mesma largura. A tabelinha de pendências (de todos os clientes) fica no topo à
+     da outra e com a mesma largura. A lista de tarefas (TAREFAS) fica no topo à
      direita e acompanha a rolagem; em telas menores, vai para cima das caixas */
   .groups { display: grid; grid-template-columns: minmax(0, max-content) 230px; justify-content: center; align-items: start; gap: 22px 18px; }
   .groups > section { grid-column: 1; }
@@ -178,6 +187,7 @@ const CONTAS_GOOGLE_ADS = [
   .side li::marker { color: var(--label); }
   .side .when { color: var(--label); }
   .side .block + .block { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
+  .side .block > h4:first-child { margin-top: 4px; }
 
   /* Cada seção (Recorrentes, Recorrentes · Psicólogos, Projetos · Psicólogos) fica dentro de uma caixa com contorno */
   section {
@@ -542,29 +552,17 @@ const CONTAS_GOOGLE_ADS = [
     return list.map(x => x.c);
   }
 
-  /* Tabelinha no topo à direita: tirada dos campos verificacao / saldo / promocao de todos os clientes.
-     Urgentes (verificação e saldo) em cima; promoções embaixo. Com data, a mais próxima primeiro. */
   const isDate = d => /^\d\d\/\d\d\/\d{4}$/.test(d || "");
-  const dateVal = d => isDate(d) ? parseDate(d) : Infinity; // sem data vai para o fim
-  const byDate = field => (a, b) => dateVal(a[field]) - dateVal(b[field]) || a.nome.localeCompare(b.nome, "pt-BR");
-  const when = d => isDate(d) ? `até ${d.slice(0, 5)}` : d;
-  const li = (nome, txt) => `<li>${esc(nome)}${txt ? ` <span class="when">· ${esc(txt)}</span>` : ""}</li>`;
 
-  const MOSTRAR_LATERAL = false; // tabelinha desligada por enquanto (pedido de 29/10); true traz de volta
-
+  /* Lista de tarefas no topo à direita, vinda de TAREFAS (montada à mão).
+     A antiga tabelinha automática (verificação / saldo / promoção) está no histórico do git. */
   function renderSide() {
-    const all = RECORRENTES.concat(RECORRENTES_PSICOLOGOS, PROJETOS);
-    const verif = all.filter(c => c.verificacao).sort(byDate("verificacao"))
-      .map(c => li(c.nome, when(c.verificacao) + (c.verificacaoNota ? ` (${c.verificacaoNota})` : "")));
-    const saldo = all.filter(c => c.saldo).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR")).map(c => li(c.nome));
-    const promo = all.filter(c => c.promocao).sort(byDate("promocao")).map(c => li(c.nome, when(c.promocao)));
     const side = document.getElementById("side");
-    // Sem nenhuma pendência, a tabelinha some
-    side.hidden = !MOSTRAR_LATERAL || !(verif.length || saldo.length || promo.length);
-    const list = items => items.length ? `<ul>${items.join("")}</ul>` : `<ul><li>Nada pendente</li></ul>`;
-    side.innerHTML =
-      `<div class="block"><h3>Urgente</h3><h4>Realizar verificação</h4>${list(verif)}<h4>Colocar saldo</h4>${list(saldo)}</div>` +
-      `<div class="block"><h3>Promoções</h3>${list(promo)}</div>`;
+    side.hidden = !TAREFAS.length; // sem tarefas, a lista some e as caixas voltam para o centro
+    side.innerHTML = `<h3>Tarefas</h3>` + TAREFAS.map(t =>
+      `<div class="block"><h4>${esc(t.cliente)}</h4><ul>` +
+      t.itens.map(([tarefa, detalhe]) => `<li>${esc(tarefa)}${detalhe ? ` <span class="when">· ${esc(detalhe)}</span>` : ""}</li>`).join("") +
+      `</ul></div>`).join("");
   }
 
   function render(view) {
