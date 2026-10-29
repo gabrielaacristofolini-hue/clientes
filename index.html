@@ -23,7 +23,7 @@
    Cada caixa mostra primeiro quem foi revisado mais recentemente (mesma data → ordem alfabética).
    "verificacao" (data ou "sem prazo"), "saldo: true" e "promocao" (data) alimentam a tabelinha lateral.
    ===================================================================== */
-const ATUALIZADO_EM = "29/10/2026 às 15:23";
+const ATUALIZADO_EM = "29/10/2026 às 15:26";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
@@ -161,6 +161,7 @@ const CONTAS_GOOGLE_ADS = [
   .groups { display: grid; grid-template-columns: minmax(0, max-content) 230px; justify-content: center; align-items: start; gap: 22px 18px; }
   .groups > section { grid-column: 1; }
   .groups > .side { grid-column: 2; grid-row: 1 / span 3; position: sticky; top: 16px; }
+  .groups:has(> .side[hidden]) { grid-template-columns: minmax(0, max-content); } /* sem a tabelinha, as caixas ficam centralizadas */
   @media (max-width: 1460px) {
     .groups { grid-template-columns: minmax(0, max-content); }
     .groups > .side { grid-column: 1; grid-row: 1; position: static; }
@@ -549,6 +550,8 @@ const CONTAS_GOOGLE_ADS = [
   const when = d => isDate(d) ? `até ${d.slice(0, 5)}` : d;
   const li = (nome, txt) => `<li>${esc(nome)}${txt ? ` <span class="when">· ${esc(txt)}</span>` : ""}</li>`;
 
+  const MOSTRAR_LATERAL = false; // tabelinha desligada por enquanto (pedido de 29/10); true traz de volta
+
   function renderSide() {
     const all = RECORRENTES.concat(RECORRENTES_PSICOLOGOS, PROJETOS);
     const verif = all.filter(c => c.verificacao).sort(byDate("verificacao"))
@@ -557,7 +560,7 @@ const CONTAS_GOOGLE_ADS = [
     const promo = all.filter(c => c.promocao).sort(byDate("promocao")).map(c => li(c.nome, when(c.promocao)));
     const side = document.getElementById("side");
     // Sem nenhuma pendência, a tabelinha some
-    side.hidden = !(verif.length || saldo.length || promo.length);
+    side.hidden = !MOSTRAR_LATERAL || !(verif.length || saldo.length || promo.length);
     const list = items => items.length ? `<ul>${items.join("")}</ul>` : `<ul><li>Nada pendente</li></ul>`;
     side.innerHTML =
       `<div class="block"><h3>Urgente</h3><h4>Realizar verificação</h4>${list(verif)}<h4>Colocar saldo</h4>${list(saldo)}</div>` +
