@@ -23,10 +23,10 @@
    Cada caixa mostra primeiro quem foi revisado mais recentemente (mesma data → ordem alfabética).
    "verificacao" (data ou "sem prazo"), "saldo: true" e "promocao" (data) marcam os prazos; a lista de tarefas à direita vem de TAREFAS.
    ===================================================================== */
-const ATUALIZADO_EM = "03/11/2026 às 16:21";
+const ATUALIZADO_EM = "03/11/2026 às 16:25";
 
 const RECORRENTES = [
-  { nome: "LEOCAR",     segmento: "Concessionária",               plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
+  { nome: "LEOCAR",     segmento: "Concessionária",               dono: "Elite Stage", plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
   { nome: "VILA 86",    segmento: "Moda streetwear",              plataformas: ["meta", "google"], revisao: "03/11/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Otimização em 03/11: campanha de vendas do Meta pausada; por enquanto, o foco lá é distribuição de conteúdo e visitas ao perfil. Orçamento da campanha de vendas do Google aumentado, pois é de onde vem a maior parte das vendas. Acompanhar: média mínima de 1 venda por dia e, no Instagram, o menor custo por visita possível. Seguir de olho nas vendas e nos dados do Analytics." },
   { nome: "061 RACING", segmento: "Mecânica de alta performance", plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Acompanhar a qualidade dos contatos recebidos." },
 ];
@@ -46,6 +46,13 @@ const PROJETOS = [
   { nome: "ALICE",     segmento: "Psicologia", plataformas: ["google"], conta: "357-411-5648", verificacao: "sem prazo", promocao: "12/11/2026", revisao: "29/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "14/09/2026", obs: "Otimização em 29/10: orçamento reduzido para não gastar além do necessário e ainda assim garantir os créditos da promoção; ajustes nas palavras-chave e nos termos de pesquisa. **Promoção até 12/11**, já perto da meta. **Verificação pendente, ainda sem prazo:** por enquanto, a conta não mostra nenhum prazo." },
   { nome: "YASMIN",    segmento: "Psicologia", plataformas: ["google"], conta: "756-159-1841", verificacao: "20/11/2026", promocao: "14/11/2026", revisao: "29/10/2026", script: "SIM", mensal: 150, pagamento: "01/03", inicio: "30/09/2026", obs: "Ajustes em 28 e 29/10 nos anúncios, palavras-chave e termos de pesquisa, para manter o que está convertendo. **Promoção até 14/11.** **Verificação até 20/11** (só confirmar o telefone). No momento, o orçamento está maior para atingir a promoção, que está quase batida. Revisado em 29/10: tudo ok, seguimos assim." },
   { nome: "THAIS",     segmento: "Psicologia", plataformas: ["google"], revisao: "",           script: "",    mensal: 150, pagamento: "",      inicio: "",           obs: "Primeira versão do site pronta e enviada para avaliação. Pendente: criar a conta do Google, registrar o domínio e subir o site nele. As campanhas ainda não começaram." },
+];
+
+/* Card "A receber" à esquerda: soma as mensalidades de cada dono e mostra o próximo dia de pagamento.
+   Cliente sem o campo "dono" é do Bruno. */
+const RECEBIMENTOS = [
+  { dono: "Bruno", dia: 20 },
+  { dono: "Elite Stage", dia: 10 },
 ];
 
 /* Lista de tarefas à direita, montada à mão conforme os pedidos.
@@ -108,7 +115,7 @@ const CONTAS_GOOGLE_ADS = [
     font: 13px/1.4 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { padding: 24px 40px 32px; }
+  .wrap { padding: 24px 24px 32px; }
   @media (max-width: 600px) { .wrap { padding: 16px; } }
 
   /* Caixas de clientes uma embaixo da outra, com o cabeçalho em cima; o conjunto fica centralizado */
@@ -174,16 +181,19 @@ const CONTAS_GOOGLE_ADS = [
   /* Uma caixa por grupo (Recorrentes, Recorrentes · Psicólogos, Projetos · Psicólogos), uma embaixo
      da outra e com a mesma largura. A lista de tarefas (TAREFAS) fica no topo à
      direita e acompanha a rolagem; em telas menores, vai para cima das caixas */
-  .groups { display: grid; grid-template-columns: minmax(0, max-content) max-content; justify-content: center; align-items: start; gap: 22px 18px; }
-  .groups > section { grid-column: 1; }
-  .groups > .side { grid-column: 2; grid-row: 1 / span 3; position: sticky; top: 16px; }
-  .groups:has(> .side[hidden]) { grid-template-columns: minmax(0, max-content); } /* sem a tabelinha, as caixas ficam centralizadas */
-  /* .stack: sem espaço para a lista ao lado (ver fitSide), ela vai para cima das caixas */
+  .groups { display: grid; grid-template-columns: 158px minmax(0, max-content) max-content; justify-content: center; align-items: start; gap: 22px 14px; }
+  .groups > section { grid-column: 2; }
+  .groups > .side { grid-column: 3; grid-row: 1 / span 3; position: sticky; top: 16px; }
+  .groups > .side.receber { grid-column: 1; min-width: 0; padding-left: 12px; padding-right: 12px; }
+  .groups:has(> #side[hidden]) { grid-template-columns: 158px minmax(0, max-content); } /* sem tarefas, some a coluna da direita */
+  /* .stack: sem espaço para os cards ao lado (ver fitSide), eles vão para cima das caixas */
   .groups.stack { grid-template-columns: minmax(0, max-content); }
-  .groups.stack > .side { grid-column: 1; grid-row: 1; position: static; }
+  .groups.stack > section { grid-column: 1; }
+  .groups.stack > .side, .groups.stack > .side.receber { grid-column: 1; grid-row: auto; position: static; }
   @media (max-width: 1460px) {
-    .groups { grid-template-columns: minmax(0, max-content); }
-    .groups > .side { grid-column: 1; grid-row: 1; position: static; }
+    .groups, .groups:has(> #side[hidden]) { grid-template-columns: minmax(0, max-content); }
+    .groups > section { grid-column: 1; }
+    .groups > .side, .groups > .side.receber { grid-column: 1; grid-row: auto; position: static; }
   }
   .side {
     min-width: 230px;
@@ -199,6 +209,8 @@ const CONTAS_GOOGLE_ADS = [
   .side .when { color: var(--label); }
   .side .block + .block { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
   .side .block > h4:first-child { margin-top: 4px; }
+  .receber .valor { font-size: 16px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .receber .when { font-size: 11.5px; white-space: nowrap; }
 
   /* Cada seção (Recorrentes, Recorrentes · Psicólogos, Projetos · Psicólogos) fica dentro de uma caixa com contorno */
   section {
@@ -247,6 +259,8 @@ const CONTAS_GOOGLE_ADS = [
   /* Símbolo da plataforma (Google / Meta) ao lado do nome */
   .plat { display: inline-block; width: 14px; height: 14px; margin-left: 6px; vertical-align: -2px; }
   .plat + .plat { margin-left: 4px; }
+  /* De quem é o cliente (Bruno ou Elite Stage), ao lado do nome */
+  .dono { margin-left: 6px; font-size: 11.5px; font-weight: 500; letter-spacing: 0; color: var(--label); }
   .c.empty { color: var(--label); }
 
   /* Títulos das colunas: clicar ordena */
@@ -336,7 +350,8 @@ const CONTAS_GOOGLE_ADS = [
 
     <!-- Uma caixa por grupo, uma embaixo da outra; a tabelinha de pendências fica no topo à direita -->
     <div class="groups">
-      <aside class="side" id="side" aria-label="Pendências"></aside>
+      <aside class="side receber" id="receber" aria-label="A receber"></aside>
+      <aside class="side" id="side" aria-label="Tarefas"></aside>
 
       <section id="box-rec">
         <h2>Recorrentes <span id="count-rec"></span></h2>
@@ -516,10 +531,12 @@ const CONTAS_GOOGLE_ADS = [
     return `<div class="promo">${html}</div>`;
   }
 
+  const donoDe = c => c.dono || "Bruno"; // de quem é o cliente
+
   function card(c, withAds) {
     const plats = (c.plataformas || []).filter(p => PLATFORMS[p])
       .map(p => `<span class="plat" title="${PLATFORMS[p].title}" role="img" aria-label="${PLATFORMS[p].title}">${PLATFORMS[p].svg}</span>`).join("");
-    let html = `<div class="c name">${esc(c.nome)}${plats}<span class="seg">${c.segmento ? esc(c.segmento) : "&nbsp;"}</span></div>`
+    let html = `<div class="c name">${esc(c.nome)}${plats}<span class="dono">${esc(donoDe(c))}</span><span class="seg">${c.segmento ? esc(c.segmento) : "&nbsp;"}</span></div>`
       + cell("Última revisão/alteração", esc(c.revisao))
       + nextCell(c)
       + cell("Script", esc(c.script))
@@ -575,6 +592,22 @@ const CONTAS_GOOGLE_ADS = [
     fitSide();
   }
 
+  /* Card "A receber": soma as mensalidades por dono; cada bloco mostra o próximo dia de pagamento */
+  function proximoDia(dia) {
+    const n = new Date();
+    const d = new Date(n.getFullYear(), n.getMonth() + (n.getDate() > dia ? 1 : 0), dia);
+    return String(d.getDate()).padStart(2, "0") + "/" + String(d.getMonth() + 1).padStart(2, "0");
+  }
+  function renderReceber() {
+    const todos = RECORRENTES.concat(RECORRENTES_PSICOLOGOS, PROJETOS);
+    document.getElementById("receber").innerHTML = `<h3>A receber</h3>` + RECEBIMENTOS.map(({ dono, dia }) => {
+      const lista = todos.filter(c => donoDe(c) === dono);
+      const total = lista.reduce((s, c) => s + (c.mensal || 0), 0);
+      return `<div class="block"><h4>${esc(dono)}</h4><div class="valor">${money(total)}</div>` +
+        `<div class="when">dia ${proximoDia(dia)} · ${lista.length} cliente${lista.length === 1 ? "" : "s"}</div></div>`;
+    }).join("");
+  }
+
   // A lista cresce para cada tarefa caber numa linha; se não couber ao lado das caixas, vai para cima delas
   function fitSide() {
     const g = document.querySelector(".groups");
@@ -617,6 +650,7 @@ const CONTAS_GOOGLE_ADS = [
       (ads.updated ? ` · Google Ads ${ads.updated}` : "");
     Object.keys(VIEWS).forEach(render);
     renderSide();
+    renderReceber();
   }
   renderAll();
 
