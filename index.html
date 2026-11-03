@@ -23,7 +23,7 @@
    Cada caixa mostra primeiro quem foi revisado mais recentemente (mesma data → ordem alfabética).
    "verificacao" (data ou "sem prazo"), "saldo: true" e "promocao" (data) marcam os prazos; a lista de tarefas à direita vem de TAREFAS.
    ===================================================================== */
-const ATUALIZADO_EM = "03/11/2026 às 16:13";
+const ATUALIZADO_EM = "03/11/2026 às 16:16";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
@@ -132,17 +132,16 @@ const CONTAS_GOOGLE_ADS = [
   .ads-strip {
     grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: 96px 86px 74px 78px 88px 52px 56px 104px 72px 72px minmax(170px, 1fr);
+    grid-template-columns: 96px 90px 84px 98px 88px 58px 58px 118px 84px 84px minmax(230px, 1fr);
     margin: 8px 14px 0; padding-top: 7px;
     border-top: 1px dashed var(--box-line);
     font-variant-numeric: tabular-nums;
   }
-  .ads-strip > div { min-width: 0; padding: 0 8px; border-left: 1px solid var(--line); white-space: nowrap; }
+  .ads-strip > div { min-width: 0; padding: 0 10px; border-left: 1px solid var(--line); white-space: nowrap; }
   .ads-strip > div:first-child { padding-left: 0; border-left: 0; }
   .ads-strip > .gs { border-left: 2px solid var(--box-line); }
   .ads-strip .k { display: block; font-size: 11px; color: var(--label); }
   .ads-strip .v { display: block; font-size: 13px; font-weight: 500; }
-  .ads-strip .alert-cell .sub { display: inline; margin-left: 6px; }
   .ads-strip.none { display: block; color: var(--label); font-size: 12.5px; }
   /* Linha da promoção do Google (gastar R$ 1.200 até o prazo), embaixo da faixa do Google Ads */
   .promo {
@@ -163,7 +162,7 @@ const CONTAS_GOOGLE_ADS = [
   .bar > i { display: block; height: 100%; border-radius: inherit; background: var(--soft-ink); }
   .bar-row .pct { font-size: 12px; font-weight: 600; color: var(--soft-ink); min-width: 34px; text-align: right; }
   /* Caixas dos psicólogos ficam um pouco mais largas para caber a faixa do Google Ads */
-  .cards.psi { min-width: 1060px; }
+  .cards.psi { min-width: 1130px; }
   section.wide { overflow-x: auto; }
   .sub { display: block; margin-top: 1px; font-size: 11.5px; font-weight: 500; letter-spacing: 0; color: var(--label); }
   /* Alerta da conta: só "Crítico" e "Atenção" ganham cor; o resto (ex.: "Tudo certo") é texto normal */
@@ -312,7 +311,6 @@ const CONTAS_GOOGLE_ADS = [
     .ads-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 10px; margin: 0; padding-top: 8px; }
     .ads-strip > div, .ads-strip > .gs { padding: 0; border-left: 0; white-space: normal; }
     .ads-strip > div:first-child, .ads-strip > div:last-child { grid-column: 1 / -1; }
-    .ads-strip .alert-cell .sub { display: block; margin-left: 0; }
     .promo { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 10px; margin: 0; padding-top: 8px; }
     .promo > div { padding: 0; border-left: 0; white-space: normal; }
     .promo > .bar-cell { grid-column: 1 / -1; order: -1; }
@@ -482,9 +480,8 @@ const CONTAS_GOOGLE_ADS = [
     const alert = (r[col.alerta] || "").trim();
     const level = /^crítico/i.test(alert) ? "crit" : /^atenção/i.test(alert) ? "warn" : "ok";
     const when = (r[col.atualizado] || "").trim().replace(/^(\d\d\/\d\d)\/\d{4}/, "$1");
-    html += `<div class="gs alert-cell"><span class="k">Alerta da conta</span>` +
-      (alert ? `<span class="alert ${level}">${esc(alert)}</span>` : "—") +
-      (when ? `<span class="sub">atualizado ${esc(when)}</span>` : "") + `</div>`;
+    html += `<div class="gs alert-cell"><span class="k">Alerta da conta${when ? ` · atualizado ${esc(when)}` : ""}</span>` +
+      (alert ? `<span class="alert ${level}">${esc(alert)}</span>` : "—") + `</div>`;
     return `<div class="ads-strip" title="${esc(r[0].trim())} · ${esc(r[1].trim())} · ${esc((r[2] || "").trim())}">${html}</div>` + promoLine(c, r);
   }
 
