@@ -23,7 +23,7 @@
    Cada caixa mostra primeiro quem foi revisado mais recentemente (mesma data → ordem alfabética).
    "verificacao" (data ou "sem prazo"), "saldo: true" e "promocao" (data) marcam os prazos; a lista de tarefas à direita vem de TAREFAS.
    ===================================================================== */
-const ATUALIZADO_EM = "03/11/2026 às 16:25";
+const ATUALIZADO_EM = "03/11/2026 às 16:28";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               dono: "Elite Stage", plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
@@ -48,7 +48,7 @@ const PROJETOS = [
   { nome: "THAIS",     segmento: "Psicologia", plataformas: ["google"], revisao: "",           script: "",    mensal: 150, pagamento: "",      inicio: "",           obs: "Primeira versão do site pronta e enviada para avaliação. Pendente: criar a conta do Google, registrar o domínio e subir o site nele. As campanhas ainda não começaram." },
 ];
 
-/* Card "A receber" à esquerda: soma as mensalidades de cada dono e mostra o próximo dia de pagamento.
+/* Aba "A receber": soma as mensalidades de cada dono e mostra o próximo dia de pagamento.
    Cliente sem o campo "dono" é do Bruno. */
 const RECEBIMENTOS = [
   { dono: "Bruno", dia: 20 },
@@ -115,7 +115,7 @@ const CONTAS_GOOGLE_ADS = [
     font: 13px/1.4 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { padding: 24px 24px 32px; }
+  .wrap { padding: 24px 40px 32px; }
   @media (max-width: 600px) { .wrap { padding: 16px; } }
 
   /* Caixas de clientes uma embaixo da outra, com o cabeçalho em cima; o conjunto fica centralizado */
@@ -181,19 +181,60 @@ const CONTAS_GOOGLE_ADS = [
   /* Uma caixa por grupo (Recorrentes, Recorrentes · Psicólogos, Projetos · Psicólogos), uma embaixo
      da outra e com a mesma largura. A lista de tarefas (TAREFAS) fica no topo à
      direita e acompanha a rolagem; em telas menores, vai para cima das caixas */
-  .groups { display: grid; grid-template-columns: 158px minmax(0, max-content) max-content; justify-content: center; align-items: start; gap: 22px 14px; }
-  .groups > section { grid-column: 2; }
-  .groups > .side { grid-column: 3; grid-row: 1 / span 3; position: sticky; top: 16px; }
-  .groups > .side.receber { grid-column: 1; min-width: 0; padding-left: 12px; padding-right: 12px; }
-  .groups:has(> #side[hidden]) { grid-template-columns: 158px minmax(0, max-content); } /* sem tarefas, some a coluna da direita */
-  /* .stack: sem espaço para os cards ao lado (ver fitSide), eles vão para cima das caixas */
+  .groups { display: grid; grid-template-columns: minmax(0, max-content) max-content; justify-content: center; align-items: start; gap: 22px 18px; }
+  .groups > section { grid-column: 1; }
+  .groups > .side { grid-column: 2; grid-row: 1 / span 3; position: sticky; top: 16px; }
+  .groups:has(> #side[hidden]) { grid-template-columns: minmax(0, max-content); } /* sem tarefas, as caixas ficam centralizadas */
+  /* .stack: sem espaço para a lista ao lado (ver fitSide), ela vai para cima das caixas */
   .groups.stack { grid-template-columns: minmax(0, max-content); }
-  .groups.stack > section { grid-column: 1; }
-  .groups.stack > .side, .groups.stack > .side.receber { grid-column: 1; grid-row: auto; position: static; }
+  .groups.stack > .side { grid-column: 1; grid-row: 1; position: static; }
   @media (max-width: 1460px) {
-    .groups, .groups:has(> #side[hidden]) { grid-template-columns: minmax(0, max-content); }
-    .groups > section { grid-column: 1; }
-    .groups > .side, .groups > .side.receber { grid-column: 1; grid-row: auto; position: static; }
+    .groups { grid-template-columns: minmax(0, max-content); }
+    .groups > .side { grid-column: 1; grid-row: 1; position: static; }
+  }
+
+  /* Abas no topo: Clientes e A receber */
+  .tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+  .tabs a {
+    padding: 5px 12px; border-radius: 999px;
+    color: var(--box); opacity: .65; text-decoration: none;
+    font-size: 14px; font-weight: 600; letter-spacing: .01em;
+  }
+  .tabs a:hover { opacity: 1; }
+  .tabs a[aria-current="page"] { opacity: 1; background: var(--box); color: var(--ink); }
+
+  /* Aba A receber: total em cima, a divisão por dono numa barra e cada dono com suas parcelas */
+  .rec { width: min(1240px, calc(100vw - 80px)); display: grid; gap: 18px; font-variant-numeric: tabular-nums; }
+  .rec-hero { display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: end; gap: 12px 40px; padding: 4px 2px 2px; color: var(--box); }
+  .rec-k { display: block; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; opacity: .65; }
+  .rec-total { display: block; margin-top: 2px; font-size: 34px; font-weight: 700; line-height: 1.15; letter-spacing: -.01em; }
+  .rec-total small { margin-left: 8px; font-size: 13px; font-weight: 500; letter-spacing: 0; opacity: .65; }
+  .rec-bar { display: flex; gap: 3px; height: 10px; }
+  .rec-bar i { display: block; min-width: 4px; border-radius: 999px; background: var(--box); }
+  .rec-bar i + i { background: #8a929b; }
+  .rec-legend { display: flex; flex-wrap: wrap; gap: 2px 20px; margin-top: 7px; font-size: 12.5px; }
+  .rec-legend span { white-space: nowrap; }
+  .rec-legend span + span { opacity: .7; }
+  .rec-owners { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 1fr); align-items: start; gap: 18px; }
+  .rec-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 6px 6px 12px; }
+  .rec-head h2 { margin: 0; padding: 0; }
+  .rec-valor { display: block; margin-top: 2px; font-size: 26px; font-weight: 700; line-height: 1.15; }
+  .rec-when { text-align: right; white-space: nowrap; font-size: 12px; color: var(--soft-ink); }
+  .rec-when b { display: block; font-size: 17px; font-weight: 700; color: var(--ink); }
+  .rec-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); align-items: start; gap: 10px; }
+  .rec-group { padding: 10px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow); }
+  .rec-group h3 { display: flex; justify-content: space-between; gap: 10px; margin: 0; padding-bottom: 7px; border-bottom: 1px solid var(--box-line); font-size: 12px; font-weight: 600; color: var(--soft-ink); }
+  .rec-group h3 b { font-weight: 700; color: var(--ink); white-space: nowrap; }
+  .rec-group ul { margin: 0; padding: 0; list-style: none; }
+  .rec-group li { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--line); font-weight: 500; }
+  .rec-group li:last-child { border-bottom: 0; padding-bottom: 0; }
+  .rec-group li > span { min-width: 0; }
+  .rec-group li small { display: block; font-size: 11.5px; font-weight: 500; color: var(--label); }
+  .rec-group li b { font-weight: 600; white-space: nowrap; }
+  @media (max-width: 1000px) {
+    .rec { width: 100%; }
+    .rec-hero { grid-template-columns: minmax(0, 1fr); }
+    .rec-owners { grid-template-columns: minmax(0, 1fr); }
   }
   .side {
     min-width: 230px;
@@ -209,8 +250,6 @@ const CONTAS_GOOGLE_ADS = [
   .side .when { color: var(--label); }
   .side .block + .block { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
   .side .block > h4:first-child { margin-top: 4px; }
-  .receber .valor { font-size: 16px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .receber .when { font-size: 11.5px; white-space: nowrap; }
 
   /* Cada seção (Recorrentes, Recorrentes · Psicólogos, Projetos · Psicólogos) fica dentro de uma caixa com contorno */
   section {
@@ -344,13 +383,17 @@ const CONTAS_GOOGLE_ADS = [
           <path d="M9 68c0-15 10-25 23-25s23 10 23 25z" fill="#fff"/>
         </g>
       </svg>
-      <span>Clientes</span>
+      <nav class="tabs" aria-label="Abas">
+        <a href="#clientes" data-tab="clientes">Clientes</a>
+        <a href="#receber" data-tab="receber">A receber</a>
+      </nav>
       <span class="updated" id="updated"></span>
     </header>
 
     <!-- Uma caixa por grupo, uma embaixo da outra; a tabelinha de pendências fica no topo à direita -->
-    <div class="groups">
-      <aside class="side receber" id="receber" aria-label="A receber"></aside>
+    <div class="rec" id="receber" hidden></div>
+
+    <div class="groups" id="clientes">
       <aside class="side" id="side" aria-label="Tarefas"></aside>
 
       <section id="box-rec">
@@ -592,21 +635,53 @@ const CONTAS_GOOGLE_ADS = [
     fitSide();
   }
 
-  /* Card "A receber": soma as mensalidades por dono; cada bloco mostra o próximo dia de pagamento */
-  function proximoDia(dia) {
+  /* Aba "A receber": total do mês, a divisão por dono e, em cada dono, a mensalidade de cada cliente por grupo */
+  const somaMensal = lista => lista.reduce((s, c) => s + (c.mensal || 0), 0);
+  const qtd = n => `${n} cliente${n === 1 ? "" : "s"}`;
+  function proximaData(dia) {
     const n = new Date();
-    const d = new Date(n.getFullYear(), n.getMonth() + (n.getDate() > dia ? 1 : 0), dia);
-    return String(d.getDate()).padStart(2, "0") + "/" + String(d.getMonth() + 1).padStart(2, "0");
+    return Date.UTC(n.getFullYear(), n.getMonth() + (n.getDate() > dia ? 1 : 0), dia);
+  }
+  function faltam(t) {
+    const d = Math.round((t - today()) / DAY);
+    return d === 0 ? "é hoje" : d === 1 ? "é amanhã" : `faltam ${d} dias`;
   }
   function renderReceber() {
-    const todos = RECORRENTES.concat(RECORRENTES_PSICOLOGOS, PROJETOS);
-    document.getElementById("receber").innerHTML = `<h3>A receber</h3>` + RECEBIMENTOS.map(({ dono, dia }) => {
-      const lista = todos.filter(c => donoDe(c) === dono);
-      const total = lista.reduce((s, c) => s + (c.mensal || 0), 0);
-      return `<div class="block"><h4>${esc(dono)}</h4><div class="valor">${money(total)}</div>` +
-        `<div class="when">dia ${proximoDia(dia)} · ${lista.length} cliente${lista.length === 1 ? "" : "s"}</div></div>`;
+    const todos = Object.values(VIEWS).flatMap(v => v.data);
+    const total = somaMensal(todos);
+    const donos = RECEBIMENTOS.map(r => {
+      const lista = todos.filter(c => donoDe(c) === r.dono);
+      return { ...r, lista, total: somaMensal(lista), data: proximaData(r.dia) };
+    });
+    const hero = `<div class="rec-hero"><div><span class="rec-k">Total por mês</span>` +
+      `<span class="rec-total">${money(total)}<small>${qtd(todos.length)}</small></span></div>` +
+      `<div><div class="rec-bar">${donos.map(d => `<i style="flex:${d.total || 1} 1 0"></i>`).join("")}</div>` +
+      `<div class="rec-legend">${donos.map(d => `<span>${esc(d.dono)}: ${money(d.total)} (${Math.round(d.total / total * 100)}%)</span>`).join("")}</div></div></div>`;
+    const caixas = donos.map(d => {
+      const grupos = Object.values(VIEWS).map(v => ({ title: v.title, lista: v.data.filter(c => donoDe(c) === d.dono) }))
+        .filter(g => g.lista.length).map(g => `<div class="rec-group"><h3>${esc(g.title)} <b>${money(somaMensal(g.lista))}</b></h3><ul>` +
+          g.lista.slice().sort((a, b) => (b.mensal || 0) - (a.mensal || 0) || a.nome.localeCompare(b.nome, "pt-BR"))
+            .map(c => `<li><span>${esc(c.nome)}<small>${esc(c.segmento || "")}</small></span><b>${money(c.mensal || 0)}</b></li>`).join("") +
+          `</ul></div>`).join("");
+      return `<section><div class="rec-head"><div><h2>${esc(d.dono)} <span>${qtd(d.lista.length)}</span></h2><span class="rec-valor">${money(d.total)}</span></div>` +
+        `<div class="rec-when">Recebe em<b>${fmtDate(d.data).slice(0, 5)}</b>${faltam(d.data)}</div></div>` +
+        `<div class="rec-groups">${grupos}</div></section>`;
     }).join("");
+    document.getElementById("receber").innerHTML = hero + `<div class="rec-owners">${caixas}</div>`;
   }
+
+  // Abas: a aba aberta fica no endereço da página (#clientes ou #receber)
+  function showTab() {
+    const aba = location.hash === "#receber" ? "receber" : "clientes";
+    document.getElementById("clientes").hidden = aba !== "clientes";
+    document.getElementById("receber").hidden = aba !== "receber";
+    document.querySelectorAll(".tabs a").forEach(a => {
+      if (a.dataset.tab === aba) a.setAttribute("aria-current", "page");
+      else a.removeAttribute("aria-current");
+    });
+    if (aba === "clientes") fitSide(); // só dá para medir com a aba visível
+  }
+  addEventListener("hashchange", showTab);
 
   // A lista cresce para cada tarefa caber numa linha; se não couber ao lado das caixas, vai para cima delas
   function fitSide() {
@@ -653,6 +728,7 @@ const CONTAS_GOOGLE_ADS = [
     renderReceber();
   }
   renderAll();
+  showTab();
 
   fetch(SHEET_CSV)
     .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
