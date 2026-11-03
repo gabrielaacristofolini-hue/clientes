@@ -23,16 +23,12 @@
    Cada caixa mostra primeiro quem foi revisado mais recentemente (mesma data → ordem alfabética).
    "verificacao" (data ou "sem prazo"), "saldo: true" e "promocao" (data) marcam os prazos; a lista de tarefas à direita vem de TAREFAS.
    ===================================================================== */
-const ATUALIZADO_EM = "03/11/2026 às 16:19";
+const ATUALIZADO_EM = "03/11/2026 às 16:21";
 
 const RECORRENTES = [
+  { nome: "LEOCAR",     segmento: "Concessionária",               plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
   { nome: "VILA 86",    segmento: "Moda streetwear",              plataformas: ["meta", "google"], revisao: "03/11/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Otimização em 03/11: campanha de vendas do Meta pausada; por enquanto, o foco lá é distribuição de conteúdo e visitas ao perfil. Orçamento da campanha de vendas do Google aumentado, pois é de onde vem a maior parte das vendas. Acompanhar: média mínima de 1 venda por dia e, no Instagram, o menor custo por visita possível. Seguir de olho nas vendas e nos dados do Analytics." },
   { nome: "061 RACING", segmento: "Mecânica de alta performance", plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 200, pagamento: "", inicio: "",           obs: "Acompanhar a qualidade dos contatos recebidos." },
-];
-
-/* Aba "Clientes Isaac · Elite Stage". Todos os outros grupos ficam na aba "Clientes Bruno". */
-const ISAAC = [
-  { nome: "LEOCAR",     segmento: "Concessionária",               plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
 ];
 
 const RECORRENTES_PSICOLOGOS = [
@@ -291,14 +287,6 @@ const CONTAS_GOOGLE_ADS = [
     text-transform: uppercase; letter-spacing: .05em;
   }
 
-  .tabs { display: flex; gap: 4px; flex-wrap: wrap; }
-  .tabs a {
-    padding: 5px 12px; border-radius: 999px;
-    color: var(--box); opacity: .65; text-decoration: none;
-    font-size: 14px; font-weight: 600; letter-spacing: .01em;
-  }
-  .tabs a:hover { opacity: 1; }
-  .tabs a[aria-current="page"] { opacity: 1; background: var(--box); color: var(--ink); }
   .top .updated { margin-left: auto; padding: 3px 10px; border: 1px solid rgba(252, 244, 216, .25); border-radius: 999px; font-size: 12.5px; font-weight: 500; letter-spacing: 0; }
 
   /* Telas menores: cada cliente vira um bloco, com rótulos em cada campo */
@@ -342,10 +330,7 @@ const CONTAS_GOOGLE_ADS = [
           <path d="M9 68c0-15 10-25 23-25s23 10 23 25z" fill="#fff"/>
         </g>
       </svg>
-      <nav class="tabs" aria-label="Abas">
-        <a href="#bruno" data-tab="bruno">Clientes Bruno</a>
-        <a href="#isaac" data-tab="isaac">Clientes Isaac · Elite Stage</a>
-      </nav>
+      <span>Clientes</span>
       <span class="updated" id="updated"></span>
     </header>
 
@@ -366,11 +351,6 @@ const CONTAS_GOOGLE_ADS = [
       <section id="box-proj">
         <h2>Projetos · Psicólogos <span id="count-proj"></span></h2>
         <div class="cards" id="cards-proj"></div>
-      </section>
-
-      <section id="box-isaac" hidden>
-        <h2>Recorrentes <span id="count-isaac"></span></h2>
-        <div class="cards" id="cards-isaac"></div>
       </section>
     </div>
   </div>
@@ -421,12 +401,7 @@ const CONTAS_GOOGLE_ADS = [
     rec:    { title: "Recorrentes",              data: RECORRENTES },
     recpsi: { title: "Recorrentes · Psicólogos", data: RECORRENTES_PSICOLOGOS, ads: true },
     proj:   { title: "Projetos · Psicólogos",    data: PROJETOS,               ads: true },
-    isaac:  { title: "Recorrentes",              data: ISAAC },
   };
-
-  /* Abas: quais grupos cada uma mostra */
-  const ABAS = { bruno: ["rec", "recpsi", "proj"], isaac: ["isaac"] };
-  let aba = "bruno";
 
   /* Colunas (iguais em todas as abas). O tipo define o primeiro clique:
      datas e valores começam do mais recente/maior; textos, de A a Z. */
@@ -569,7 +544,7 @@ const CONTAS_GOOGLE_ADS = [
   }
 
   // Ordenação de cada grupo: coluna (índice) e direção (1 = crescente, -1 = decrescente)
-  const state = { rec: { col: null, dir: 1 }, recpsi: { col: null, dir: 1 }, proj: { col: null, dir: 1 }, isaac: { col: null, dir: 1 } };
+  const state = { rec: { col: null, dir: 1 }, recpsi: { col: null, dir: 1 }, proj: { col: null, dir: 1 } };
 
   function sorted(view) {
     const { col, dir } = state[view];
@@ -592,11 +567,8 @@ const CONTAS_GOOGLE_ADS = [
      A antiga tabelinha automática (verificação / saldo / promoção) está no histórico do git. */
   function renderSide() {
     const side = document.getElementById("side");
-    // Só as tarefas dos clientes da aba aberta; sem tarefas, a lista some e as caixas voltam para o centro
-    const nomes = ABAS[aba].flatMap(v => VIEWS[v].data.map(c => c.nome));
-    const tarefas = TAREFAS.filter(t => nomes.includes(t.cliente));
-    side.hidden = !tarefas.length;
-    side.innerHTML = `<h3>Tarefas</h3>` + tarefas.map(t =>
+    side.hidden = !TAREFAS.length; // sem tarefas, a lista some e as caixas voltam para o centro
+    side.innerHTML = `<h3>Tarefas</h3>` + TAREFAS.map(t =>
       `<div class="block"><h4>${esc(t.cliente)}</h4><ul>` +
       t.itens.map(([tarefa, detalhe]) => `<li>${esc(tarefa)}${detalhe ? ` <span class="when">· ${esc(detalhe)}</span>` : ""}</li>`).join("") +
       `</ul></div>`).join("");
@@ -639,27 +611,14 @@ const CONTAS_GOOGLE_ADS = [
     render(view);
   });
 
-  // Desenha os grupos (de novo quando os dados do Google Ads chegam)
+  // Desenha os três grupos (de novo quando os dados do Google Ads chegam)
   function renderAll() {
     document.getElementById("updated").textContent = `Atualizado em ${ATUALIZADO_EM}` +
       (ads.updated ? ` · Google Ads ${ads.updated}` : "");
     Object.keys(VIEWS).forEach(render);
     renderSide();
   }
-
-  // Abas: a aba aberta fica no endereço da página (#bruno ou #isaac)
-  function showTab() {
-    aba = ABAS[location.hash.slice(1)] ? location.hash.slice(1) : "bruno";
-    Object.keys(VIEWS).forEach(v => { document.getElementById(`box-${v}`).hidden = !ABAS[aba].includes(v); });
-    document.querySelectorAll(".tabs a").forEach(a => {
-      if (a.dataset.tab === aba) a.setAttribute("aria-current", "page");
-      else a.removeAttribute("aria-current");
-    });
-    renderSide();
-  }
-  addEventListener("hashchange", showTab);
   renderAll();
-  showTab();
 
   fetch(SHEET_CSV)
     .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
