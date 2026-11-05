@@ -23,7 +23,7 @@
    Cada caixa mostra primeiro quem foi revisado mais recentemente (mesma data → ordem alfabética).
    "verificacao" (data ou "sem prazo"), "saldo: true" e "promocao" (data) marcam os prazos; a lista de tarefas à direita vem de TAREFAS.
    ===================================================================== */
-const ATUALIZADO_EM = "05/11/2026 às 17:35";
+const ATUALIZADO_EM = "05/11/2026 às 17:42";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               dono: "Elite Stage", plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
@@ -116,7 +116,7 @@ const CONTAS_GOOGLE_ADS = [
     font: 13px/1.4 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { padding: 32px 56px 44px; }
+  .wrap { padding: 32px 40px 44px; }
   @media (max-width: 600px) { .wrap { padding: 16px; } }
 
   /* Caixas de clientes uma embaixo da outra, com o cabeçalho em cima; o conjunto fica centralizado */
@@ -175,7 +175,9 @@ const CONTAS_GOOGLE_ADS = [
   section.wide { overflow-x: auto; }
   .sub { display: block; margin-top: 1px; font-size: 11.5px; font-weight: 500; letter-spacing: 0; color: var(--label); }
   /* Alerta da conta: só "Crítico" e "Atenção" ganham cor; o resto (ex.: "Tudo certo") é texto normal */
-  .alert { display: inline-block; font-size: 12.5px; font-weight: 500; }
+  .alert { display: inline-block; margin: 1px 0; font-size: 12.5px; font-weight: 500; white-space: nowrap; }
+  /* A célula do alerta não alarga a caixa: ocupa o espaço que sobra e quebra linha entre os selos */
+  .ads-strip > .alert-cell { contain: inline-size; white-space: normal; }
   .alert.ok { color: var(--soft-ink); }
   .alert.warn, .alert.crit { padding: 1px 8px; border-radius: 0; font-size: 12px; font-weight: 600; }
   .alert.warn { background: #fff0d6; color: var(--warn-ink); }
@@ -183,14 +185,14 @@ const CONTAS_GOOGLE_ADS = [
   /* Uma caixa por grupo (Recorrentes, Recorrentes · Psicólogos, Projetos · Psicólogos), uma embaixo
      da outra e com a mesma largura. A lista de tarefas (TAREFAS) fica no topo à
      direita e acompanha a rolagem; em telas menores, vai para cima das caixas */
-  .groups { display: grid; grid-template-columns: minmax(0, max-content) max-content; justify-content: center; align-items: start; gap: 30px 28px; }
+  .groups { display: grid; grid-template-columns: minmax(0, max-content) max-content; justify-content: center; align-items: start; gap: 30px 24px; }
   .groups > section { grid-column: 1; }
   .groups > .side { grid-column: 2; grid-row: 1 / span 3; } /* fica parada no topo, não acompanha a rolagem */
   .groups:has(> #side[hidden]) { grid-template-columns: minmax(0, max-content); } /* sem tarefas, as caixas ficam centralizadas */
   /* .stack: sem espaço para a lista ao lado (ver fitSide), ela vai para cima das caixas */
   .groups.stack { grid-template-columns: minmax(0, max-content); }
-  .groups.stack > .side { grid-column: 1; grid-row: 1; position: static; }
-  @media (max-width: 1460px) {
+  .groups.stack > .side { grid-column: 1; grid-row: 1; position: static; justify-self: end; width: max-content; } /* em cima, mas compacta à direita (não estica) */
+  @media (max-width: 1100px) {
     .groups { grid-template-columns: minmax(0, max-content); }
     .groups > .side { grid-column: 1; grid-row: 1; position: static; }
   }
@@ -553,11 +555,12 @@ const CONTAS_GOOGLE_ADS = [
     GROUPS.forEach(([g, off]) => PERIODS.forEach(([p, key], j) => {
       html += `<div${j === 0 ? ` class="gs"` : ""}><span class="k">${j === 0 ? `${g} · ${p}` : p}</span><span class="v">${v(r[col[key] + off])}</span></div>`;
     }));
-    const alert = (r[col.alerta] || "").trim();
-    const level = /^crítico/i.test(alert) ? "crit" : /^atenção/i.test(alert) ? "warn" : "ok";
+    // A planilha pode juntar vários alertas com " · "; cada um vira um selo, e eles quebram linha se não couberem
+    const alerts = (r[col.alerta] || "").split(/\s+·\s+/).map(a => a.trim()).filter(Boolean);
+    const level = a => /^crítico/i.test(a) ? "crit" : /^atenção/i.test(a) ? "warn" : "ok";
     const when = (r[col.atualizado] || "").trim().replace(/^(\d\d\/\d\d)\/\d{4}/, "$1");
     html += `<div class="gs alert-cell"><span class="k">Alerta da conta${when ? ` · atualizado ${esc(when)}` : ""}</span>` +
-      (alert ? `<span class="alert ${level}">${esc(alert)}</span>` : "—") + `</div>`;
+      (alerts.length ? alerts.map(a => `<span class="alert ${level(a)}">${esc(a)}</span>`).join(" ") : "—") + `</div>`;
     return `<div class="ads-strip" title="${esc(r[0].trim())} · ${esc(r[1].trim())} · ${esc((r[2] || "").trim())}">${html}</div>` + promoLine(c, r);
   }
 
