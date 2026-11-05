@@ -23,7 +23,7 @@
    Cada caixa mostra primeiro quem foi revisado mais recentemente (mesma data → ordem alfabética).
    "verificacao" (data ou "sem prazo"), "saldo: true" e "promocao" (data) marcam os prazos; a lista de tarefas à direita vem de TAREFAS.
    ===================================================================== */
-const ATUALIZADO_EM = "05/11/2026 às 16:15";
+const ATUALIZADO_EM = "05/11/2026 às 16:19";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               dono: "Elite Stage", plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
@@ -90,15 +90,19 @@ const CONTAS_GOOGLE_ADS = [
 </script>
 <style>
   :root {
-    --bg: #0f2e22; /* verde-escuro */
-    --box: #fcf4d8;
-    --box-line: #ede0b3;
+    --bg: #0f0f0f;
+    --box: #143a2b; /* caixas em verde-escuro */
+    --box-ink: #e4eee8; /* texto claro sobre o fundo e as caixas */
+    --box-label: #a3c2b1;
+    --box-line: #2a5a45;
     --surface: #ffffff;
     --ink: #1a1f24;
     --label: #8a929b;
     --soft-ink: #4a535c;
-    --line: #f0e9d0;
-    --accent: #2c6a4c;
+    --line: #e4ebe7;
+    --row-soft: #f2f6f4;
+    --accent: #8fd6ad; /* títulos das caixas */
+    --accent-strong: #2f7a57; /* barras e detalhes verdes */
     --accent-soft: #e8f3ec;
     --accent-soft-ink: #24593f;
     --warn-ink: #b45309;
@@ -125,8 +129,8 @@ const CONTAS_GOOGLE_ADS = [
   .top {
     display: flex; align-items: center; gap: 10px;
     padding: 2px 2px 18px;
-    border-bottom: 1px solid rgba(252, 244, 216, .14);
-    color: var(--box);
+    border-bottom: 1px solid rgba(255, 255, 255, .12);
+    color: var(--box-ink);
     font-size: 16px; font-weight: 700; letter-spacing: .02em;
   }
   .top svg { display: block; flex: none; }
@@ -165,7 +169,7 @@ const CONTAS_GOOGLE_ADS = [
   .promo .v { display: block; font-size: 13px; font-weight: 500; }
   .promo .sub { display: inline; margin-left: 6px; }
   .bar-row { display: flex; align-items: center; gap: 8px; height: 18px; }
-  .bar { flex: 1; height: 7px; border-radius: 0; background: #ece9df; overflow: hidden; }
+  .bar { flex: 1; height: 7px; border-radius: 0; background: #e4ebe7; overflow: hidden; }
   .bar > i { display: block; height: 100%; border-radius: inherit; background: var(--soft-ink); }
   .bar-row .pct { font-size: 12px; font-weight: 600; color: var(--soft-ink); min-width: 34px; text-align: right; }
   /* Caixas dos psicólogos ficam um pouco mais largas para caber a faixa do Google Ads */
@@ -197,44 +201,60 @@ const CONTAS_GOOGLE_ADS = [
   .tabs { display: flex; gap: 4px; flex-wrap: wrap; }
   .tabs a {
     padding: 5px 12px; border-radius: 0;
-    color: var(--box); opacity: .65; text-decoration: none;
+    color: var(--box-ink); opacity: .65; text-decoration: none;
     font-size: 14px; font-weight: 600; letter-spacing: .01em;
   }
   .tabs a:hover { opacity: 1; }
-  .tabs a[aria-current="page"] { opacity: 1; background: var(--box); color: var(--ink); }
+  .tabs a[aria-current="page"] { opacity: 1; background: var(--box); color: #fff; box-shadow: inset 0 0 0 1px var(--box-line); }
 
-  /* Aba Financeiro: total em cima, a divisão por dono numa barra e cada dono com suas parcelas */
-  .rec { width: min(1320px, calc(100vw - 112px)); display: grid; gap: 28px; font-variant-numeric: tabular-nums; }
-  .rec-hero { display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: end; gap: 12px 40px; padding: 4px 2px 2px; color: var(--box); }
-  .rec-k { display: block; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; opacity: .65; }
-  .rec-total { display: block; margin-top: 2px; font-size: 34px; font-weight: 700; line-height: 1.15; letter-spacing: -.01em; }
-  .rec-total small { margin-left: 8px; font-size: 13px; font-weight: 500; letter-spacing: 0; opacity: .65; }
-  .rec-bar { display: flex; gap: 3px; height: 10px; }
-  .rec-bar i { display: block; min-width: 4px; border-radius: 0; background: var(--box); }
-  .rec-bar i + i { background: #8a929b; }
-  .rec-legend { display: flex; flex-wrap: wrap; gap: 2px 20px; margin-top: 7px; font-size: 12.5px; }
-  .rec-legend span { white-space: nowrap; }
-  .rec-legend span + span { opacity: .7; }
-  .rec-owners { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 1fr); align-items: start; gap: 28px; }
-  .rec-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 4px 4px 16px; }
-  .rec-head h2 { margin: 0; padding: 0; }
-  .rec-valor { display: block; margin-top: 2px; font-size: 26px; font-weight: 700; line-height: 1.15; }
-  .rec-when { text-align: right; white-space: nowrap; font-size: 12px; color: var(--soft-ink); }
-  .rec-when b { display: block; font-size: 17px; font-weight: 700; color: var(--ink); }
-  .rec-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); align-items: start; gap: 16px; }
-  .rec-group { padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 0; box-shadow: var(--shadow); }
-  .rec-group h3 { display: flex; justify-content: space-between; gap: 10px; margin: 0; padding-bottom: 7px; border-bottom: 1px solid var(--box-line); font-size: 12px; font-weight: 600; color: var(--soft-ink); }
-  .rec-group h3 b { font-weight: 700; color: var(--ink); white-space: nowrap; }
-  .rec-group ul { margin: 0; padding: 0; list-style: none; }
-  .rec-group li { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); font-weight: 500; }
-  .rec-group li:last-child { border-bottom: 0; padding-bottom: 0; }
-  .rec-group li > span { min-width: 0; }
-  .rec-group li small { display: block; font-size: 11.5px; font-weight: 500; color: var(--label); }
-  .rec-group li b { font-weight: 600; white-space: nowrap; }
+  /* Aba Financeiro: resumo em cards, extrato por cliente (agrupado por dono) e, ao lado,
+     a agenda de recebimentos e a composição do valor */
+  .fin { width: min(1320px, calc(100vw - 112px)); display: grid; gap: 28px; font-variant-numeric: tabular-nums; }
+  .fin-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .kpi { padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--accent-strong); }
+  .kpi .k { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--label); }
+  .kpi .v { display: block; margin-top: 6px; font-size: 26px; font-weight: 700; line-height: 1.15; letter-spacing: -.01em; }
+  .kpi .s { display: block; margin-top: 4px; font-size: 12px; color: var(--soft-ink); }
+  .fin-cols { display: grid; grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr); align-items: start; gap: 28px; }
+  .fin-side { display: grid; gap: 16px; }
+  .fin-table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); }
+  .fin-table th { padding: 10px 16px; border-bottom: 1px solid var(--line); text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--label); }
+  .fin-table td { padding: 10px 16px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  .fin-table .num { text-align: right; white-space: nowrap; }
+  .fin-table td small { display: block; font-size: 11.5px; color: var(--label); }
+  .fin-table tr.dono td { padding-top: 14px; background: var(--row-soft); font-weight: 700; }
+  .fin-table tr.dono td small { display: inline; margin-left: 8px; font-weight: 500; }
+  .fin-table .cli { font-weight: 600; }
+  .fin-table .grp { color: var(--soft-ink); }
+  .pct { display: flex; align-items: center; gap: 10px; }
+  .pct .bar { flex: 1; min-width: 60px; height: 6px; }
+  .pct span { min-width: 30px; text-align: right; font-size: 12px; color: var(--soft-ink); }
+  .fin .bar > i { background: var(--accent-strong); }
+  .fin-card { padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); }
+  .fin-card h3 { margin: 0 0 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--label); }
+  .fin-card .meter + h3 { margin-top: 20px; }
+  .agenda { margin: 0; padding: 0; list-style: none; }
+  .agenda li { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+  .agenda li:first-child { border-top: 0; padding-top: 0; }
+  .agenda .dia { padding: 6px 0; text-align: center; background: var(--row-soft); line-height: 1.1; }
+  .agenda .dia b { display: block; font-size: 19px; }
+  .agenda .dia small { font-size: 11px; color: var(--soft-ink); }
+  .agenda .quem { font-weight: 600; }
+  .agenda .quem small { display: block; font-size: 11.5px; font-weight: 500; color: var(--label); }
+  .agenda .quanto { font-weight: 700; white-space: nowrap; }
+  .meter + .meter { margin-top: 12px; }
+  .meter .lin { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 5px; font-weight: 500; }
+  .meter .lin b { white-space: nowrap; }
+  .meter .bar { display: block; height: 7px; }
   @media (max-width: 1000px) {
-    .rec { width: 100%; }
-    .rec-hero { grid-template-columns: minmax(0, 1fr); }
-    .rec-owners { grid-template-columns: minmax(0, 1fr); }
+    .fin { width: 100%; }
+    .fin-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .fin-cols { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .fin-kpis { grid-template-columns: minmax(0, 1fr); }
+    .fin-table .grp, .fin-table .col-pct { display: none; }
+    .fin-table th, .fin-table td { padding-left: 12px; padding-right: 12px; }
   }
   .side {
     min-width: 230px;
@@ -264,7 +284,7 @@ const CONTAS_GOOGLE_ADS = [
     margin: 0 0 8px 2px; font-size: 12px; font-weight: 600; color: var(--accent);
     text-transform: uppercase; letter-spacing: .08em;
   }
-  section h2 span { color: var(--label); font-weight: 500; text-transform: none; letter-spacing: 0; }
+  section h2 span { color: var(--box-label); font-weight: 500; text-transform: none; letter-spacing: 0; }
 
   /* As colunas são compartilhadas por todos os cards da seção (subgrid),
      então cada coluna tem a largura do seu maior conteúdo e nada quebra linha. */
@@ -307,11 +327,11 @@ const CONTAS_GOOGLE_ADS = [
     display: flex; align-items: center; gap: 4px;
     width: 100%; padding: 4px 14px;
     border: 0; border-left: 1px solid transparent; background: none;
-    font: inherit; font-size: 11.5px; font-weight: 500; color: var(--label);
+    font: inherit; font-size: 11.5px; font-weight: 500; color: var(--box-label);
     white-space: nowrap; cursor: pointer; text-align: left;
   }
-  .sort:hover { color: var(--ink); }
-  .sort[aria-sort="ascending"], .sort[aria-sort="descending"] { color: var(--ink); font-weight: 600; }
+  .sort:hover { color: #fff; }
+  .sort[aria-sort="ascending"], .sort[aria-sort="descending"] { color: #fff; font-weight: 600; }
   .sort .arrow { font-size: 10px; opacity: 0; }
   .sort:hover .arrow { opacity: .4; }
   .sort[aria-sort="ascending"] .arrow, .sort[aria-sort="descending"] .arrow { opacity: 1; }
@@ -340,14 +360,14 @@ const CONTAS_GOOGLE_ADS = [
     text-transform: uppercase; letter-spacing: .05em;
   }
 
-  .top .updated { margin-left: auto; padding: 3px 10px; border: 1px solid rgba(252, 244, 216, .25); border-radius: 0; font-size: 12.5px; font-weight: 500; letter-spacing: 0; }
+  .top .updated { margin-left: auto; padding: 3px 10px; border: 1px solid rgba(255, 255, 255, .2); border-radius: 0; font-size: 12.5px; font-weight: 500; letter-spacing: 0; }
 
   /* Telas menores: cada cliente vira um bloco, com rótulos em cada campo */
   @media (max-width: 1000px) {
     body { font-size: 14px; }
     .cards { display: flex; flex-direction: column; gap: 9px; }
     .card.head { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; }
-    .card.head .sort { width: auto; padding: 3px 9px; border: 1px solid var(--box-line); border-radius: 0; background: var(--surface); }
+    .card.head .sort { width: auto; padding: 3px 9px; border: 1px solid var(--box-line); border-radius: 0; background: var(--surface); color: var(--soft-ink); }
     .card { grid-template-columns: repeat(6, 1fr); gap: 6px 12px; padding: 12px 14px; border-radius: 0; }
     .c { grid-column: span 2; padding: 0; border-left: 0; }
     .c.name { grid-column: 1 / -1; font-size: 15px; }
@@ -378,7 +398,7 @@ const CONTAS_GOOGLE_ADS = [
       <svg viewBox="0 0 64 64" width="26" height="26" aria-hidden="true">
         <clipPath id="avatar-clip"><circle cx="32" cy="32" r="32"/></clipPath>
         <g clip-path="url(#avatar-clip)">
-          <rect width="64" height="64" fill="#2c6a4c"/>
+          <rect width="64" height="64" fill="#2f7a57"/>
           <circle cx="32" cy="25" r="11" fill="#fff"/>
           <path d="M9 68c0-15 10-25 23-25s23 10 23 25z" fill="#fff"/>
         </g>
@@ -391,7 +411,7 @@ const CONTAS_GOOGLE_ADS = [
     </header>
 
     <!-- Uma caixa por grupo, uma embaixo da outra; a tabelinha de pendências fica no topo à direita -->
-    <div class="rec" id="receber" hidden></div> <!-- aba Financeiro -->
+    <div class="fin" id="receber" hidden></div> <!-- aba Financeiro -->
 
     <div class="groups" id="clientes">
       <aside class="side" id="side" aria-label="Tarefas"></aside>
@@ -647,27 +667,53 @@ const CONTAS_GOOGLE_ADS = [
     return d === 0 ? "é hoje" : d === 1 ? "é amanhã" : `faltam ${d} dias`;
   }
   function renderReceber() {
-    const todos = Object.values(VIEWS).flatMap(v => v.data);
+    const todos = Object.values(VIEWS).flatMap(v => v.data.map(c => ({ ...c, grupo: v.title })));
     const total = somaMensal(todos);
+    const pct = v => total ? Math.round(v / total * 100) : 0;
     const donos = RECEBIMENTOS.map(r => {
-      const lista = todos.filter(c => donoDe(c) === r.dono);
+      const lista = todos.filter(c => donoDe(c) === r.dono)
+        .sort((a, b) => (b.mensal || 0) - (a.mensal || 0) || a.nome.localeCompare(b.nome, "pt-BR"));
       return { ...r, lista, total: somaMensal(lista), data: proximaData(r.dia) };
     });
-    const hero = `<div class="rec-hero"><div><span class="rec-k">Total por mês</span>` +
-      `<span class="rec-total">${money(total)}<small>${qtd(todos.length)}</small></span></div>` +
-      `<div><div class="rec-bar">${donos.map(d => `<i style="flex:${d.total || 1} 1 0"></i>`).join("")}</div>` +
-      `<div class="rec-legend">${donos.map(d => `<span>${esc(d.dono)}: ${money(d.total)} (${Math.round(d.total / total * 100)}%)</span>`).join("")}</div></div></div>`;
-    const caixas = donos.map(d => {
-      const grupos = Object.values(VIEWS).map(v => ({ title: v.title, lista: v.data.filter(c => donoDe(c) === d.dono) }))
-        .filter(g => g.lista.length).map(g => `<div class="rec-group"><h3>${esc(g.title)} <b>${money(somaMensal(g.lista))}</b></h3><ul>` +
-          g.lista.slice().sort((a, b) => (b.mensal || 0) - (a.mensal || 0) || a.nome.localeCompare(b.nome, "pt-BR"))
-            .map(c => `<li><span>${esc(c.nome)}<small>${esc(c.segmento || "")}</small></span><b>${money(c.mensal || 0)}</b></li>`).join("") +
-          `</ul></div>`).join("");
-      return `<section><div class="rec-head"><div><h2>${esc(d.dono)} <span>${qtd(d.lista.length)}</span></h2><span class="rec-valor">${money(d.total)}</span></div>` +
-        `<div class="rec-when">Recebe em<b>${fmtDate(d.data).slice(0, 5)}</b>${faltam(d.data)}</div></div>` +
-        `<div class="rec-groups">${grupos}</div></section>`;
-    }).join("");
-    document.getElementById("receber").innerHTML = hero + `<div class="rec-owners">${caixas}</div>`;
+    const agenda = donos.slice().sort((a, b) => a.data - b.data);
+    const prox = agenda[0];
+    const dm = t => fmtDate(t).slice(0, 5);
+    const barra = p => `<span class="bar"><i style="width:${p}%"></i></span>`;
+
+    // Resumo: total, próximo recebimento e um card por dono
+    const kpi = (k, v, s) => `<div class="kpi"><span class="k">${k}</span><span class="v">${v}</span><span class="s">${s}</span></div>`;
+    const kpis = kpi("Total por mês", money(total), qtd(todos.length)) +
+      kpi("Próximo recebimento", money(prox.total), `${esc(prox.dono)} · ${dm(prox.data)} · ${faltam(prox.data)}`) +
+      donos.map(d => kpi(esc(d.dono), money(d.total), `dia ${dm(d.data)} · ${qtd(d.lista.length)}`)).join("");
+
+    // Extrato: uma linha por cliente, agrupado por dono, com a parte de cada um no total
+    const parte = v => `<td class="col-pct"><div class="pct">${barra(pct(v))}<span>${pct(v)}%</span></div></td>`;
+    const linhas = donos.map(d =>
+      `<tr class="dono"><td colspan="2">${esc(d.dono)}<small>recebe dia ${dm(d.data)} · ${faltam(d.data)}</small></td>` +
+      `<td class="num">${money(d.total)}</td>${parte(d.total)}</tr>` +
+      d.lista.map(c => `<tr><td class="cli">${esc(c.nome)}<small>${esc(c.segmento || "")}</small></td>` +
+        `<td class="grp">${esc(c.grupo)}</td><td class="num">${money(c.mensal || 0)}</td>${parte(c.mensal || 0)}</tr>`).join("")
+    ).join("");
+    const extrato = `<table class="fin-table"><thead><tr><th>Cliente</th><th class="grp">Grupo</th>` +
+      `<th class="num">Mensalidade</th><th class="col-pct">Parte do total</th></tr></thead><tbody>${linhas}</tbody></table>`;
+
+    // Ao lado: agenda dos recebimentos (o mais próximo primeiro) e a composição por dono e por grupo
+    const agendaHtml = `<ul class="agenda">` + agenda.map(d => {
+      const [dia, mes] = dm(d.data).split("/");
+      return `<li><span class="dia"><b>${dia}</b><small>/${mes}</small></span>` +
+        `<span class="quem">${esc(d.dono)}<small>${faltam(d.data)} · ${qtd(d.lista.length)}</small></span><span class="quanto">${money(d.total)}</span></li>`;
+    }).join("") + `</ul>`;
+    const meter = (rotulo, v) => `<div class="meter"><div class="lin"><span>${esc(rotulo)}</span><b>${money(v)} · ${pct(v)}%</b></div>${barra(pct(v))}</div>`;
+    const porDono = donos.map(d => meter(d.dono, d.total)).join("");
+    const porGrupo = Object.values(VIEWS).map(v => meter(v.title, somaMensal(v.data))).join("");
+
+    document.getElementById("receber").innerHTML =
+      `<section><h2>Resumo do mês</h2><div class="fin-kpis">${kpis}</div></section>` +
+      `<div class="fin-cols"><section><h2>Extrato por cliente <span>${qtd(todos.length)}</span></h2>${extrato}</section>` +
+      `<section><h2>Recebimentos</h2><div class="fin-side">` +
+      `<div class="fin-card"><h3>Agenda</h3>${agendaHtml}</div>` +
+      `<div class="fin-card"><h3>Por dono</h3>${porDono}<h3>Por grupo</h3>${porGrupo}</div>` +
+      `</div></section></div>`;
   }
 
   // Abas: a aba aberta fica no endereço da página (#clientes ou #financeiro; #receber ainda funciona)
