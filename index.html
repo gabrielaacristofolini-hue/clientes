@@ -23,7 +23,7 @@
    Cada caixa mostra primeiro quem foi revisado mais recentemente (mesma data → ordem alfabética).
    "verificacao" (data ou "sem prazo"), "saldo: true" e "promocao" (data) marcam os prazos; a lista de tarefas à direita vem de TAREFAS.
    ===================================================================== */
-const ATUALIZADO_EM = "05/11/2026 às 16:19";
+const ATUALIZADO_EM = "05/11/2026 às 16:21";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               dono: "Elite Stage", plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
@@ -101,7 +101,7 @@ const CONTAS_GOOGLE_ADS = [
     --soft-ink: #4a535c;
     --line: #e4ebe7;
     --row-soft: #f2f6f4;
-    --accent: #8fd6ad; /* títulos das caixas */
+    --accent: #f0d78c; /* títulos das caixas (dourado claro, contrasta com o verde) */
     --accent-strong: #2f7a57; /* barras e detalhes verdes */
     --accent-soft: #e8f3ec;
     --accent-soft-ink: #24593f;
@@ -111,7 +111,7 @@ const CONTAS_GOOGLE_ADS = [
   }
 
   * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; color-scheme: light; }
+  html { -webkit-text-size-adjust: 100%; color-scheme: light; scrollbar-gutter: stable; } /* a barra de rolagem não empurra a página ao trocar de aba */
   body {
     margin: 0;
     background: var(--bg);
@@ -123,7 +123,8 @@ const CONTAS_GOOGLE_ADS = [
   @media (max-width: 600px) { .wrap { padding: 16px; } }
 
   /* Caixas de clientes uma embaixo da outra, com o cabeçalho em cima; o conjunto fica centralizado */
-  .layout { display: grid; grid-template-columns: minmax(0, max-content); justify-content: center; align-items: start; gap: 26px; }
+  /* Largura fixa (igual nas duas abas), para o cabeçalho não mudar de lugar ao trocar de aba */
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr); width: min(1460px, 100%); margin: 0 auto; align-items: start; gap: 26px; }
   .top { grid-column: 1 / -1; }
 
   .top {
@@ -209,7 +210,7 @@ const CONTAS_GOOGLE_ADS = [
 
   /* Aba Financeiro: resumo em cards, extrato por cliente (agrupado por dono) e, ao lado,
      a agenda de recebimentos e a composição do valor */
-  .fin { width: min(1320px, calc(100vw - 112px)); display: grid; gap: 28px; font-variant-numeric: tabular-nums; }
+  .fin { width: 100%; display: grid; gap: 28px; font-variant-numeric: tabular-nums; }
   .fin-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
   .kpi { padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--accent-strong); }
   .kpi .k { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--label); }
@@ -247,7 +248,7 @@ const CONTAS_GOOGLE_ADS = [
   .meter .lin b { white-space: nowrap; }
   .meter .bar { display: block; height: 7px; }
   @media (max-width: 1000px) {
-    .fin { width: 100%; }
+
     .fin-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .fin-cols { grid-template-columns: minmax(0, 1fr); }
   }
@@ -411,9 +412,9 @@ const CONTAS_GOOGLE_ADS = [
     </header>
 
     <!-- Uma caixa por grupo, uma embaixo da outra; a tabelinha de pendências fica no topo à direita -->
-    <div class="fin" id="receber" hidden></div> <!-- aba Financeiro -->
+    <div class="fin" id="aba-financeiro" hidden></div> <!-- aba Financeiro -->
 
-    <div class="groups" id="clientes">
+    <div class="groups" id="aba-clientes">
       <aside class="side" id="side" aria-label="Tarefas"></aside>
 
       <section id="box-rec">
@@ -707,7 +708,7 @@ const CONTAS_GOOGLE_ADS = [
     const porDono = donos.map(d => meter(d.dono, d.total)).join("");
     const porGrupo = Object.values(VIEWS).map(v => meter(v.title, somaMensal(v.data))).join("");
 
-    document.getElementById("receber").innerHTML =
+    document.getElementById("aba-financeiro").innerHTML =
       `<section><h2>Resumo do mês</h2><div class="fin-kpis">${kpis}</div></section>` +
       `<div class="fin-cols"><section><h2>Extrato por cliente <span>${qtd(todos.length)}</span></h2>${extrato}</section>` +
       `<section><h2>Recebimentos</h2><div class="fin-side">` +
@@ -719,8 +720,8 @@ const CONTAS_GOOGLE_ADS = [
   // Abas: a aba aberta fica no endereço da página (#clientes ou #financeiro; #receber ainda funciona)
   function showTab() {
     const aba = ["#financeiro", "#receber"].includes(location.hash) ? "receber" : "clientes";
-    document.getElementById("clientes").hidden = aba !== "clientes";
-    document.getElementById("receber").hidden = aba !== "receber";
+    document.getElementById("aba-clientes").hidden = aba !== "clientes"; // ids diferentes do #clientes / #financeiro do endereço, para o navegador não rolar a página ao trocar de aba
+    document.getElementById("aba-financeiro").hidden = aba !== "receber";
     document.querySelectorAll(".tabs a").forEach(a => {
       if (a.dataset.tab === aba) a.setAttribute("aria-current", "page");
       else a.removeAttribute("aria-current");
