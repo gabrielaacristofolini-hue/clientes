@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Clientes Bruno</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="alternate icon" type="image/png" href="favicon.png">
+<script>
+/* =====================================================================
+   Página do Bruno: só os clientes dele, em versão simples.
+   Aqui só entra o que ele pode ver: nada de mensalidade, tarefas ou histórico
+   de otimizações. "otimizacao" é sempre só a mais recente.
+   Os números (situação, gasto, conversões, promoção) vêm ao vivo da planilha.
+   ===================================================================== */
+const ATUALIZADO_EM = "09/11/2026 às 14:48";
+
+const GRUPOS = [
+  { titulo: "Recorrentes", clientes: [
+    { nome: "VILA 86", segmento: "Moda streetwear", plataformas: ["meta", "google"], revisao: "03/11/2026",
+      cenario: "O foco de vendas está no Google, de onde vem a maior parte dos resultados. No Instagram, o foco atual é distribuição de conteúdo e visitas ao perfil. Referência: pelo menos 1 venda por dia.",
+      otimizacao: "Campanha de vendas do Meta pausada e orçamento da campanha de vendas do Google aumentado." },
+    { nome: "061 RACING", segmento: "Mecânica de alta performance", plataformas: ["meta"], revisao: "26/10/2026",
+      cenario: "Campanhas em acompanhamento, com atenção à qualidade dos contatos recebidos.",
+      otimizacao: "Revisão das campanhas e acompanhamento da qualidade dos contatos." },
+  ] },
+  { titulo: "Recorrentes · Psicólogos", clientes: [
+    { nome: "NARA", segmento: "Psicologia", plataformas: ["google"], conta: "775-492-4225", promocao: "24/11/2026", revisao: "05/11/2026",
+      cenario: "Conta regularizada e campanhas retomadas em 05/11. Em acompanhamento de perto, para confirmar os próximos contatos e o ritmo de gasto.",
+      otimizacao: "Retomada das campanhas após a regularização e a verificação da conta." },
+    { nome: "NATHALIA", segmento: "Psicologia", plataformas: ["google"], conta: "359-065-0990", revisao: "05/11/2026",
+      cenario: "Campanhas no ar. Esta conta não participa da promoção do Google.",
+      otimizacao: "Ajustes em termos de pesquisa, público-alvo e palavras-chave." },
+    { nome: "CLÉCIA", segmento: "Psicologia", plataformas: ["google"], conta: "128-846-8174", promocao: "20/11/2026", revisao: "29/10/2026",
+      cenario: "Campanhas com uma média boa. Verificação da conta prevista até 16/11.",
+      otimizacao: "Ajustes em palavras-chave, anúncios, termos de pesquisa e orçamento." },
+    { nome: "HUGO", segmento: "Psicologia", plataformas: ["google"], conta: "587-222-5596", promocao: "20/11/2026", revisao: "29/10/2026",
+      cenario: "Recarga feita em 29/10 e campanhas de volta ao ar.",
+      otimizacao: "Novos grupos de anúncios e palavras-chave, ajustes na segmentação e nos anúncios, e negativação de termos de pesquisa." },
+  ] },
+  { titulo: "Projetos · Psicólogos", clientes: [
+    { nome: "SHEILA", segmento: "Psicologia", plataformas: ["google"], conta: "353-831-5205", promocao: "20/11/2026", revisao: "29/10/2026",
+      cenario: "Recarga feita em 29/10 e campanhas de volta ao ar.",
+      otimizacao: "Manutenção: palavras-chave removidas e adicionadas, termos de pesquisa e ajustes nos anúncios." },
+    { nome: "CARMEM", segmento: "Psicologia", plataformas: ["google"], conta: "918-578-8000", promocao: "27/11/2026", revisao: "29/10/2026",
+      cenario: "Campanhas de volta ao ar em novembro, depois da pausa. Verificação da conta por selfie prevista até 11/11.",
+      otimizacao: "Ajustes em palavras-chave, termos de pesquisa, anúncios e lista de palavras-chave negativas." },
+    { nome: "THAYNARA", segmento: "Psicologia", plataformas: ["google"], conta: "337-837-5511", promocao: "31/10/2026", promocaoNota: "aguardando análise do Google", revisao: "29/10/2026",
+      cenario: "Campanhas pausadas. A meta da promoção foi atingida e a ideia é voltar a investir quando os créditos do Google entrarem.",
+      otimizacao: "Revisão da conta; campanhas seguem pausadas até a entrada dos créditos." },
+    { nome: "DANIELLE", segmento: "Psicologia", plataformas: ["google"], conta: "150-686-1633", promocao: "10/11/2026", revisao: "29/10/2026",
+      cenario: "Conta sem verificação pendente e perto da meta da promoção.",
+      otimizacao: "Ajustes em público-alvo, palavras-chave, anúncios e termos de pesquisa." },
+    { nome: "ALICE", segmento: "Psicologia", plataformas: ["google"], conta: "357-411-5648", promocao: "12/11/2026", revisao: "29/10/2026",
+      cenario: "Orçamento calibrado para garantir os créditos da promoção sem gastar além do necessário. A conta tem verificação pendente, ainda sem prazo.",
+      otimizacao: "Ajuste de orçamento e ajustes em palavras-chave e termos de pesquisa." },
+    { nome: "YASMIN", segmento: "Psicologia", plataformas: ["google"], conta: "756-159-1841", promocao: "14/11/2026", revisao: "29/10/2026",
+      cenario: "Campanhas no ar, mantendo o que está convertendo. Verificação da conta (confirmação de telefone) prevista até 20/11.",
+      otimizacao: "Ajustes em anúncios, palavras-chave e termos de pesquisa." },
+    { nome: "THAIS", segmento: "Psicologia", plataformas: ["google"], revisao: "",
+      cenario: "Site pronto e domínio registrado. Falta publicar o site no domínio e criar a conta de anúncios; as campanhas ainda não começaram.",
+      otimizacao: "" },
+  ] },
+];
+</script>
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --box: #143a2b;
+    --box-ink: #e4eee8;
+    --box-label: #a3c2b1;
+    --box-line: #2a5a45;
+    --surface: #ffffff;
+    --ink: #1a1f24;
+    --label: #8a929b;
+    --soft-ink: #4a535c;
+    --line: #e4ebe7;
+    --title: #f0d78c;
+    --bar: #2f7a57;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; color-scheme: light; scrollbar-gutter: stable; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 13px/1.4 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { padding: 32px 40px 44px; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr); width: min(1240px, 100%); margin: 0 auto; gap: 26px; }
+
+  .top {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    padding: 2px 2px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, .12);
+    color: var(--box-ink);
+    font-size: 16px; font-weight: 700; letter-spacing: .02em;
+  }
+  .top svg { display: block; flex: none; }
+  .updated { margin-left: auto; padding: 3px 10px; border: 1px solid rgba(255, 255, 255, .2); font-size: 12.5px; font-weight: 500; letter-spacing: 0; }
+
+  section { min-width: 0; background: var(--box); border: 1px solid var(--box-line); padding: 16px 20px 20px; }
+  section + section { margin-top: 30px; }
+  section h2 {
+    display: flex; align-items: baseline; gap: 8px;
+    margin: 0 0 12px 2px; font-size: 12px; font-weight: 600; color: var(--title);
+    text-transform: uppercase; letter-spacing: .08em;
+  }
+  section h2 span { color: var(--box-label); font-weight: 500; text-transform: none; letter-spacing: 0; }
+  .cards { display: grid; gap: 10px; }
+
+  .card { padding: 12px 16px 13px; background: var(--surface); border: 1px solid var(--line); }
+  .dados { display: grid; grid-template-columns: 220px 150px 120px 100px 90px 100px minmax(150px, 1fr); align-items: center; font-variant-numeric: tabular-nums; }
+  .dados > div { min-width: 0; padding: 0 14px; border-left: 1px solid var(--line); white-space: nowrap; }
+  .dados > div:first-child { padding-left: 0; border-left: 0; }
+  .k { display: block; font-size: 11px; color: var(--label); }
+  .v { display: block; font-size: 13px; font-weight: 500; }
+  .nome { font-size: 13px; font-weight: 700; letter-spacing: .01em; }
+  .seg { display: block; font-size: 11.5px; font-weight: 500; letter-spacing: 0; color: var(--label); }
+  .plat { display: inline-block; width: 14px; height: 14px; margin-left: 6px; vertical-align: -2px; }
+  .plat + .plat { margin-left: 4px; }
+  .plat svg { display: block; width: 100%; height: 100%; }
+  .barra { display: block; height: 6px; margin-top: 4px; background: var(--line); }
+  .barra i { display: block; height: 100%; background: var(--bar); }
+
+  .texto { margin: 10px 0 0; padding-top: 8px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--soft-ink); }
+  .texto + .texto { margin-top: 5px; padding-top: 0; border-top: 0; }
+  .texto b { margin-right: 4px; font-size: 11px; font-weight: 700; color: var(--label); text-transform: uppercase; letter-spacing: .04em; }
+
+  @media (max-width: 1000px) {
+    .wrap { padding: 16px; }
+    .updated { margin-left: 0; }
+    section { padding: 12px; }
+    .dados { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-items: start; }
+    .dados > div { padding: 0; border-left: 0; white-space: normal; }
+    .dados > div:first-child, .dados > .promo { grid-column: 1 / -1; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="layout">
+    <header class="top">
+      <svg width="30" height="30" viewBox="0 0 64 64" aria-hidden="true">
+        <defs><clipPath id="avatar-clip"><circle cx="32" cy="32" r="32"/></clipPath></defs>
+        <g clip-path="url(#avatar-clip)">
+          <rect width="64" height="64" fill="#2f7a57"/>
+          <circle cx="32" cy="25" r="11" fill="#fff"/>
+          <path d="M9 68c0-15 10-25 23-25s23 10 23 25z" fill="#fff"/>
+        </g>
+      </svg>
+      <span>Clientes Bruno</span>
+      <span class="updated" id="updated"></span>
+    </header>
+    <main id="grupos"></main>
+  </div>
+</div>
+
+<script>
+(function () {
+  const DAY = 86400000;
+  const META = 1200; // promoção do Google: gastar R$ 1.200 até o prazo
+
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const parseDate = s => { if (!s) return null; const [d, m, y] = s.split("/").map(Number); return Date.UTC(y, m - 1, d); };
+  const curta = s => s ? s.slice(0, 5) : "";
+  const toNumber = s => parseFloat(String(s || "").replace(/[^\d,-]/g, "").replace(",", ".")) || 0;
+  const today = () => { const n = new Date(); return Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()); };
+
+  const PLATFORMS = {
+    google: { title: "Google Ads", svg: `<svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>` },
+    meta: { title: "Meta Ads", svg: `<svg viewBox="0 0 24 24"><path d="M12 12c-2-3-3.6-5.2-5.6-5.2S2.8 9 2.8 12s1.6 5.2 3.6 5.2S10 15 12 12s3.6-5.2 5.6-5.2 3.6 2.2 3.6 5.2-1.6 5.2-3.6 5.2S14 15 12 12z" fill="none" stroke="#0866FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
+  };
+
+  /* Números ao vivo da aba "Geral" da planilha; só as contas listadas em GRUPOS são usadas */
+  const SHEET_CSV = "https://docs.google.com/spreadsheets/d/14wsRMmTuI7v7nT2yy6AXYKzlhBHNkznw4XXsen69xxE/gviz/tq?tqx=out:csv&sheet=Geral";
+  const ads = { porConta: {}, col: null, status: "loading", updated: "" };
+
+  function parseCSV(text) {
+    const rows = []; let row = [], cur = "", q = false;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (q) {
+        if (ch === '"' && text[i + 1] === '"') { cur += '"'; i++; }
+        else if (ch === '"') q = false;
+        else cur += ch;
+      } else if (ch === '"') q = true;
+      else if (ch === ",") { row.push(cur); cur = ""; }
+      else if (ch === "\n") { row.push(cur); rows.push(row); row = []; cur = ""; }
+      else if (ch !== "\r") cur += ch;
+    }
+    if (cur || row.length) { row.push(cur); rows.push(row); }
+    return rows;
+  }
+
+  function colunas(header) {
+    const h = header.map(s => (s || "").trim().toUpperCase());
+    const find = re => h.findIndex(s => re.test(s));
+    return { semana: find(/^ÚLTIMOS 7 DIAS/), total: find(/^TODO O PERÍODO/), atualizado: find(/^ATUALIZADO/) };
+  }
+
+  const celula = (k, v, cls) => `<div${cls ? ` class="${cls}"` : ""}><span class="k">${k}</span><span class="v">${v}</span></div>`;
+
+  function promocao(c, r) {
+    if (!c.promocao || !r || ads.col.total < 0) return celula("Promoção Google", "—", "promo");
+    const gasto = toNumber(r[ads.col.total]);
+    const pct = Math.min(Math.floor(gasto / META * 100), 100);
+    const prazo = parseDate(c.promocao);
+    const estado = gasto >= META ? `Meta atingida${c.promocaoNota ? ` – ${esc(c.promocaoNota)}` : ""}`
+      : prazo < today() ? `${pct}% · prazo encerrado` : `${pct}% · até ${curta(c.promocao)}`;
+    return `<div class="promo"><span class="k">Promoção Google</span><span class="v">${estado}</span><span class="barra"><i style="width:${pct}%"></i></span></div>`;
+  }
+
+  function dados(c) {
+    const r = c.conta ? ads.porConta[c.conta] : null;
+    const v = x => !x || !x.trim() || x.trim() === "–" ? "—" : esc(x.trim());
+    let situacao = "—", gasto = "—", conv = "—", custo = "—";
+    if (c.conta && ads.status === "loading") situacao = "Carregando…";
+    if (r) {
+      situacao = v((r[2] || "").split("·").pop());
+      const s = ads.col.semana;
+      gasto = v(r[s]); conv = v(r[s + 6]); custo = v(r[s + 8]);
+    }
+    return celula("Situação", situacao) +
+      celula("Última otimização", c.revisao ? esc(c.revisao) : "—") +
+      celula("Gasto · 7 dias", gasto) + celula("Conv. · 7 dias", conv) + celula("Custo/conv.", custo) +
+      promocao(c, r);
+  }
+
+  function card(c) {
+    const plats = (c.plataformas || []).map(p => `<span class="plat" title="${PLATFORMS[p].title}">${PLATFORMS[p].svg}</span>`).join("");
+    return `<article class="card"><div class="dados"><div><span class="nome">${esc(c.nome)}${plats}</span><span class="seg">${esc(c.segmento)}</span></div>${dados(c)}</div>` +
+      `<p class="texto"><b>Cenário</b>${esc(c.cenario)}</p>` +
+      (c.otimizacao ? `<p class="texto"><b>Última otimização</b>${esc(c.otimizacao)}</p>` : "") + `</article>`;
+  }
+
+  // Otimização mais recente primeiro; mesma data → ordem alfabética; sem data no fim
+  const ordem = lista => lista.slice().sort((a, b) =>
+    (parseDate(b.revisao) ?? -Infinity) - (parseDate(a.revisao) ?? -Infinity) || a.nome.localeCompare(b.nome, "pt-BR"));
+
+  function render() {
+    document.getElementById("updated").textContent = `Atualizado em ${ATUALIZADO_EM}` + (ads.updated ? ` · Google Ads ${ads.updated}` : "");
+    document.getElementById("grupos").innerHTML = GRUPOS.map(g =>
+      `<section><h2>${esc(g.titulo)} <span>${g.clientes.length} cliente${g.clientes.length === 1 ? "" : "s"}</span></h2>` +
+      `<div class="cards">${ordem(g.clientes).map(card).join("")}</div></section>`).join("");
+  }
+  render();
+
+  const contas = GRUPOS.flatMap(g => g.clientes.map(c => c.conta)).filter(Boolean);
+  fetch(SHEET_CSV)
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+    .then(text => {
+      const all = parseCSV(text);
+      ads.col = colunas(all[0] || []);
+      const rows = all.slice(1).filter(r => r[1] && contas.includes(r[1].trim()));
+      ads.porConta = Object.fromEntries(rows.map(r => [r[1].trim(), r]));
+      const stamp = s => { const m = (s || "").match(/(\d\d)\/(\d\d)\/(\d{4}) (\d\d):(\d\d)/); return m ? +(m[3] + m[2] + m[1] + m[4] + m[5]) : 0; };
+      const latest = rows.reduce((a, r) => stamp(r[ads.col.atualizado]) > stamp(a) ? r[ads.col.atualizado] : a, "");
+      const m = latest.match(/(\d\d\/\d\d)\/\d{4} (\d\d:\d\d)/);
+      ads.updated = m ? `de ${m[1]} às ${m[2]}` : "";
+      ads.status = "ok";
+    })
+    .catch(() => { ads.status = "error"; })
+    .then(render);
+})();
+</script>
+</body>
+</html>
