@@ -10,55 +10,55 @@
 <script>
 /* =====================================================================
    Página do Bruno: só os clientes dele, em versão simples.
-   Aqui só entra o que ele pode ver: nada de mensalidade, tarefas ou histórico
+   Aqui só entra o que ele pode ver: situação, mensalidade, parcelas, cenário e a última otimização; nada de tarefas ou histórico
    de otimizações. "otimizacao" é sempre só a mais recente.
-   Os números (situação, gasto e conversões) vêm ao vivo da planilha.
+   A situação de cada conta vem ao vivo da planilha. "parcelas" é quantas já foram pagas (psicólogos).
    ===================================================================== */
-const ATUALIZADO_EM = "09/11/2026 às 14:52";
+const ATUALIZADO_EM = "09/11/2026 às 14:54";
 
 const GRUPOS = [
   { titulo: "Recorrentes", clientes: [
-    { nome: "VILA 86", segmento: "Moda streetwear", plataformas: ["meta", "google"], revisao: "03/11/2026",
+    { nome: "VILA 86", segmento: "Moda streetwear", plataformas: ["meta", "google"], mensal: 200, revisao: "03/11/2026",
       cenario: "O foco de vendas está no Google, de onde vem a maior parte dos resultados. No Instagram, o foco atual é distribuição de conteúdo e visitas ao perfil. Referência: pelo menos 1 venda por dia.",
       otimizacao: "Campanha de vendas do Meta pausada e orçamento da campanha de vendas do Google aumentado." },
-    { nome: "061 RACING", segmento: "Mecânica de alta performance", plataformas: ["meta"], revisao: "26/10/2026",
+    { nome: "061 RACING", segmento: "Mecânica de alta performance", plataformas: ["meta"], mensal: 200, revisao: "26/10/2026",
       cenario: "Campanhas em acompanhamento, com atenção à qualidade dos contatos recebidos.",
       otimizacao: "Revisão das campanhas e acompanhamento da qualidade dos contatos." },
   ] },
   { titulo: "Recorrentes · Psicólogos", clientes: [
-    { nome: "NARA", segmento: "Psicologia", plataformas: ["google"], conta: "775-492-4225", revisao: "05/11/2026",
-      cenario: "Conta regularizada e campanhas retomadas em 05/11. Em acompanhamento de perto, para confirmar os próximos contatos e o ritmo de gasto.",
+    { nome: "NARA", segmento: "Psicologia", plataformas: ["google"], conta: "775-492-4225", mensal: 150, parcelas: 0, revisao: "05/11/2026",
+      cenario: "Conta regularizada e campanhas retomadas em 05/11. Em acompanhamento de perto, para confirmar os próximos contatos e o ritmo das campanhas.",
       otimizacao: "Retomada das campanhas após a regularização e a verificação da conta." },
-    { nome: "NATHALIA", segmento: "Psicologia", plataformas: ["google"], conta: "359-065-0990", revisao: "05/11/2026",
+    { nome: "NATHALIA", segmento: "Psicologia", plataformas: ["google"], conta: "359-065-0990", mensal: 150, parcelas: 0, revisao: "05/11/2026",
       cenario: "Campanhas no ar.",
       otimizacao: "Ajustes em termos de pesquisa, público-alvo e palavras-chave." },
-    { nome: "CLÉCIA", segmento: "Psicologia", plataformas: ["google"], conta: "128-846-8174", revisao: "29/10/2026",
+    { nome: "CLÉCIA", segmento: "Psicologia", plataformas: ["google"], conta: "128-846-8174", mensal: 150, parcelas: 0, revisao: "29/10/2026",
       cenario: "Campanhas com uma média boa. Verificação da conta prevista até 16/11.",
       otimizacao: "Ajustes em palavras-chave, anúncios, termos de pesquisa e orçamento." },
-    { nome: "HUGO", segmento: "Psicologia", plataformas: ["google"], conta: "587-222-5596", revisao: "29/10/2026",
+    { nome: "HUGO", segmento: "Psicologia", plataformas: ["google"], conta: "587-222-5596", mensal: 150, parcelas: 0, revisao: "29/10/2026",
       cenario: "Recarga feita em 29/10 e campanhas de volta ao ar.",
       otimizacao: "Novos grupos de anúncios e palavras-chave, ajustes na segmentação e nos anúncios, e negativação de termos de pesquisa." },
   ] },
   { titulo: "Projetos · Psicólogos", clientes: [
-    { nome: "SHEILA", segmento: "Psicologia", plataformas: ["google"], conta: "353-831-5205", revisao: "29/10/2026",
+    { nome: "SHEILA", segmento: "Psicologia", plataformas: ["google"], conta: "353-831-5205", mensal: 150, parcelas: 1, revisao: "29/10/2026",
       cenario: "Recarga feita em 29/10 e campanhas de volta ao ar.",
       otimizacao: "Manutenção: palavras-chave removidas e adicionadas, termos de pesquisa e ajustes nos anúncios." },
-    { nome: "CARMEM", segmento: "Psicologia", plataformas: ["google"], conta: "918-578-8000", revisao: "29/10/2026",
+    { nome: "CARMEM", segmento: "Psicologia", plataformas: ["google"], conta: "918-578-8000", mensal: 150, parcelas: 0, revisao: "29/10/2026",
       cenario: "Campanhas de volta ao ar em novembro, depois da pausa. Verificação da conta por selfie prevista até 11/11.",
       otimizacao: "Ajustes em palavras-chave, termos de pesquisa, anúncios e lista de palavras-chave negativas." },
-    { nome: "THAYNARA", segmento: "Psicologia", plataformas: ["google"], conta: "337-837-5511", revisao: "29/10/2026",
+    { nome: "THAYNARA", segmento: "Psicologia", plataformas: ["google"], conta: "337-837-5511", mensal: 150, parcelas: 1, revisao: "29/10/2026",
       cenario: "Campanhas pausadas. A ideia é voltar a investir quando os créditos do Google entrarem.",
       otimizacao: "Revisão da conta; campanhas seguem pausadas até a entrada dos créditos." },
-    { nome: "DANIELLE", segmento: "Psicologia", plataformas: ["google"], conta: "150-686-1633", revisao: "29/10/2026",
+    { nome: "DANIELLE", segmento: "Psicologia", plataformas: ["google"], conta: "150-686-1633", mensal: 150, parcelas: 1, revisao: "29/10/2026",
       cenario: "Conta sem verificação pendente.",
       otimizacao: "Ajustes em público-alvo, palavras-chave, anúncios e termos de pesquisa." },
-    { nome: "ALICE", segmento: "Psicologia", plataformas: ["google"], conta: "357-411-5648", revisao: "29/10/2026",
-      cenario: "Orçamento calibrado para não gastar além do necessário. A conta tem verificação pendente, ainda sem prazo.",
+    { nome: "ALICE", segmento: "Psicologia", plataformas: ["google"], conta: "357-411-5648", mensal: 150, parcelas: 1, revisao: "29/10/2026",
+      cenario: "Orçamento ajustado ao necessário. A conta tem verificação pendente, ainda sem prazo.",
       otimizacao: "Ajuste de orçamento e ajustes em palavras-chave e termos de pesquisa." },
-    { nome: "YASMIN", segmento: "Psicologia", plataformas: ["google"], conta: "756-159-1841", revisao: "29/10/2026",
+    { nome: "YASMIN", segmento: "Psicologia", plataformas: ["google"], conta: "756-159-1841", mensal: 150, parcelas: 1, revisao: "29/10/2026",
       cenario: "Campanhas no ar, mantendo o que está convertendo. Verificação da conta (confirmação de telefone) prevista até 20/11.",
       otimizacao: "Ajustes em anúncios, palavras-chave e termos de pesquisa." },
-    { nome: "THAIS", segmento: "Psicologia", plataformas: ["google"], revisao: "",
+    { nome: "THAIS", segmento: "Psicologia", plataformas: ["google"], mensal: 150, parcelas: 0, revisao: "",
       cenario: "Site pronto e domínio registrado. Falta publicar o site no domínio e criar a conta de anúncios; as campanhas ainda não começaram.",
       otimizacao: "" },
   ] },
@@ -113,7 +113,7 @@ const GRUPOS = [
   .cards { display: grid; gap: 10px; }
 
   .card { padding: 12px 16px 13px; background: var(--surface); border: 1px solid var(--line); }
-  .dados { display: grid; grid-template-columns: minmax(240px, 1.5fr) minmax(190px, 1.2fr) repeat(3, minmax(130px, 1fr)); align-items: center; font-variant-numeric: tabular-nums; }
+  .dados { display: grid; grid-template-columns: minmax(260px, 1.5fr) minmax(200px, 1.2fr) repeat(2, minmax(150px, 1fr)); align-items: center; font-variant-numeric: tabular-nums; }
   .dados > div { min-width: 0; padding: 0 20px; border-left: 1px solid var(--line); white-space: nowrap; }
   .dados > div:first-child { padding-left: 0; border-left: 0; }
   .k { display: block; font-size: 11px; color: var(--label); }
@@ -160,6 +160,8 @@ const GRUPOS = [
 <script>
 (function () {
 
+  const PARCELAS = 3; // total de parcelas dos clientes psicólogos
+  const money = v => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const parseDate = s => { if (!s) return null; const [d, m, y] = s.split("/").map(Number); return Date.UTC(y, m - 1, d); };
 
@@ -192,7 +194,7 @@ const GRUPOS = [
   function colunas(header) {
     const h = header.map(s => (s || "").trim().toUpperCase());
     const find = re => h.findIndex(s => re.test(s));
-    return { semana: find(/^ÚLTIMOS 7 DIAS/), atualizado: find(/^ATUALIZADO/) };
+    return { atualizado: find(/^ATUALIZADO/) };
   }
 
   const celula = (k, v, cls) => `<div${cls ? ` class="${cls}"` : ""}><span class="k">${k}</span><span class="v">${v}</span></div>`;
@@ -200,15 +202,12 @@ const GRUPOS = [
   function dados(c) {
     const r = c.conta ? ads.porConta[c.conta] : null;
     const v = x => !x || !x.trim() || x.trim() === "–" ? "—" : esc(x.trim());
-    let situacao = "—", gasto = "—", conv = "—", custo = "—";
+    let situacao = "—";
     if (c.conta && ads.status === "loading") situacao = "Carregando…";
-    if (r) {
-      situacao = v((r[2] || "").split("·").pop());
-      const s = ads.col.semana;
-      gasto = v(r[s]); conv = v(r[s + 6]); custo = v(r[s + 8]);
-    }
+    if (r) situacao = v((r[2] || "").split("·").pop());
     return celula("Situação", situacao) +
-      celula("Gasto · 7 dias", gasto) + celula("Conv. · 7 dias", conv) + celula("Custo/conv. · 7 dias", custo);
+      celula("Mensalidade", money(c.mensal)) +
+      (c.parcelas != null ? celula("Parcelas pagas", `${c.parcelas} de ${PARCELAS}`) : "");
   }
 
   function card(c) {
