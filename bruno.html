@@ -14,7 +14,7 @@
    de otimizações. "otimizacao" é sempre só a mais recente.
    Só a barrinha da promoção vem ao vivo da planilha (pela "conta"). "parcelas" é quantas já foram pagas (só clientes de projeto).
    ===================================================================== */
-const ATUALIZADO_EM = "09/11/2026 às 15:05";
+const ATUALIZADO_EM = "09/11/2026 às 15:09";
 
 const GRUPOS = [
   { titulo: "Recorrentes", clientes: [
@@ -27,7 +27,7 @@ const GRUPOS = [
   ] },
   { titulo: "Recorrentes · Psicólogos", clientes: [
     { nome: "NARA", segmento: "Psicologia", plataformas: ["google"], conta: "775-492-4225", mensal: 150, revisao: "09/11/2026",
-      cenario: "Desde a retomada das campanhas, vieram novos contatos, nenhum ainda muito qualificado e, até o momento, sem fechamento confirmado. O trabalho agora é buscar mais volume e contatos mais qualificados.",
+      cenario: "Desde a retomada, vieram novos contatos, nenhum ainda muito qualificado e, até o momento, sem fechamento confirmado. O foco agora é mais volume e mais qualidade.",
       otimizacao: "Criação de uma nova campanha com palavras-chave mais amplas e público bem mais fechado; a campanha principal fica com público mais amplo e palavras-chave mais fechadas." },
     { nome: "NATHALIA", segmento: "Psicologia", plataformas: ["google"], mensal: 150, revisao: "05/11/2026",
       cenario: "Campanhas no ar.",
@@ -131,7 +131,7 @@ const GRUPOS = [
   .barra i { display: block; height: 100%; background: var(--bar); }
   .barra-linha b { min-width: 34px; text-align: right; font-size: 12.5px; font-weight: 600; }
 
-  .texto { margin: 10px 0 0; padding-top: 8px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--soft-ink); }
+  .texto { margin: 10px 0 0; padding-top: 8px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--soft-ink); text-wrap: pretty; } /* evita palavra sozinha na última linha */
   .texto + .texto { margin-top: 5px; padding-top: 0; border-top: 0; }
   .texto b { margin-right: 4px; font-size: 11px; font-weight: 700; color: var(--label); text-transform: uppercase; letter-spacing: .04em; }
 

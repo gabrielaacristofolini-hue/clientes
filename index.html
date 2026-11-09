@@ -23,7 +23,7 @@
    Cada caixa mostra primeiro quem foi revisado mais recentemente (mesma data → ordem alfabética).
    "verificacao" (data ou "sem prazo"), "saldo: true" e "promocao" (data) marcam os prazos; a lista de tarefas à direita vem de TAREFAS.
    ===================================================================== */
-const ATUALIZADO_EM = "09/11/2026 às 15:05";
+const ATUALIZADO_EM = "09/11/2026 às 15:09";
 
 const RECORRENTES = [
   { nome: "LEOCAR",     segmento: "Concessionária",               dono: "Elite Stage", plataformas: ["meta"], revisao: "26/10/2026", script: "NÃO", mensal: 250, pagamento: "", inicio: "",           obs: "Acompanhar os contatos gerados para BMW e Fusca." },
@@ -340,6 +340,7 @@ const CONTAS_GOOGLE_ADS = [
   .note {
     grid-column: 1 / -1;
     contain: inline-size; /* observação longa quebra linha em vez de alargar a caixa */
+    text-wrap: pretty; /* evita palavra sozinha na última linha */
     margin: 10px 14px 0;
     padding-top: 8px;
     border-top: 1px solid var(--line);
