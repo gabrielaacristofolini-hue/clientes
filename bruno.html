@@ -10,11 +10,11 @@
 <script>
 /* =====================================================================
    Página do Bruno: só os clientes dele, em versão simples.
-   Aqui só entra o que ele pode ver: situação, mensalidade, parcelas, cenário e a última otimização; nada de tarefas ou histórico
+   Aqui só entra o que ele pode ver: mensalidade, parcelas, cenário e a última otimização; nada de tarefas ou histórico
    de otimizações. "otimizacao" é sempre só a mais recente.
-   A situação de cada conta vem ao vivo da planilha. "parcelas" é quantas já foram pagas (só clientes de projeto).
+   "parcelas" é quantas já foram pagas (só clientes de projeto).
    ===================================================================== */
-const ATUALIZADO_EM = "09/11/2026 às 14:56";
+const ATUALIZADO_EM = "09/11/2026 às 14:58";
 
 const GRUPOS = [
   { titulo: "Recorrentes", clientes: [
@@ -26,36 +26,36 @@ const GRUPOS = [
       otimizacao: "Revisão das campanhas e acompanhamento da qualidade dos contatos." },
   ] },
   { titulo: "Recorrentes · Psicólogos", clientes: [
-    { nome: "NARA", segmento: "Psicologia", plataformas: ["google"], conta: "775-492-4225", mensal: 150, revisao: "05/11/2026",
+    { nome: "NARA", segmento: "Psicologia", plataformas: ["google"], mensal: 150, revisao: "05/11/2026",
       cenario: "Conta regularizada e campanhas retomadas em 05/11. Em acompanhamento de perto, para confirmar os próximos contatos e o ritmo das campanhas.",
       otimizacao: "Retomada das campanhas após a regularização e a verificação da conta." },
-    { nome: "NATHALIA", segmento: "Psicologia", plataformas: ["google"], conta: "359-065-0990", mensal: 150, revisao: "05/11/2026",
+    { nome: "NATHALIA", segmento: "Psicologia", plataformas: ["google"], mensal: 150, revisao: "05/11/2026",
       cenario: "Campanhas no ar.",
       otimizacao: "Ajustes em termos de pesquisa, público-alvo e palavras-chave." },
-    { nome: "CLÉCIA", segmento: "Psicologia", plataformas: ["google"], conta: "128-846-8174", mensal: 150, revisao: "29/10/2026",
+    { nome: "CLÉCIA", segmento: "Psicologia", plataformas: ["google"], mensal: 150, revisao: "29/10/2026",
       cenario: "Campanhas com uma média boa. Verificação da conta prevista até 16/11.",
       otimizacao: "Ajustes em palavras-chave, anúncios, termos de pesquisa e orçamento." },
-    { nome: "HUGO", segmento: "Psicologia", plataformas: ["google"], conta: "587-222-5596", mensal: 150, revisao: "29/10/2026",
+    { nome: "HUGO", segmento: "Psicologia", plataformas: ["google"], mensal: 150, revisao: "29/10/2026",
       cenario: "Recarga feita em 29/10 e campanhas de volta ao ar.",
       otimizacao: "Novos grupos de anúncios e palavras-chave, ajustes na segmentação e nos anúncios, e negativação de termos de pesquisa." },
   ] },
   { titulo: "Projetos · Psicólogos", clientes: [
-    { nome: "SHEILA", segmento: "Psicologia", plataformas: ["google"], conta: "353-831-5205", mensal: 150, parcelas: 1, revisao: "29/10/2026",
+    { nome: "SHEILA", segmento: "Psicologia", plataformas: ["google"], mensal: 150, parcelas: 1, revisao: "29/10/2026",
       cenario: "Recarga feita em 29/10 e campanhas de volta ao ar.",
       otimizacao: "Manutenção: palavras-chave removidas e adicionadas, termos de pesquisa e ajustes nos anúncios." },
-    { nome: "CARMEM", segmento: "Psicologia", plataformas: ["google"], conta: "918-578-8000", mensal: 150, parcelas: 0, revisao: "29/10/2026",
+    { nome: "CARMEM", segmento: "Psicologia", plataformas: ["google"], mensal: 150, parcelas: 0, revisao: "29/10/2026",
       cenario: "Campanhas de volta ao ar em novembro, depois da pausa. Verificação da conta por selfie prevista até 11/11.",
       otimizacao: "Ajustes em palavras-chave, termos de pesquisa, anúncios e lista de palavras-chave negativas." },
-    { nome: "THAYNARA", segmento: "Psicologia", plataformas: ["google"], conta: "337-837-5511", mensal: 150, parcelas: 1, revisao: "29/10/2026",
+    { nome: "THAYNARA", segmento: "Psicologia", plataformas: ["google"], mensal: 150, parcelas: 1, revisao: "29/10/2026",
       cenario: "Campanhas pausadas. A ideia é voltar a investir quando os créditos do Google entrarem.",
       otimizacao: "Revisão da conta; campanhas seguem pausadas até a entrada dos créditos." },
-    { nome: "DANIELLE", segmento: "Psicologia", plataformas: ["google"], conta: "150-686-1633", mensal: 150, parcelas: 1, revisao: "29/10/2026",
+    { nome: "DANIELLE", segmento: "Psicologia", plataformas: ["google"], mensal: 150, parcelas: 1, revisao: "29/10/2026",
       cenario: "Conta sem verificação pendente.",
       otimizacao: "Ajustes em público-alvo, palavras-chave, anúncios e termos de pesquisa." },
-    { nome: "ALICE", segmento: "Psicologia", plataformas: ["google"], conta: "357-411-5648", mensal: 150, parcelas: 1, revisao: "29/10/2026",
+    { nome: "ALICE", segmento: "Psicologia", plataformas: ["google"], mensal: 150, parcelas: 1, revisao: "29/10/2026",
       cenario: "Orçamento ajustado ao necessário. A conta tem verificação pendente, ainda sem prazo.",
       otimizacao: "Ajuste de orçamento e ajustes em palavras-chave e termos de pesquisa." },
-    { nome: "YASMIN", segmento: "Psicologia", plataformas: ["google"], conta: "756-159-1841", mensal: 150, parcelas: 1, revisao: "29/10/2026",
+    { nome: "YASMIN", segmento: "Psicologia", plataformas: ["google"], mensal: 150, parcelas: 1, revisao: "29/10/2026",
       cenario: "Campanhas no ar, mantendo o que está convertendo. Verificação da conta (confirmação de telefone) prevista até 20/11.",
       otimizacao: "Ajustes em anúncios, palavras-chave e termos de pesquisa." },
     { nome: "THAIS", segmento: "Psicologia", plataformas: ["google"], mensal: 150, parcelas: 0, revisao: "",
@@ -113,7 +113,7 @@ const GRUPOS = [
   .cards { display: grid; gap: 10px; }
 
   .card { padding: 12px 16px 13px; background: var(--surface); border: 1px solid var(--line); }
-  .dados { display: grid; grid-template-columns: minmax(260px, 1.5fr) minmax(200px, 1.2fr) repeat(2, minmax(150px, 1fr)); align-items: center; font-variant-numeric: tabular-nums; }
+  .dados { display: grid; grid-template-columns: minmax(280px, 2fr) repeat(2, minmax(160px, 1fr)); align-items: center; font-variant-numeric: tabular-nums; }
   .dados > div { min-width: 0; padding: 0 20px; border-left: 1px solid var(--line); white-space: nowrap; }
   .dados > div:first-child { padding-left: 0; border-left: 0; }
   .k { display: block; font-size: 11px; color: var(--label); }
@@ -170,43 +170,10 @@ const GRUPOS = [
     meta: { title: "Meta Ads", svg: `<svg viewBox="0 0 24 24"><path d="M12 12c-2-3-3.6-5.2-5.6-5.2S2.8 9 2.8 12s1.6 5.2 3.6 5.2S10 15 12 12s3.6-5.2 5.6-5.2 3.6 2.2 3.6 5.2-1.6 5.2-3.6 5.2S14 15 12 12z" fill="none" stroke="#0866FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
   };
 
-  /* Números ao vivo da aba "Geral" da planilha; só as contas listadas em GRUPOS são usadas */
-  const SHEET_CSV = "https://docs.google.com/spreadsheets/d/14wsRMmTuI7v7nT2yy6AXYKzlhBHNkznw4XXsen69xxE/gviz/tq?tqx=out:csv&sheet=Geral";
-  const ads = { porConta: {}, col: null, status: "loading", updated: "" };
-
-  function parseCSV(text) {
-    const rows = []; let row = [], cur = "", q = false;
-    for (let i = 0; i < text.length; i++) {
-      const ch = text[i];
-      if (q) {
-        if (ch === '"' && text[i + 1] === '"') { cur += '"'; i++; }
-        else if (ch === '"') q = false;
-        else cur += ch;
-      } else if (ch === '"') q = true;
-      else if (ch === ",") { row.push(cur); cur = ""; }
-      else if (ch === "\n") { row.push(cur); rows.push(row); row = []; cur = ""; }
-      else if (ch !== "\r") cur += ch;
-    }
-    if (cur || row.length) { row.push(cur); rows.push(row); }
-    return rows;
-  }
-
-  function colunas(header) {
-    const h = header.map(s => (s || "").trim().toUpperCase());
-    const find = re => h.findIndex(s => re.test(s));
-    return { atualizado: find(/^ATUALIZADO/) };
-  }
-
   const celula = (k, v, cls) => `<div${cls ? ` class="${cls}"` : ""}><span class="k">${k}</span><span class="v">${v}</span></div>`;
 
   function dados(c) {
-    const r = c.conta ? ads.porConta[c.conta] : null;
-    const v = x => !x || !x.trim() || x.trim() === "–" ? "—" : esc(x.trim());
-    let situacao = "—";
-    if (c.conta && ads.status === "loading") situacao = "Carregando…";
-    if (r) situacao = v((r[2] || "").split("·").pop());
-    return celula("Situação", situacao) +
-      celula("Mensalidade", money(c.mensal)) +
+    return celula("Mensalidade", money(c.mensal)) +
       (c.parcelas != null ? celula("Parcelas pagas", `${c.parcelas} de ${PARCELAS}`) : "");
   }
 
@@ -222,29 +189,12 @@ const GRUPOS = [
     (parseDate(b.revisao) ?? -Infinity) - (parseDate(a.revisao) ?? -Infinity) || a.nome.localeCompare(b.nome, "pt-BR"));
 
   function render() {
-    document.getElementById("updated").textContent = `Atualizado em ${ATUALIZADO_EM}` + (ads.updated ? ` · Google Ads ${ads.updated}` : "");
+    document.getElementById("updated").textContent = `Atualizado em ${ATUALIZADO_EM}`;
     document.getElementById("grupos").innerHTML = GRUPOS.map(g =>
       `<section><h2>${esc(g.titulo)} <span>${g.clientes.length} cliente${g.clientes.length === 1 ? "" : "s"}</span></h2>` +
       `<div class="cards">${ordem(g.clientes).map(card).join("")}</div></section>`).join("");
   }
   render();
-
-  const contas = GRUPOS.flatMap(g => g.clientes.map(c => c.conta)).filter(Boolean);
-  fetch(SHEET_CSV)
-    .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
-    .then(text => {
-      const all = parseCSV(text);
-      ads.col = colunas(all[0] || []);
-      const rows = all.slice(1).filter(r => r[1] && contas.includes(r[1].trim()));
-      ads.porConta = Object.fromEntries(rows.map(r => [r[1].trim(), r]));
-      const stamp = s => { const m = (s || "").match(/(\d\d)\/(\d\d)\/(\d{4}) (\d\d):(\d\d)/); return m ? +(m[3] + m[2] + m[1] + m[4] + m[5]) : 0; };
-      const latest = rows.reduce((a, r) => stamp(r[ads.col.atualizado]) > stamp(a) ? r[ads.col.atualizado] : a, "");
-      const m = latest.match(/(\d\d\/\d\d)\/\d{4} (\d\d:\d\d)/);
-      ads.updated = m ? `de ${m[1]} às ${m[2]}` : "";
-      ads.status = "ok";
-    })
-    .catch(() => { ads.status = "error"; })
-    .then(render);
 })();
 </script>
 </body>
