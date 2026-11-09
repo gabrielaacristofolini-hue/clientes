@@ -12,9 +12,9 @@
    Página do Bruno: só os clientes dele, em versão simples.
    Aqui só entra o que ele pode ver: mensalidade, parcelas, cenário e a última otimização; nada de tarefas ou histórico
    de otimizações. "otimizacao" é sempre só a mais recente.
-   "parcelas" é quantas já foram pagas (só clientes de projeto).
+   Só a barrinha da promoção vem ao vivo da planilha (pela "conta"). "parcelas" é quantas já foram pagas (só clientes de projeto).
    ===================================================================== */
-const ATUALIZADO_EM = "09/11/2026 às 14:58";
+const ATUALIZADO_EM = "09/11/2026 às 15:03";
 
 const GRUPOS = [
   { titulo: "Recorrentes", clientes: [
@@ -26,36 +26,36 @@ const GRUPOS = [
       otimizacao: "Revisão das campanhas e acompanhamento da qualidade dos contatos." },
   ] },
   { titulo: "Recorrentes · Psicólogos", clientes: [
-    { nome: "NARA", segmento: "Psicologia", plataformas: ["google"], mensal: 150, revisao: "05/11/2026",
+    { nome: "NARA", segmento: "Psicologia", plataformas: ["google"], conta: "775-492-4225", mensal: 150, revisao: "05/11/2026",
       cenario: "Conta regularizada e campanhas retomadas em 05/11. Em acompanhamento de perto, para confirmar os próximos contatos e o ritmo das campanhas.",
       otimizacao: "Retomada das campanhas após a regularização e a verificação da conta." },
     { nome: "NATHALIA", segmento: "Psicologia", plataformas: ["google"], mensal: 150, revisao: "05/11/2026",
       cenario: "Campanhas no ar.",
       otimizacao: "Ajustes em termos de pesquisa, público-alvo e palavras-chave." },
-    { nome: "CLÉCIA", segmento: "Psicologia", plataformas: ["google"], mensal: 150, revisao: "29/10/2026",
+    { nome: "CLÉCIA", segmento: "Psicologia", plataformas: ["google"], conta: "128-846-8174", mensal: 150, revisao: "29/10/2026",
       cenario: "Campanhas com uma média boa. Verificação da conta prevista até 16/11.",
       otimizacao: "Ajustes em palavras-chave, anúncios, termos de pesquisa e orçamento." },
-    { nome: "HUGO", segmento: "Psicologia", plataformas: ["google"], mensal: 150, revisao: "29/10/2026",
+    { nome: "HUGO", segmento: "Psicologia", plataformas: ["google"], conta: "587-222-5596", mensal: 150, revisao: "29/10/2026",
       cenario: "Recarga feita em 29/10 e campanhas de volta ao ar.",
       otimizacao: "Novos grupos de anúncios e palavras-chave, ajustes na segmentação e nos anúncios, e negativação de termos de pesquisa." },
   ] },
   { titulo: "Projetos · Psicólogos", clientes: [
-    { nome: "SHEILA", segmento: "Psicologia", plataformas: ["google"], mensal: 150, parcelas: 1, revisao: "29/10/2026",
+    { nome: "SHEILA", segmento: "Psicologia", plataformas: ["google"], conta: "353-831-5205", mensal: 150, parcelas: 1, revisao: "29/10/2026",
       cenario: "Recarga feita em 29/10 e campanhas de volta ao ar.",
       otimizacao: "Manutenção: palavras-chave removidas e adicionadas, termos de pesquisa e ajustes nos anúncios." },
-    { nome: "CARMEM", segmento: "Psicologia", plataformas: ["google"], mensal: 150, parcelas: 0, revisao: "29/10/2026",
+    { nome: "CARMEM", segmento: "Psicologia", plataformas: ["google"], conta: "918-578-8000", mensal: 150, parcelas: 0, revisao: "29/10/2026",
       cenario: "Campanhas de volta ao ar em novembro, depois da pausa. Verificação da conta por selfie prevista até 11/11.",
       otimizacao: "Ajustes em palavras-chave, termos de pesquisa, anúncios e lista de palavras-chave negativas." },
-    { nome: "THAYNARA", segmento: "Psicologia", plataformas: ["google"], mensal: 150, parcelas: 1, revisao: "29/10/2026",
+    { nome: "THAYNARA", segmento: "Psicologia", plataformas: ["google"], conta: "337-837-5511", mensal: 150, parcelas: 1, revisao: "29/10/2026",
       cenario: "Campanhas pausadas. A ideia é voltar a investir quando os créditos do Google entrarem.",
       otimizacao: "Revisão da conta; campanhas seguem pausadas até a entrada dos créditos." },
-    { nome: "DANIELLE", segmento: "Psicologia", plataformas: ["google"], mensal: 150, parcelas: 1, revisao: "29/10/2026",
+    { nome: "DANIELLE", segmento: "Psicologia", plataformas: ["google"], conta: "150-686-1633", mensal: 150, parcelas: 1, revisao: "29/10/2026",
       cenario: "Conta sem verificação pendente.",
       otimizacao: "Ajustes em público-alvo, palavras-chave, anúncios e termos de pesquisa." },
-    { nome: "ALICE", segmento: "Psicologia", plataformas: ["google"], mensal: 150, parcelas: 1, revisao: "29/10/2026",
+    { nome: "ALICE", segmento: "Psicologia", plataformas: ["google"], conta: "357-411-5648", mensal: 150, parcelas: 1, revisao: "29/10/2026",
       cenario: "Orçamento ajustado ao necessário. A conta tem verificação pendente, ainda sem prazo.",
       otimizacao: "Ajuste de orçamento e ajustes em palavras-chave e termos de pesquisa." },
-    { nome: "YASMIN", segmento: "Psicologia", plataformas: ["google"], mensal: 150, parcelas: 1, revisao: "29/10/2026",
+    { nome: "YASMIN", segmento: "Psicologia", plataformas: ["google"], conta: "756-159-1841", mensal: 150, parcelas: 1, revisao: "29/10/2026",
       cenario: "Campanhas no ar, mantendo o que está convertendo. Verificação da conta (confirmação de telefone) prevista até 20/11.",
       otimizacao: "Ajustes em anúncios, palavras-chave e termos de pesquisa." },
     { nome: "THAIS", segmento: "Psicologia", plataformas: ["google"], mensal: 150, parcelas: 0, revisao: "",
@@ -113,7 +113,7 @@ const GRUPOS = [
   .cards { display: grid; gap: 10px; }
 
   .card { padding: 12px 16px 13px; background: var(--surface); border: 1px solid var(--line); }
-  .dados { display: grid; grid-template-columns: minmax(280px, 2fr) repeat(2, minmax(160px, 1fr)); align-items: center; font-variant-numeric: tabular-nums; }
+  .dados { display: grid; grid-template-columns: minmax(280px, 1.4fr) minmax(280px, 1.6fr) minmax(170px, 1fr); align-items: center; font-variant-numeric: tabular-nums; }
   .dados > div { min-width: 0; padding: 0 20px; border-left: 1px solid var(--line); white-space: nowrap; }
   .dados > div:first-child { padding-left: 0; border-left: 0; }
   .k { display: block; font-size: 11px; color: var(--label); }
@@ -123,6 +123,13 @@ const GRUPOS = [
   .plat { display: inline-block; width: 14px; height: 14px; margin-left: 6px; vertical-align: -2px; }
   .plat + .plat { margin-left: 4px; }
   .plat svg { display: block; width: 100%; height: 100%; }
+  .dados > .promo { grid-column: 2; }
+  /* Mensalidade e parcelas bem discretas, no canto direito */
+  .dados > .disc { grid-column: 3; padding-right: 0; border-left: 0; text-align: right; font-size: 11px; color: var(--label); }
+  .barra-linha { display: flex; align-items: center; gap: 10px; height: 19px; }
+  .barra { flex: 1; height: 7px; background: var(--line); }
+  .barra i { display: block; height: 100%; background: var(--bar); }
+  .barra-linha b { min-width: 34px; text-align: right; font-size: 12.5px; font-weight: 600; }
 
   .texto { margin: 10px 0 0; padding-top: 8px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--soft-ink); }
   .texto + .texto { margin-top: 5px; padding-top: 0; border-top: 0; }
@@ -134,7 +141,7 @@ const GRUPOS = [
     section { padding: 12px; }
     .dados { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-items: start; }
     .dados > div { padding: 0; border-left: 0; white-space: normal; }
-    .dados > div:first-child { grid-column: 1 / -1; }
+    .dados > div:first-child, .dados > .promo, .dados > .disc { grid-column: 1 / -1; }
   }
 </style>
 </head>
@@ -172,9 +179,40 @@ const GRUPOS = [
 
   const celula = (k, v, cls) => `<div${cls ? ` class="${cls}"` : ""}><span class="k">${k}</span><span class="v">${v}</span></div>`;
 
+  /* Promoção do Google: só a barrinha e o percentual de R$ 1.200 gastos, lidos ao vivo da aba "Geral" da planilha */
+  const SHEET_CSV = "https://docs.google.com/spreadsheets/d/14wsRMmTuI7v7nT2yy6AXYKzlhBHNkznw4XXsen69xxE/gviz/tq?tqx=out:csv&sheet=Geral";
+  const META = 1200;
+  const gastoPorConta = {};
+  const toNumber = s => parseFloat(String(s || "").replace(/[^\d,-]/g, "").replace(",", ".")) || 0;
+
+  function parseCSV(text) {
+    const rows = []; let row = [], cur = "", q = false;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (q) {
+        if (ch === '"' && text[i + 1] === '"') { cur += '"'; i++; }
+        else if (ch === '"') q = false;
+        else cur += ch;
+      } else if (ch === '"') q = true;
+      else if (ch === ",") { row.push(cur); cur = ""; }
+      else if (ch === "\n") { row.push(cur); rows.push(row); row = []; cur = ""; }
+      else if (ch !== "\r") cur += ch;
+    }
+    if (cur || row.length) { row.push(cur); rows.push(row); }
+    return rows;
+  }
+
+  function promocao(c) {
+    if (!c.conta) return "";
+    const gasto = gastoPorConta[c.conta];
+    const pct = gasto == null ? 0 : Math.min(Math.floor(gasto / META * 100), 100);
+    return `<div class="promo"><span class="k">Promoção Google</span><span class="barra-linha">` +
+      `<span class="barra"><i style="width:${pct}%"></i></span><b>${gasto == null ? "—" : pct + "%"}</b></span></div>`;
+  }
+
   function dados(c) {
-    return celula("Mensalidade", money(c.mensal)) +
-      (c.parcelas != null ? celula("Parcelas pagas", `${c.parcelas} de ${PARCELAS}`) : "");
+    return promocao(c) +
+      `<div class="disc">${money(c.mensal)}${c.parcelas != null ? ` · ${c.parcelas} de ${PARCELAS} parcelas` : ""}</div>`;
   }
 
   function card(c) {
@@ -195,6 +233,19 @@ const GRUPOS = [
       `<div class="cards">${ordem(g.clientes).map(card).join("")}</div></section>`).join("");
   }
   render();
+
+  // "conta" só existe nos clientes que entram na promoção; só essas linhas da planilha são usadas
+  const contas = GRUPOS.flatMap(g => g.clientes.map(c => c.conta)).filter(Boolean);
+  fetch(SHEET_CSV)
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+    .then(text => {
+      const all = parseCSV(text);
+      const total = (all[0] || []).findIndex(s => /^TODO O PERÍODO/.test((s || "").trim().toUpperCase()));
+      if (total < 0) return;
+      all.slice(1).filter(r => r[1] && contas.includes(r[1].trim())).forEach(r => { gastoPorConta[r[1].trim()] = toNumber(r[total]); });
+      render();
+    })
+    .catch(() => {}); // sem a planilha, a barrinha fica vazia e o resto da página continua normal
 })();
 </script>
 </body>
