@@ -12,9 +12,9 @@
    Página do Bruno: só os clientes dele, em versão simples.
    Aqui só entra o que ele pode ver: nada de mensalidade, tarefas ou histórico
    de otimizações. "otimizacao" é sempre só a mais recente.
-   Os números (situação, gasto, conversões, promoção) vêm ao vivo da planilha.
+   Os números (situação, gasto e conversões) vêm ao vivo da planilha.
    ===================================================================== */
-const ATUALIZADO_EM = "09/11/2026 às 14:48";
+const ATUALIZADO_EM = "09/11/2026 às 14:52";
 
 const GRUPOS = [
   { titulo: "Recorrentes", clientes: [
@@ -26,36 +26,36 @@ const GRUPOS = [
       otimizacao: "Revisão das campanhas e acompanhamento da qualidade dos contatos." },
   ] },
   { titulo: "Recorrentes · Psicólogos", clientes: [
-    { nome: "NARA", segmento: "Psicologia", plataformas: ["google"], conta: "775-492-4225", promocao: "24/11/2026", revisao: "05/11/2026",
+    { nome: "NARA", segmento: "Psicologia", plataformas: ["google"], conta: "775-492-4225", revisao: "05/11/2026",
       cenario: "Conta regularizada e campanhas retomadas em 05/11. Em acompanhamento de perto, para confirmar os próximos contatos e o ritmo de gasto.",
       otimizacao: "Retomada das campanhas após a regularização e a verificação da conta." },
     { nome: "NATHALIA", segmento: "Psicologia", plataformas: ["google"], conta: "359-065-0990", revisao: "05/11/2026",
-      cenario: "Campanhas no ar. Esta conta não participa da promoção do Google.",
+      cenario: "Campanhas no ar.",
       otimizacao: "Ajustes em termos de pesquisa, público-alvo e palavras-chave." },
-    { nome: "CLÉCIA", segmento: "Psicologia", plataformas: ["google"], conta: "128-846-8174", promocao: "20/11/2026", revisao: "29/10/2026",
+    { nome: "CLÉCIA", segmento: "Psicologia", plataformas: ["google"], conta: "128-846-8174", revisao: "29/10/2026",
       cenario: "Campanhas com uma média boa. Verificação da conta prevista até 16/11.",
       otimizacao: "Ajustes em palavras-chave, anúncios, termos de pesquisa e orçamento." },
-    { nome: "HUGO", segmento: "Psicologia", plataformas: ["google"], conta: "587-222-5596", promocao: "20/11/2026", revisao: "29/10/2026",
+    { nome: "HUGO", segmento: "Psicologia", plataformas: ["google"], conta: "587-222-5596", revisao: "29/10/2026",
       cenario: "Recarga feita em 29/10 e campanhas de volta ao ar.",
       otimizacao: "Novos grupos de anúncios e palavras-chave, ajustes na segmentação e nos anúncios, e negativação de termos de pesquisa." },
   ] },
   { titulo: "Projetos · Psicólogos", clientes: [
-    { nome: "SHEILA", segmento: "Psicologia", plataformas: ["google"], conta: "353-831-5205", promocao: "20/11/2026", revisao: "29/10/2026",
+    { nome: "SHEILA", segmento: "Psicologia", plataformas: ["google"], conta: "353-831-5205", revisao: "29/10/2026",
       cenario: "Recarga feita em 29/10 e campanhas de volta ao ar.",
       otimizacao: "Manutenção: palavras-chave removidas e adicionadas, termos de pesquisa e ajustes nos anúncios." },
-    { nome: "CARMEM", segmento: "Psicologia", plataformas: ["google"], conta: "918-578-8000", promocao: "27/11/2026", revisao: "29/10/2026",
+    { nome: "CARMEM", segmento: "Psicologia", plataformas: ["google"], conta: "918-578-8000", revisao: "29/10/2026",
       cenario: "Campanhas de volta ao ar em novembro, depois da pausa. Verificação da conta por selfie prevista até 11/11.",
       otimizacao: "Ajustes em palavras-chave, termos de pesquisa, anúncios e lista de palavras-chave negativas." },
-    { nome: "THAYNARA", segmento: "Psicologia", plataformas: ["google"], conta: "337-837-5511", promocao: "31/10/2026", promocaoNota: "aguardando análise do Google", revisao: "29/10/2026",
-      cenario: "Campanhas pausadas. A meta da promoção foi atingida e a ideia é voltar a investir quando os créditos do Google entrarem.",
+    { nome: "THAYNARA", segmento: "Psicologia", plataformas: ["google"], conta: "337-837-5511", revisao: "29/10/2026",
+      cenario: "Campanhas pausadas. A ideia é voltar a investir quando os créditos do Google entrarem.",
       otimizacao: "Revisão da conta; campanhas seguem pausadas até a entrada dos créditos." },
-    { nome: "DANIELLE", segmento: "Psicologia", plataformas: ["google"], conta: "150-686-1633", promocao: "10/11/2026", revisao: "29/10/2026",
-      cenario: "Conta sem verificação pendente e perto da meta da promoção.",
+    { nome: "DANIELLE", segmento: "Psicologia", plataformas: ["google"], conta: "150-686-1633", revisao: "29/10/2026",
+      cenario: "Conta sem verificação pendente.",
       otimizacao: "Ajustes em público-alvo, palavras-chave, anúncios e termos de pesquisa." },
-    { nome: "ALICE", segmento: "Psicologia", plataformas: ["google"], conta: "357-411-5648", promocao: "12/11/2026", revisao: "29/10/2026",
-      cenario: "Orçamento calibrado para garantir os créditos da promoção sem gastar além do necessário. A conta tem verificação pendente, ainda sem prazo.",
+    { nome: "ALICE", segmento: "Psicologia", plataformas: ["google"], conta: "357-411-5648", revisao: "29/10/2026",
+      cenario: "Orçamento calibrado para não gastar além do necessário. A conta tem verificação pendente, ainda sem prazo.",
       otimizacao: "Ajuste de orçamento e ajustes em palavras-chave e termos de pesquisa." },
-    { nome: "YASMIN", segmento: "Psicologia", plataformas: ["google"], conta: "756-159-1841", promocao: "14/11/2026", revisao: "29/10/2026",
+    { nome: "YASMIN", segmento: "Psicologia", plataformas: ["google"], conta: "756-159-1841", revisao: "29/10/2026",
       cenario: "Campanhas no ar, mantendo o que está convertendo. Verificação da conta (confirmação de telefone) prevista até 20/11.",
       otimizacao: "Ajustes em anúncios, palavras-chave e termos de pesquisa." },
     { nome: "THAIS", segmento: "Psicologia", plataformas: ["google"], revisao: "",
@@ -113,8 +113,8 @@ const GRUPOS = [
   .cards { display: grid; gap: 10px; }
 
   .card { padding: 12px 16px 13px; background: var(--surface); border: 1px solid var(--line); }
-  .dados { display: grid; grid-template-columns: 220px 150px 120px 100px 90px 100px minmax(150px, 1fr); align-items: center; font-variant-numeric: tabular-nums; }
-  .dados > div { min-width: 0; padding: 0 14px; border-left: 1px solid var(--line); white-space: nowrap; }
+  .dados { display: grid; grid-template-columns: minmax(240px, 1.5fr) minmax(190px, 1.2fr) repeat(3, minmax(130px, 1fr)); align-items: center; font-variant-numeric: tabular-nums; }
+  .dados > div { min-width: 0; padding: 0 20px; border-left: 1px solid var(--line); white-space: nowrap; }
   .dados > div:first-child { padding-left: 0; border-left: 0; }
   .k { display: block; font-size: 11px; color: var(--label); }
   .v { display: block; font-size: 13px; font-weight: 500; }
@@ -123,8 +123,6 @@ const GRUPOS = [
   .plat { display: inline-block; width: 14px; height: 14px; margin-left: 6px; vertical-align: -2px; }
   .plat + .plat { margin-left: 4px; }
   .plat svg { display: block; width: 100%; height: 100%; }
-  .barra { display: block; height: 6px; margin-top: 4px; background: var(--line); }
-  .barra i { display: block; height: 100%; background: var(--bar); }
 
   .texto { margin: 10px 0 0; padding-top: 8px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--soft-ink); }
   .texto + .texto { margin-top: 5px; padding-top: 0; border-top: 0; }
@@ -136,7 +134,7 @@ const GRUPOS = [
     section { padding: 12px; }
     .dados { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-items: start; }
     .dados > div { padding: 0; border-left: 0; white-space: normal; }
-    .dados > div:first-child, .dados > .promo { grid-column: 1 / -1; }
+    .dados > div:first-child { grid-column: 1 / -1; }
   }
 </style>
 </head>
@@ -161,14 +159,9 @@ const GRUPOS = [
 
 <script>
 (function () {
-  const DAY = 86400000;
-  const META = 1200; // promoção do Google: gastar R$ 1.200 até o prazo
 
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const parseDate = s => { if (!s) return null; const [d, m, y] = s.split("/").map(Number); return Date.UTC(y, m - 1, d); };
-  const curta = s => s ? s.slice(0, 5) : "";
-  const toNumber = s => parseFloat(String(s || "").replace(/[^\d,-]/g, "").replace(",", ".")) || 0;
-  const today = () => { const n = new Date(); return Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()); };
 
   const PLATFORMS = {
     google: { title: "Google Ads", svg: `<svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>` },
@@ -199,20 +192,10 @@ const GRUPOS = [
   function colunas(header) {
     const h = header.map(s => (s || "").trim().toUpperCase());
     const find = re => h.findIndex(s => re.test(s));
-    return { semana: find(/^ÚLTIMOS 7 DIAS/), total: find(/^TODO O PERÍODO/), atualizado: find(/^ATUALIZADO/) };
+    return { semana: find(/^ÚLTIMOS 7 DIAS/), atualizado: find(/^ATUALIZADO/) };
   }
 
   const celula = (k, v, cls) => `<div${cls ? ` class="${cls}"` : ""}><span class="k">${k}</span><span class="v">${v}</span></div>`;
-
-  function promocao(c, r) {
-    if (!c.promocao || !r || ads.col.total < 0) return celula("Promoção Google", "—", "promo");
-    const gasto = toNumber(r[ads.col.total]);
-    const pct = Math.min(Math.floor(gasto / META * 100), 100);
-    const prazo = parseDate(c.promocao);
-    const estado = gasto >= META ? `Meta atingida${c.promocaoNota ? ` – ${esc(c.promocaoNota)}` : ""}`
-      : prazo < today() ? `${pct}% · prazo encerrado` : `${pct}% · até ${curta(c.promocao)}`;
-    return `<div class="promo"><span class="k">Promoção Google</span><span class="v">${estado}</span><span class="barra"><i style="width:${pct}%"></i></span></div>`;
-  }
 
   function dados(c) {
     const r = c.conta ? ads.porConta[c.conta] : null;
@@ -225,9 +208,7 @@ const GRUPOS = [
       gasto = v(r[s]); conv = v(r[s + 6]); custo = v(r[s + 8]);
     }
     return celula("Situação", situacao) +
-      celula("Última otimização", c.revisao ? esc(c.revisao) : "—") +
-      celula("Gasto · 7 dias", gasto) + celula("Conv. · 7 dias", conv) + celula("Custo/conv.", custo) +
-      promocao(c, r);
+      celula("Gasto · 7 dias", gasto) + celula("Conv. · 7 dias", conv) + celula("Custo/conv. · 7 dias", custo);
   }
 
   function card(c) {
