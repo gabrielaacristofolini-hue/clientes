@@ -17,7 +17,7 @@
    Só a barrinha da promoção vem ao vivo da planilha (pela "conta").
    situacao: "Ativo" ou "Pausada · promoção atingida" (só quem pausou porque já atingiu a promoção).
    ===================================================================== */
-const ATUALIZADO_EM = "16/11/2026 às 16:46";
+const ATUALIZADO_EM = "16/11/2026 às 16:51";
 
 const GRUPOS = [
   { id: "rec", titulo: "Clientes recorrentes", clientes: [
@@ -304,7 +304,9 @@ const DIA_PAGAMENTO = 20;
 
     // Lista simples: cada cliente e quanto representa no dia 20, separada por grupo, com o subtotal de cada grupo
     const linha = ({ c, g, pag }) => {
-      const parcela = g.id === "proj" && pag.entra ? `parcela ${(c.parcelas || 0) + 1} de ${PARCELAS}` : "";
+      // Deixa claro que o pagamento do dia é a próxima parcela, e quantas já foram pagas antes dele
+      const pagas = c.parcelas || 0;
+      const parcela = g.id === "proj" && pag.entra ? `Neste pagamento (${dia}): ${pagas + 1}ª parcela de ${PARCELAS} · ${pagas ? `${pagas} já paga${pagas > 1 ? "s" : ""}` : "nenhuma paga ainda"}` : "";
       const nota = pag.entra ? parcela : "Não conta: ainda não completou 30 dias de campanha rodando";
       return `<li${pag.entra ? "" : ` class="fora"`}><span class="cli">${esc(c.nome)}${nota ? `<small>${esc(nota)}</small>` : ""}</span>` +
         `<span class="val">${pag.entra ? money(c.mensal) : "—"}</span></li>`;
