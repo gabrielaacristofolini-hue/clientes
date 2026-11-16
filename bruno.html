@@ -9,63 +9,83 @@
 <link rel="alternate icon" type="image/png" href="favicon.png">
 <script>
 /* =====================================================================
-   Página do Bruno: só os clientes dele, em versão simples.
-   Aqui só entra o que ele pode ver: mensalidade, parcelas, cenário e a última otimização; nada de tarefas ou histórico
-   de otimizações. "otimizacao" é sempre só a mais recente.
-   Só a barrinha da promoção vem ao vivo da planilha (pela "conta"). "parcelas" é quantas já foram pagas (só clientes de projeto).
+   Página do Bruno: reporte dos clientes dele.
+   Aba Clientes: situação, início, cenário, última otimização (só a mais recente) e próximos passos.
+   Aba Financeiro: mensalidades por grupo, próximo pagamento (dia 20, só quem já completou 30 dias)
+   e parcelas pagas dos projetos (R$ 600 em 4 parcelas de R$ 150).
+   Sem histórico de otimizações nem prazos de promoção.
+   Só a barrinha da promoção vem ao vivo da planilha (pela "conta").
+   situacao: "Rodando", "Pausada", "Sem saldo" ou "Não iniciada".
    ===================================================================== */
 const ATUALIZADO_EM = "16/11/2026 às 16:30";
 
 const GRUPOS = [
-  { titulo: "Recorrentes", clientes: [
-    { nome: "VILA 86", segmento: "Moda streetwear", plataformas: ["meta", "google"], mensal: 200, revisao: "16/11/2026",
-      cenario: "Vendas praticamente todos os dias. Campanha de Black Friday em preparação, com previsão de subir até quarta-feira.",
-      otimizacao: "Revisão geral das campanhas." },
-    { nome: "061 RACING", segmento: "Mecânica de alta performance", plataformas: ["meta"], mensal: 200, revisao: "16/11/2026",
-      cenario: "Campanhas dentro do padrão; o custo por contato do remap está um pouco alto. Conversando com o cliente sobre a qualidade dos contatos.",
-      otimizacao: "Revisão geral; ajustes maiores previstos após o retorno do cliente." },
+  { id: "rec", titulo: "Clientes recorrentes", clientes: [
+    { nome: "VILA 86", segmento: "Moda streetwear", plataformas: ["meta", "google"], mensal: 200, inicio: "", revisao: "16/11/2026", situacao: "Rodando",
+      cenario: "Vendas praticamente todos os dias, com média de quase 2 vendas por dia. No Google, o foco está nas campanhas de vendas, de onde vem a maior parte dos resultados; no Meta, em visitas ao perfil e distribuição de conteúdo.",
+      otimizacao: "Revisão geral das campanhas, sem grandes mudanças, já que os resultados seguem bons.",
+      proximos: "Subir a campanha de Black Friday até quarta-feira (18/11), com criativos próprios em um grupo separado." },
+    { nome: "061 RACING", segmento: "Mecânica de alta performance", plataformas: ["meta"], mensal: 200, inicio: "", revisao: "16/11/2026", situacao: "Rodando",
+      cenario: "Campanhas dentro do padrão. O custo por contato do remap está um pouco alto, e ainda falta o retorno do cliente para confirmar se os contatos estão virando resultado.",
+      otimizacao: "Revisão geral das campanhas.",
+      proximos: "Entender com o cliente a qualidade dos contatos e, até quarta-feira (18/11), fazer ajustes mais fortes no remap, se for preciso." },
   ] },
-  { titulo: "Recorrentes · Psicólogos", clientes: [
-    { nome: "NARA", segmento: "Psicologia", plataformas: ["google"], conta: "775-492-4225", mensal: 150, revisao: "16/11/2026",
-      cenario: "Resultado bem interessante em volume de conversões. Conversando com a cliente para entender como foram os contatos neste período.",
-      otimizacao: "Uma palavra-chave pausada e ajustes nos termos de pesquisa; o restante segue igual." },
-    { nome: "NATHALIA", segmento: "Psicologia", plataformas: ["google"], mensal: 150, revisao: "16/11/2026",
-      cenario: "Campanha local, focada em contatos high ticket. Aguardando o feedback da cliente; verificação da conta prevista até 02/12.",
-      otimizacao: "Revisão da conta, sem alterações bruscas." },
-    { nome: "CLÉCIA", segmento: "Psicologia", plataformas: ["google"], conta: "128-846-8174", mensal: 150, revisao: "16/11/2026",
-      cenario: "Conta pausada por uma verificação pendente; aguardando a cliente confirmar o número de telefone. Resultados bem interessantes até aqui.",
-      otimizacao: "Revisão da conta e pedido de verificação do telefone à cliente." },
-    { nome: "HUGO", segmento: "Psicologia", plataformas: ["google"], conta: "587-222-5596", mensal: 150, revisao: "16/11/2026",
-      cenario: "Campanhas sem saldo no momento; aguardando a recarga e o retorno do cliente sobre os próximos passos.",
-      otimizacao: "Revisão da conta; aguardando a recarga e o retorno do cliente." },
+  { id: "recpsi", titulo: "Psicólogos recorrentes", clientes: [
+    { nome: "NARA", segmento: "Psicologia", plataformas: ["google"], conta: "775-492-4225", mensal: 150, inicio: "30/09/2026", revisao: "16/11/2026", situacao: "Rodando",
+      cenario: "Conta regularizada e campanhas no ar desde 05/11. O resultado em volume de conversões está bem interessante.",
+      otimizacao: "Uma palavra-chave pausada e ajustes nos termos de pesquisa; o restante segue igual.",
+      proximos: "Entender com a cliente como foram de fato os contatos neste período." },
+    { nome: "NATHALIA", segmento: "Psicologia", plataformas: ["google"], mensal: 150, inicio: "23/09/2026", revisao: "16/11/2026", situacao: "Rodando",
+      cenario: "Campanha local, só na região, com foco em contatos de perfil mais high ticket, já que o atendimento dela tem um valor mais alto. Já houve contatos qualificados, agendamentos e fechamentos. Uma campanha de teste, com público mais fechado e orçamento menor, segue rodando.",
+      otimizacao: "Revisão da conta, sem alterações bruscas.",
+      proximos: "Aguardar o feedback da cliente para definir os próximos ajustes. Verificação da conta até 02/12." },
+    { nome: "CLÉCIA", segmento: "Psicologia", plataformas: ["google"], conta: "128-846-8174", mensal: 150, inicio: "22/09/2026", revisao: "16/11/2026", situacao: "Pausada",
+      cenario: "Resultados bem interessantes, com alguns fechamentos já confirmados pela cliente. A conta foi pausada pelo Google por causa de uma verificação pendente.",
+      otimizacao: "Revisão da conta e pedido à cliente para confirmar o número de telefone.",
+      proximos: "Assim que ela confirmar o telefone, a conta volta a rodar." },
+    { nome: "HUGO", segmento: "Psicologia", plataformas: ["google"], conta: "587-222-5596", mensal: 150, inicio: "29/09/2026", revisao: "16/11/2026", situacao: "Sem saldo",
+      cenario: "Campanhas sem saldo no momento. A qualidade dos contatos está sendo acompanhada junto com o cliente.",
+      otimizacao: "Revisão da conta.",
+      proximos: "Aguardar a recarga e o retorno do cliente sobre como seguir com as campanhas." },
   ] },
-  { titulo: "Projetos · Psicólogos", clientes: [
-    { nome: "SHEILA", segmento: "Psicologia", plataformas: ["google"], conta: "353-831-5205", mensal: 150, parcelas: 1, revisao: "16/11/2026",
-      cenario: "Aguardando o feedback da cliente e o retorno sobre os próximos passos das campanhas.",
-      otimizacao: "Revisão da conta." },
-    { nome: "CARMEM", segmento: "Psicologia", plataformas: ["google"], conta: "918-578-8000", mensal: 150, parcelas: 0, revisao: "16/11/2026",
-      cenario: "Campanhas no ar e verificação da conta concluída. Aguardando o feedback da cliente para os próximos ajustes.",
-      otimizacao: "Ajustes nos termos de pesquisa e nas campanhas." },
-    { nome: "THAYNARA", segmento: "Psicologia", plataformas: ["google"], conta: "337-837-5511", mensal: 150, parcelas: 1, revisao: "16/11/2026",
-      cenario: "Campanhas pausadas. A ideia é voltar a investir quando os créditos do Google entrarem.",
-      otimizacao: "Revisão da conta; campanhas seguem pausadas até a entrada dos créditos." },
-    { nome: "DANIELLE", segmento: "Psicologia", plataformas: ["google"], conta: "150-686-1633", mensal: 150, parcelas: 1, revisao: "16/11/2026",
-      cenario: "Campanhas pausadas por enquanto. Na volta, a dinâmica das campanhas será reestruturada com mudanças que a cliente vai sinalizar.",
-      otimizacao: "Revisão da conta; campanhas seguem pausadas por enquanto." },
-    { nome: "ALICE", segmento: "Psicologia", plataformas: ["google"], conta: "357-411-5648", mensal: 150, parcelas: 1, revisao: "16/11/2026",
+  { id: "proj", titulo: "Psicólogos de projeto", clientes: [
+    { nome: "SHEILA", segmento: "Psicologia", plataformas: ["google"], conta: "353-831-5205", mensal: 150, parcelas: 1, inicio: "24/09/2026", revisao: "16/11/2026", situacao: "Rodando",
+      cenario: "Campanhas com uma nova dinâmica desde 11/11, com troca das palavras-chave, para trazer resultado e entender o que funciona melhor. Verificação da conta já feita.",
+      otimizacao: "Revisão da conta.",
+      proximos: "Aguardar o feedback da cliente sobre manter as campanhas ou pausar por um período." },
+    { nome: "CARMEM", segmento: "Psicologia", plataformas: ["google"], conta: "918-578-8000", mensal: 150, parcelas: 0, inicio: "05/10/2026", revisao: "16/11/2026", situacao: "Rodando",
+      cenario: "Campanhas no ar e verificação da conta concluída.",
+      otimizacao: "Ajustes nos termos de pesquisa e nas campanhas.",
+      proximos: "Com o feedback da cliente, fazer mais alterações na quarta-feira (18/11)." },
+    { nome: "THAYNARA", segmento: "Psicologia", plataformas: ["google"], conta: "337-837-5511", mensal: 150, parcelas: 1, inicio: "03/09/2026", revisao: "16/11/2026", situacao: "Pausada",
+      cenario: "Campanhas pausadas: a cliente prefere aguardar a entrada dos créditos do Google para voltar a investir. Conta sem verificação pendente.",
+      otimizacao: "Revisão da conta; está tudo ok.",
+      proximos: "Conferir de novo na quarta-feira (18/11) se os créditos entraram." },
+    { nome: "DANIELLE", segmento: "Psicologia", plataformas: ["google"], conta: "150-686-1633", mensal: 150, parcelas: 1, inicio: "14/09/2026", revisao: "16/11/2026", situacao: "Pausada",
+      cenario: "Campanhas pausadas até a entrada dos créditos do Google. Conta sem verificação pendente.",
+      otimizacao: "Revisão da conta; os créditos ainda não entraram.",
+      proximos: "Na quarta-feira (18/11), conferir os créditos com a cliente. Na volta, reestruturar as campanhas com as mudanças que ela vai sinalizar." },
+    { nome: "ALICE", segmento: "Psicologia", plataformas: ["google"], conta: "357-411-5648", mensal: 150, parcelas: 1, inicio: "14/09/2026", revisao: "16/11/2026", situacao: "Sem saldo",
       cenario: "Conta revisada e em ordem; a cliente optou por seguir com as campanhas. Verificação da conta pendente, ainda sem prazo.",
-      otimizacao: "Revisão geral da conta; novos ajustes previstos após o feedback da cliente." },
-    { nome: "YASMIN", segmento: "Psicologia", plataformas: ["google"], conta: "756-159-1841", mensal: 150, parcelas: 1, revisao: "16/11/2026",
-      cenario: "Campanhas pausadas por enquanto, aguardando o retorno da cliente. Verificação da conta (confirmação de telefone) prevista até 20/11.",
-      otimizacao: "Revisão da conta; campanhas seguem pausadas por enquanto." },
-    { nome: "THAIS", segmento: "Psicologia", plataformas: ["google"], conta: "337-708-3643", mensal: 150, parcelas: 0, revisao: "16/11/2026",
-      cenario: "Campanhas no ar, com foco no atendimento online. Confirmando com a cliente os últimos contatos; verificação do anunciante até 15/12.",
-      otimizacao: "Ajustes nos termos de pesquisa." },
-    { nome: "NEIVA", segmento: "Psicologia", plataformas: ["google"], mensal: 150, parcelas: 0, revisao: "",
-      cenario: "Site pronto. Aguardando o acesso ao domínio e a criação da conta de anúncios para iniciar as campanhas.",
-      otimizacao: "" },
+      otimizacao: "Revisão geral da conta.",
+      proximos: "Pedir a recarga na quarta-feira (18/11) e, com o feedback da cliente, fazer novos ajustes." },
+    { nome: "YASMIN", segmento: "Psicologia", plataformas: ["google"], conta: "756-159-1841", mensal: 150, parcelas: 1, inicio: "30/09/2026", revisao: "16/11/2026", situacao: "Pausada",
+      cenario: "Campanhas pausadas até a entrada dos créditos do Google. Ainda sem retorno da cliente sobre os resultados.",
+      otimizacao: "Revisão da conta.",
+      proximos: "Retomar o contato com a cliente. Verificação da conta (confirmação de telefone) até 20/11." },
+    { nome: "THAIS", segmento: "Psicologia", plataformas: ["google"], conta: "337-708-3643", mensal: 150, parcelas: 0, inicio: "11/11/2026", revisao: "16/11/2026", situacao: "Rodando",
+      cenario: "Campanhas no ar desde 11/11, com foco, por enquanto, no atendimento online.",
+      otimizacao: "Ajustes nos termos de pesquisa.",
+      proximos: "Confirmar com a cliente como foram os últimos contatos e fazer otimizações maiores na quarta-feira (18/11). Verificação do anunciante até 15/12." },
+    { nome: "NEIVA", segmento: "Psicologia", plataformas: ["google"], mensal: 150, parcelas: 0, inicio: "", revisao: "", situacao: "Não iniciada",
+      cenario: "Site pronto. Aguardando o acesso ao domínio (Registro.br) e a criação da conta de anúncios.",
+      otimizacao: "",
+      proximos: "Iniciar as campanhas assim que a conta de anúncios estiver criada." },
   ] },
 ];
+
+/* Pagamento do Bruno: todo dia 20, só dos clientes que já completaram 30 dias desde o início */
+const DIA_PAGAMENTO = 20;
 </script>
 <style>
   :root {
@@ -79,6 +99,7 @@ const GRUPOS = [
     --label: #8a929b;
     --soft-ink: #4a535c;
     --line: #e4ebe7;
+    --row-soft: #f2f6f4;
     --title: #f0d78c;
     --bar: #2f7a57;
   }
@@ -89,10 +110,12 @@ const GRUPOS = [
     margin: 0;
     background: var(--bg);
     color: var(--ink);
-    font: 13px/1.4 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font: 13px/1.45 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
+  [hidden] { display: none !important; }
   .wrap { padding: 32px 40px 44px; }
+  /* Largura fixa (igual nas duas abas), para o cabeçalho não mudar de lugar */
   .layout { display: grid; grid-template-columns: minmax(0, 1fr); width: min(1240px, 100%); margin: 0 auto; gap: 26px; }
 
   .top {
@@ -103,10 +126,14 @@ const GRUPOS = [
     font-size: 16px; font-weight: 700; letter-spacing: .02em;
   }
   .top svg { display: block; flex: none; }
+  .tabs { display: flex; gap: 4px; }
+  .tabs a { padding: 5px 12px; color: var(--box-ink); opacity: .65; text-decoration: none; font-size: 14px; font-weight: 600; letter-spacing: .01em; }
+  .tabs a:hover { opacity: 1; }
+  .tabs a[aria-current="page"] { opacity: 1; background: var(--box); color: #fff; box-shadow: inset 0 0 0 1px var(--box-line); }
   .updated { margin-left: auto; padding: 3px 10px; border: 1px solid rgba(255, 255, 255, .2); font-size: 12.5px; font-weight: 500; letter-spacing: 0; }
 
   section { min-width: 0; background: var(--box); border: 1px solid var(--box-line); padding: 16px 20px 20px; }
-  section + section { margin-top: 30px; }
+  .aba > section + section, .aba > section + .fin-grupo, .fin-grupo + .fin-grupo { margin-top: 30px; }
   section h2 {
     display: flex; align-items: baseline; gap: 8px;
     margin: 0 0 12px 2px; font-size: 12px; font-weight: 600; color: var(--title);
@@ -115,8 +142,9 @@ const GRUPOS = [
   section h2 span { color: var(--box-label); font-weight: 500; text-transform: none; letter-spacing: 0; }
   .cards { display: grid; gap: 10px; }
 
-  .card { padding: 12px 16px 13px; background: var(--surface); border: 1px solid var(--line); }
-  .dados { display: grid; grid-template-columns: minmax(280px, 1.4fr) minmax(280px, 1.6fr) minmax(170px, 1fr); align-items: center; font-variant-numeric: tabular-nums; }
+  /* Card de cada cliente */
+  .card { padding: 13px 16px 14px; background: var(--surface); border: 1px solid var(--line); }
+  .dados { display: grid; grid-template-columns: minmax(250px, 1.3fr) minmax(200px, 1fr) minmax(240px, 1.3fr) minmax(150px, .8fr); align-items: center; font-variant-numeric: tabular-nums; }
   .dados > div { min-width: 0; padding: 0 20px; border-left: 1px solid var(--line); white-space: nowrap; }
   .dados > div:first-child { padding-left: 0; border-left: 0; }
   .k { display: block; font-size: 11px; color: var(--label); }
@@ -126,25 +154,61 @@ const GRUPOS = [
   .plat { display: inline-block; width: 14px; height: 14px; margin-left: 6px; vertical-align: -2px; }
   .plat + .plat { margin-left: 4px; }
   .plat svg { display: block; width: 100%; height: 100%; }
-  .dados > .promo { grid-column: 2; }
+  .sit-cell .v { display: flex; align-items: center; gap: 8px; }
+  .sit-cell small { font-size: 11.5px; color: var(--label); }
+  .dados > .promo { grid-column: 3; }
   /* Mensalidade e parcelas bem discretas, no canto direito */
-  .dados > .disc { grid-column: 3; padding-right: 0; border-left: 0; text-align: right; font-size: 11px; color: var(--label); }
+  .dados > .disc { grid-column: 4; padding-right: 0; border-left: 0; text-align: right; font-size: 11px; color: var(--label); }
   .barra-linha { display: flex; align-items: center; gap: 10px; height: 19px; }
   .barra { flex: 1; height: 7px; background: var(--line); }
   .barra i { display: block; height: 100%; background: var(--bar); }
   .barra-linha b { min-width: 34px; text-align: right; font-size: 12.5px; font-weight: 600; }
 
-  .texto { margin: 10px 0 0; padding-top: 8px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--soft-ink); text-wrap: pretty; } /* evita palavra sozinha na última linha */
-  .texto + .texto { margin-top: 5px; padding-top: 0; border-top: 0; }
-  .texto b { margin-right: 4px; font-size: 11px; font-weight: 700; color: var(--label); text-transform: uppercase; letter-spacing: .04em; }
+  /* Situação: só "Rodando" ganha cor; o resto fica neutro */
+  .sit { display: inline-block; padding: 1px 8px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; background: #eef1ef; color: var(--soft-ink); white-space: nowrap; }
+  .sit.rodando { background: #e3f1e9; color: #1f6b47; }
+  .sit.nao-iniciada { background: none; box-shadow: inset 0 0 0 1px #cfd6d2; color: var(--label); }
+
+  .textos { display: grid; gap: 6px; margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line); }
+  .texto { margin: 0; font-size: 12.5px; color: var(--soft-ink); text-wrap: pretty; } /* evita palavra sozinha na última linha */
+  .texto b { margin-right: 6px; font-size: 11px; font-weight: 700; color: var(--label); text-transform: uppercase; letter-spacing: .04em; }
+
+  /* Aba Financeiro */
+  .fin-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .kpi { padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--bar); }
+  .kpi .k { font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+  .kpi .v { margin-top: 6px; font-size: 26px; font-weight: 700; line-height: 1.15; letter-spacing: -.01em; }
+  .kpi .s { display: block; margin-top: 4px; font-size: 12px; color: var(--soft-ink); }
+  .regras { margin: 16px 0 0; padding: 12px 16px; background: var(--surface); border-left: 4px solid var(--bar); font-size: 13px; color: var(--soft-ink); }
+  .regras p { margin: 0; }
+  .regras p + p { margin-top: 6px; }
+  .regras b { color: var(--ink); }
+  .fin-table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+  .fin-table th { padding: 10px 16px; border-bottom: 1px solid var(--line); text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--label); white-space: nowrap; }
+  .fin-table td { padding: 10px 16px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  .fin-table .num { text-align: right; white-space: nowrap; }
+  .fin-table .cli { font-weight: 700; }
+  .fin-table td small { display: block; font-size: 11.5px; font-weight: 500; color: var(--label); }
+  .fin-table tfoot td { background: var(--row-soft); font-weight: 700; border-bottom: 0; }
+  .fin-table tfoot td small { font-weight: 500; }
+  .entra { font-weight: 600; color: #1f6b47; }
+  .fica { font-weight: 600; color: #8a5a12; }
+  .parc { display: inline-flex; align-items: center; gap: 5px; font-weight: 700; color: #24593f; white-space: nowrap; }
+  .parc i { display: inline-block; width: 8px; height: 8px; background: #d3ddd8; }
+  .parc i.ok { background: var(--bar); }
+  .parc span { margin-left: 3px; }
 
   @media (max-width: 1000px) {
     .wrap { padding: 16px; }
     .updated { margin-left: 0; }
     section { padding: 12px; }
-    .dados { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-items: start; }
+    .dados { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: start; }
     .dados > div { padding: 0; border-left: 0; white-space: normal; }
     .dados > div:first-child, .dados > .promo, .dados > .disc { grid-column: 1 / -1; }
+    .dados > .disc { text-align: left; }
+    .fin-kpis { grid-template-columns: minmax(0, 1fr); }
+    .fin-table .col-ini, .fin-table .col-sit { display: none; }
+    .fin-table th, .fin-table td { padding-left: 10px; padding-right: 10px; }
   }
 </style>
 </head>
@@ -160,27 +224,36 @@ const GRUPOS = [
           <path d="M9 68c0-15 10-25 23-25s23 10 23 25z" fill="#fff"/>
         </g>
       </svg>
-      <span>Clientes Bruno</span>
+      <nav class="tabs" aria-label="Abas">
+        <a href="#clientes" data-tab="clientes">Clientes</a>
+        <a href="#financeiro" data-tab="financeiro">Financeiro</a>
+      </nav>
       <span class="updated" id="updated"></span>
     </header>
-    <main id="grupos"></main>
+    <main class="aba" id="aba-clientes"></main>
+    <main class="aba" id="aba-financeiro" hidden></main>
   </div>
 </div>
 
 <script>
 (function () {
-
-  const PARCELAS = 4; // projeto de R$ 600 dividido em 4 parcelas de R$ 150 (clientes de projeto)
+  const DAY = 86400000;
+  const PARCELAS = 4; // projeto de R$ 600 dividido em 4 parcelas de R$ 150
   const money = v => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  const parseDate = s => { if (!s) return null; const [d, m, y] = s.split("/").map(Number); return Date.UTC(y, m - 1, d); };
+  const isDate = s => /^\d\d\/\d\d\/\d{4}$/.test(s || "");
+  const parseDate = s => { if (!isDate(s)) return null; const [d, m, y] = s.split("/").map(Number); return Date.UTC(y, m - 1, d); };
+  const ddmm = t => { const d = new Date(t); return String(d.getUTCDate()).padStart(2, "0") + "/" + String(d.getUTCMonth() + 1).padStart(2, "0"); };
+  const today = () => { const n = new Date(); return Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()); };
+  const qtd = n => `${n} cliente${n === 1 ? "" : "s"}`;
 
   const PLATFORMS = {
     google: { title: "Google Ads", svg: `<svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>` },
     meta: { title: "Meta Ads", svg: `<svg viewBox="0 0 24 24"><path d="M12 12c-2-3-3.6-5.2-5.6-5.2S2.8 9 2.8 12s1.6 5.2 3.6 5.2S10 15 12 12s3.6-5.2 5.6-5.2 3.6 2.2 3.6 5.2-1.6 5.2-3.6 5.2S14 15 12 12z" fill="none" stroke="#0866FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
   };
 
-  const celula = (k, v, cls) => `<div${cls ? ` class="${cls}"` : ""}><span class="k">${k}</span><span class="v">${v}</span></div>`;
+  const sitClasse = s => s === "Rodando" ? "rodando" : s === "Não iniciada" ? "nao-iniciada" : "";
+  const sit = s => `<span class="sit ${sitClasse(s)}">${esc(s)}</span>`;
 
   /* Promoção do Google: só a barrinha e o percentual de R$ 1.200 gastos, lidos ao vivo da aba "Geral" da planilha */
   const SHEET_CSV = "https://docs.google.com/spreadsheets/d/14wsRMmTuI7v7nT2yy6AXYKzlhBHNkznw4XXsen69xxE/gviz/tq?tqx=out:csv&sheet=Geral";
@@ -205,37 +278,120 @@ const GRUPOS = [
     return rows;
   }
 
-  function promocao(c) {
-    if (!c.conta) return "";
-    const gasto = gastoPorConta[c.conta];
-    const pct = gasto == null ? 0 : Math.min(Math.floor(gasto / META * 100), 100);
-    return `<div class="promo"><span class="k">Promoção Google</span><span class="barra-linha">` +
-      `<span class="barra"><i style="width:${pct}%"></i></span><b>${gasto == null ? "—" : pct + "%"}</b></span></div>`;
+  /* ===== Pagamento: próximo dia 20 e quem entra nele ===== */
+  function proximoPagamento() {
+    const n = new Date();
+    return Date.UTC(n.getFullYear(), n.getMonth() + (n.getDate() > DIA_PAGAMENTO ? 1 : 0), DIA_PAGAMENTO);
+  }
+  // Primeiro dia 20 em que o cliente já tem 30 dias desde o início
+  function primeiroPagamento(inicio) {
+    const t = parseDate(inicio) + 30 * DAY, d = new Date(t);
+    const mesmo = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), DIA_PAGAMENTO);
+    return mesmo >= t ? mesmo : Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, DIA_PAGAMENTO);
+  }
+  // Recorrentes sem data de início são clientes antigos e entram; projetos sem início ainda não começaram
+  function noPagamento(c, g, data) {
+    if (isDate(c.inicio)) {
+      const p = primeiroPagamento(c.inicio);
+      return p <= data ? { entra: true } : { entra: false, txt: `A partir de ${ddmm(p)}` };
+    }
+    return g.id === "proj" ? { entra: false, txt: "Após o início" } : { entra: true };
   }
 
-  function dados(c) {
-    return promocao(c) +
-      `<div class="disc">${money(c.mensal)}${c.parcelas != null ? ` · ${c.parcelas} de ${PARCELAS} parcelas` : ""}</div>`;
-  }
-
+  /* ===== Aba Clientes ===== */
   function card(c) {
     const plats = (c.plataformas || []).map(p => `<span class="plat" title="${PLATFORMS[p].title}">${PLATFORMS[p].svg}</span>`).join("");
-    return `<article class="card"><div class="dados"><div><span class="nome">${esc(c.nome)}${plats}</span><span class="seg">${esc(c.segmento)}</span></div>${dados(c)}</div>` +
-      `<p class="texto"><b>Cenário</b>${esc(c.cenario)}</p>` +
-      (c.otimizacao ? `<p class="texto"><b>Última otimização</b>${esc(c.otimizacao)}</p>` : "") + `</article>`;
+    const gasto = c.conta ? gastoPorConta[c.conta] : undefined;
+    const pct = gasto == null ? 0 : Math.min(Math.floor(gasto / META * 100), 100);
+    const promo = c.conta ? `<div class="promo"><span class="k">Promoção Google</span><span class="barra-linha">` +
+      `<span class="barra"><i style="width:${pct}%"></i></span><b>${gasto == null ? "—" : pct + "%"}</b></span></div>` : "";
+    const textos = [["Cenário", c.cenario], ["Última otimização", c.otimizacao], ["Próximos passos", c.proximos]]
+      .filter(([, t]) => t).map(([k, t]) => `<p class="texto"><b>${k}</b>${esc(t)}</p>`).join("");
+    return `<article class="card"><div class="dados">` +
+      `<div><span class="nome">${esc(c.nome)}${plats}</span><span class="seg">${esc(c.segmento)}</span></div>` +
+      `<div class="sit-cell"><span class="k">Situação</span><span class="v">${sit(c.situacao)}<small>${isDate(c.inicio) ? `início ${c.inicio.slice(0, 5)}` : "início —"}</small></span></div>` +
+      promo +
+      `<div class="disc">${money(c.mensal)}${c.parcelas != null ? ` · ${c.parcelas} de ${PARCELAS} parcelas` : ""}</div>` +
+      `</div><div class="textos">${textos}</div></article>`;
   }
 
-  // Otimização mais recente primeiro; mesma data → ordem alfabética; sem data no fim
+  // Revisão mais recente primeiro; mesma data → ordem alfabética; sem data no fim
   const ordem = lista => lista.slice().sort((a, b) =>
     (parseDate(b.revisao) ?? -Infinity) - (parseDate(a.revisao) ?? -Infinity) || a.nome.localeCompare(b.nome, "pt-BR"));
 
-  function render() {
-    document.getElementById("updated").textContent = `Atualizado em ${ATUALIZADO_EM}`;
-    document.getElementById("grupos").innerHTML = GRUPOS.map(g =>
-      `<section><h2>${esc(g.titulo)} <span>${g.clientes.length} cliente${g.clientes.length === 1 ? "" : "s"}</span></h2>` +
+  function renderClientes() {
+    document.getElementById("aba-clientes").innerHTML = GRUPOS.map(g =>
+      `<section><h2>${esc(g.titulo)} <span>${qtd(g.clientes.length)}</span></h2>` +
       `<div class="cards">${ordem(g.clientes).map(card).join("")}</div></section>`).join("");
   }
+
+  /* ===== Aba Financeiro ===== */
+  function renderFinanceiro() {
+    const data = proximoPagamento();
+    const dia = ddmm(data);
+    const todos = GRUPOS.flatMap(g => g.clientes.map(c => ({ c, g, pag: noPagamento(c, g, data) })));
+    const soma = l => l.reduce((s, x) => s + (x.c.mensal || 0), 0);
+    const entram = todos.filter(x => x.pag.entra), ficam = todos.filter(x => !x.pag.entra);
+    const faltam = Math.round((data - today()) / DAY);
+    const quando = faltam === 0 ? "é hoje" : faltam === 1 ? "é amanhã" : `faltam ${faltam} dias`;
+
+    const kpi = (k, v, s) => `<div class="kpi"><span class="k">${k}</span><span class="v">${v}</span><span class="s">${s}</span></div>`;
+    const kpis = kpi(`Próximo pagamento · ${dia}`, money(soma(entram)), `${qtd(entram.length)} · ${quando}`) +
+      kpi("Mensalidade total", money(soma(todos)), `${qtd(todos.length)}, somando todos os grupos`) +
+      kpi("Entram depois", money(soma(ficam)), ficam.length ? ficam.map(x => `${esc(x.c.nome)} (${esc(x.pag.txt.toLowerCase())})`).join(" · ") : "nenhum cliente");
+
+    const projetos = (GRUPOS.find(g => g.id === "proj") || { clientes: [] }).clientes;
+    const semParcela = projetos.filter(c => !c.parcelas).map(c => c.nome);
+    const regras = `<div class="regras">` +
+      `<p><b>Pagamento todo dia ${DIA_PAGAMENTO}:</b> entram os clientes que já completaram 30 dias desde o início das campanhas. Os demais entram no mês seguinte.</p>` +
+      `<p><b>Psicólogos de projeto:</b> o combinado é R$ 600 por projeto, em 4 parcelas de R$ 150. A maior parte já pagou 1 parcela` +
+      (semParcela.length ? `; ${semParcela.map(esc).join(", ").replace(/, ([^,]*)$/, " e $1")} ainda não ${semParcela.length === 1 ? "pagou" : "pagaram"} nenhuma.` : ".") + `</p></div>`;
+
+    const parcelas = c => {
+      const n = c.parcelas || 0;
+      const marcas = Array.from({ length: PARCELAS }, (_, i) => `<i${i < n ? ` class="ok"` : ""}></i>`).join("");
+      return `<span class="parc">${marcas}<span>${n} de ${PARCELAS}</span></span>`;
+    };
+    const tabela = g => {
+      const linhas = todos.filter(x => x.g === g);
+      const proj = g.id === "proj";
+      const doGrupo = linhas.filter(x => x.pag.entra);
+      return `<section class="fin-grupo"><h2>${esc(g.titulo)} <span>${qtd(linhas.length)}</span></h2>` +
+        `<table class="fin-table"><thead><tr><th>Cliente</th><th class="col-sit">Situação</th><th class="col-ini">Início</th>` +
+        (proj ? `<th>Parcelas pagas</th>` : "") + `<th class="num">Mensalidade</th><th class="num">No dia ${dia}</th></tr></thead><tbody>` +
+        linhas.map(({ c, pag }) => `<tr><td class="cli">${esc(c.nome)}<small>${esc(c.segmento)}</small></td>` +
+          `<td class="col-sit">${sit(c.situacao)}</td><td class="col-ini">${isDate(c.inicio) ? c.inicio.slice(0, 5) : "—"}</td>` +
+          (proj ? `<td>${parcelas(c)}</td>` : "") +
+          `<td class="num">${money(c.mensal)}</td>` +
+          `<td class="num">${pag.entra ? `<span class="entra">Entra</span>` : `<span class="fica">${esc(pag.txt)}</span>`}</td></tr>`).join("") +
+        `</tbody><tfoot><tr><td colspan="${proj ? 4 : 3}">Total do grupo<small>${qtd(doGrupo.length)} no dia ${dia}</small></td>` +
+        `<td class="num">${money(soma(linhas))}</td><td class="num">${money(soma(doGrupo))}</td></tr></tfoot></table></section>`;
+    };
+
+    document.getElementById("aba-financeiro").innerHTML =
+      `<section><h2>Resumo</h2><div class="fin-kpis">${kpis}</div>${regras}</section>` +
+      GRUPOS.map(tabela).join("");
+  }
+
+  function render() {
+    document.getElementById("updated").textContent = `Atualizado em ${ATUALIZADO_EM}`;
+    renderClientes();
+    renderFinanceiro();
+  }
+
+  // Abas: a aba aberta fica no endereço (#clientes ou #financeiro); os ids das abas são diferentes para o navegador não rolar a página
+  function showTab() {
+    const aba = location.hash === "#financeiro" ? "financeiro" : "clientes";
+    document.getElementById("aba-clientes").hidden = aba !== "clientes";
+    document.getElementById("aba-financeiro").hidden = aba !== "financeiro";
+    document.querySelectorAll(".tabs a").forEach(a => {
+      if (a.dataset.tab === aba) a.setAttribute("aria-current", "page");
+      else a.removeAttribute("aria-current");
+    });
+  }
+  addEventListener("hashchange", showTab);
   render();
+  showTab();
 
   // "conta" só existe nos clientes que entram na promoção; só essas linhas da planilha são usadas
   const contas = GRUPOS.flatMap(g => g.clientes.map(c => c.conta)).filter(Boolean);
@@ -246,7 +402,7 @@ const GRUPOS = [
       const total = (all[0] || []).findIndex(s => /^TODO O PERÍODO/.test((s || "").trim().toUpperCase()));
       if (total < 0) return;
       all.slice(1).filter(r => r[1] && contas.includes(r[1].trim())).forEach(r => { gastoPorConta[r[1].trim()] = toNumber(r[total]); });
-      render();
+      renderClientes();
     })
     .catch(() => {}); // sem a planilha, a barrinha fica vazia e o resto da página continua normal
 })();
