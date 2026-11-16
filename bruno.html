@@ -14,7 +14,7 @@
    de otimizações. "otimizacao" é sempre só a mais recente.
    Só a barrinha da promoção vem ao vivo da planilha (pela "conta"). "parcelas" é quantas já foram pagas (só clientes de projeto).
    ===================================================================== */
-const ATUALIZADO_EM = "16/11/2026 às 14:35";
+const ATUALIZADO_EM = "16/11/2026 às 15:00";
 
 const GRUPOS = [
   { titulo: "Recorrentes", clientes: [
@@ -170,7 +170,7 @@ const GRUPOS = [
 <script>
 (function () {
 
-  const PARCELAS = 3; // total de parcelas dos clientes psicólogos
+  const PARCELAS = 4; // projeto de R$ 600 dividido em 4 parcelas de R$ 150 (clientes de projeto)
   const money = v => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const parseDate = s => { if (!s) return null; const [d, m, y] = s.split("/").map(Number); return Date.UTC(y, m - 1, d); };
