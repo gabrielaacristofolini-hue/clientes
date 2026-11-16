@@ -10,77 +10,49 @@
 <script>
 /* =====================================================================
    Página do Bruno: reporte dos clientes dele.
-   Aba Clientes: situação, início, cenário, última otimização (só a mais recente) e próximos passos.
+   Aba Clientes: situação, início e um reporte geral de cada cliente (o mais atualizado possível).
    Aba Financeiro: mensalidades por grupo, próximo pagamento (dia 20, só quem já completou 30 dias)
    e parcelas pagas dos projetos (R$ 600 em 4 parcelas de R$ 150).
    Sem histórico de otimizações nem prazos de promoção.
    Só a barrinha da promoção vem ao vivo da planilha (pela "conta").
-   situacao: "Rodando", "Pausada", "Sem saldo" ou "Não iniciada".
+   situacao: "Ativo" ou "Pausada · promoção atingida" (só quem pausou porque já atingiu a promoção).
    ===================================================================== */
-const ATUALIZADO_EM = "16/11/2026 às 16:30";
+const ATUALIZADO_EM = "16/11/2026 às 16:41";
 
 const GRUPOS = [
   { id: "rec", titulo: "Clientes recorrentes", clientes: [
-    { nome: "VILA 86", segmento: "Moda streetwear", plataformas: ["meta", "google"], mensal: 200, inicio: "", revisao: "16/11/2026", situacao: "Rodando",
-      cenario: "Vendas praticamente todos os dias, com média de quase 2 vendas por dia. No Google, o foco está nas campanhas de vendas, de onde vem a maior parte dos resultados; no Meta, em visitas ao perfil e distribuição de conteúdo.",
-      otimizacao: "Revisão geral das campanhas, sem grandes mudanças, já que os resultados seguem bons.",
-      proximos: "Subir a campanha de Black Friday até quarta-feira (18/11), com criativos próprios em um grupo separado." },
-    { nome: "061 RACING", segmento: "Mecânica de alta performance", plataformas: ["meta"], mensal: 200, inicio: "", revisao: "16/11/2026", situacao: "Rodando",
-      cenario: "Campanhas dentro do padrão. O custo por contato do remap está um pouco alto, e ainda falta o retorno do cliente para confirmar se os contatos estão virando resultado.",
-      otimizacao: "Revisão geral das campanhas.",
-      proximos: "Entender com o cliente a qualidade dos contatos e, até quarta-feira (18/11), fazer ajustes mais fortes no remap, se for preciso." },
+    { nome: "VILA 86", segmento: "Moda streetwear", plataformas: ["meta", "google"], mensal: 200, inicio: "", revisao: "16/11/2026", situacao: "Ativo",
+      reporte: "Vendas praticamente todos os dias, com média de quase 2 vendas por dia. No Google, o foco está nas campanhas de vendas, de onde vem a maior parte dos resultados; no Meta, em visitas ao perfil e distribuição de conteúdo. Na última revisão não foi preciso mudar muita coisa, já que os resultados seguem bons. A campanha de Black Friday deve subir até quarta-feira (18/11), com criativos próprios em um grupo separado." },
+    { nome: "061 RACING", segmento: "Mecânica de alta performance", plataformas: ["meta"], mensal: 200, inicio: "", revisao: "16/11/2026", situacao: "Ativo",
+      reporte: "Campanhas dentro do padrão. O custo por contato do remap está um pouco alto, e ainda falta o retorno do cliente para confirmar se os contatos estão virando resultado. A ideia é entender com ele a qualidade dos contatos e, até quarta-feira (18/11), fazer ajustes mais fortes no remap, se for preciso." },
   ] },
   { id: "recpsi", titulo: "Psicólogos recorrentes", clientes: [
-    { nome: "NARA", segmento: "Psicologia", plataformas: ["google"], conta: "775-492-4225", mensal: 150, inicio: "30/09/2026", revisao: "16/11/2026", situacao: "Rodando",
-      cenario: "Conta regularizada e campanhas no ar desde 05/11. O resultado em volume de conversões está bem interessante.",
-      otimizacao: "Uma palavra-chave pausada e ajustes nos termos de pesquisa; o restante segue igual.",
-      proximos: "Entender com a cliente como foram de fato os contatos neste período." },
-    { nome: "NATHALIA", segmento: "Psicologia", plataformas: ["google"], mensal: 150, inicio: "23/09/2026", revisao: "16/11/2026", situacao: "Rodando",
-      cenario: "Campanha local, só na região, com foco em contatos de perfil mais high ticket, já que o atendimento dela tem um valor mais alto. Já houve contatos qualificados, agendamentos e fechamentos. Uma campanha de teste, com público mais fechado e orçamento menor, segue rodando.",
-      otimizacao: "Revisão da conta, sem alterações bruscas.",
-      proximos: "Aguardar o feedback da cliente para definir os próximos ajustes. Verificação da conta até 02/12." },
-    { nome: "CLÉCIA", segmento: "Psicologia", plataformas: ["google"], conta: "128-846-8174", mensal: 150, inicio: "22/09/2026", revisao: "16/11/2026", situacao: "Pausada",
-      cenario: "Resultados bem interessantes, com alguns fechamentos já confirmados pela cliente. A conta foi pausada pelo Google por causa de uma verificação pendente.",
-      otimizacao: "Revisão da conta e pedido à cliente para confirmar o número de telefone.",
-      proximos: "Assim que ela confirmar o telefone, a conta volta a rodar." },
-    { nome: "HUGO", segmento: "Psicologia", plataformas: ["google"], conta: "587-222-5596", mensal: 150, inicio: "29/09/2026", revisao: "16/11/2026", situacao: "Sem saldo",
-      cenario: "Campanhas sem saldo no momento. A qualidade dos contatos está sendo acompanhada junto com o cliente.",
-      otimizacao: "Revisão da conta.",
-      proximos: "Aguardar a recarga e o retorno do cliente sobre como seguir com as campanhas." },
+    { nome: "NARA", segmento: "Psicologia", plataformas: ["google"], conta: "775-492-4225", mensal: 150, inicio: "30/09/2026", revisao: "16/11/2026", situacao: "Ativo",
+      reporte: "Conta regularizada e campanhas no ar desde 05/11. O resultado em volume de conversões está bem interessante. Na última revisão, uma palavra-chave foi pausada e os termos de pesquisa foram ajustados; o restante segue igual. Agora estamos entendendo com a cliente como foram de fato os contatos neste período." },
+    { nome: "NATHALIA", segmento: "Psicologia", plataformas: ["google"], mensal: 150, inicio: "23/09/2026", revisao: "16/11/2026", situacao: "Ativo",
+      reporte: "Campanha local, só na região, com foco em contatos de perfil mais high ticket, já que o atendimento dela tem um valor mais alto. Já houve contatos qualificados, agendamentos e fechamentos, e uma campanha de teste, com público mais fechado e orçamento menor, segue rodando. Sem alterações bruscas por enquanto: estamos aguardando o feedback da cliente para definir os próximos ajustes. A verificação da conta precisa ser feita até 02/12." },
+    { nome: "CLÉCIA", segmento: "Psicologia", plataformas: ["google"], conta: "128-846-8174", mensal: 150, inicio: "22/09/2026", revisao: "16/11/2026", situacao: "Ativo",
+      reporte: "Resultados bem interessantes, com alguns fechamentos já confirmados pela cliente. A conta foi pausada pelo Google por causa de uma verificação pendente, e pedimos para ela confirmar o número de telefone; assim que ela confirmar, a conta volta a rodar." },
+    { nome: "HUGO", segmento: "Psicologia", plataformas: ["google"], conta: "587-222-5596", mensal: 150, inicio: "29/09/2026", revisao: "16/11/2026", situacao: "Ativo",
+      reporte: "Estamos aguardando a recarga do cliente e o retorno dele sobre como seguir com as campanhas. Em paralelo, acompanhamos com ele a qualidade dos contatos que chegaram." },
   ] },
   { id: "proj", titulo: "Psicólogos de projeto", clientes: [
-    { nome: "SHEILA", segmento: "Psicologia", plataformas: ["google"], conta: "353-831-5205", mensal: 150, parcelas: 1, inicio: "24/09/2026", revisao: "16/11/2026", situacao: "Rodando",
-      cenario: "Campanhas com uma nova dinâmica desde 11/11, com troca das palavras-chave, para trazer resultado e entender o que funciona melhor. Verificação da conta já feita.",
-      otimizacao: "Revisão da conta.",
-      proximos: "Aguardar o feedback da cliente sobre manter as campanhas ou pausar por um período." },
-    { nome: "CARMEM", segmento: "Psicologia", plataformas: ["google"], conta: "918-578-8000", mensal: 150, parcelas: 0, inicio: "05/10/2026", revisao: "16/11/2026", situacao: "Rodando",
-      cenario: "Campanhas no ar e verificação da conta concluída.",
-      otimizacao: "Ajustes nos termos de pesquisa e nas campanhas.",
-      proximos: "Com o feedback da cliente, fazer mais alterações na quarta-feira (18/11)." },
-    { nome: "THAYNARA", segmento: "Psicologia", plataformas: ["google"], conta: "337-837-5511", mensal: 150, parcelas: 1, inicio: "03/09/2026", revisao: "16/11/2026", situacao: "Pausada",
-      cenario: "Campanhas pausadas: a cliente prefere aguardar a entrada dos créditos do Google para voltar a investir. Conta sem verificação pendente.",
-      otimizacao: "Revisão da conta; está tudo ok.",
-      proximos: "Conferir de novo na quarta-feira (18/11) se os créditos entraram." },
-    { nome: "DANIELLE", segmento: "Psicologia", plataformas: ["google"], conta: "150-686-1633", mensal: 150, parcelas: 1, inicio: "14/09/2026", revisao: "16/11/2026", situacao: "Pausada",
-      cenario: "Campanhas pausadas até a entrada dos créditos do Google. Conta sem verificação pendente.",
-      otimizacao: "Revisão da conta; os créditos ainda não entraram.",
-      proximos: "Na quarta-feira (18/11), conferir os créditos com a cliente. Na volta, reestruturar as campanhas com as mudanças que ela vai sinalizar." },
-    { nome: "ALICE", segmento: "Psicologia", plataformas: ["google"], conta: "357-411-5648", mensal: 150, parcelas: 1, inicio: "14/09/2026", revisao: "16/11/2026", situacao: "Sem saldo",
-      cenario: "Conta revisada e em ordem; a cliente optou por seguir com as campanhas. Verificação da conta pendente, ainda sem prazo.",
-      otimizacao: "Revisão geral da conta.",
-      proximos: "Pedir a recarga na quarta-feira (18/11) e, com o feedback da cliente, fazer novos ajustes." },
-    { nome: "YASMIN", segmento: "Psicologia", plataformas: ["google"], conta: "756-159-1841", mensal: 150, parcelas: 1, inicio: "30/09/2026", revisao: "16/11/2026", situacao: "Pausada",
-      cenario: "Campanhas pausadas até a entrada dos créditos do Google. Ainda sem retorno da cliente sobre os resultados.",
-      otimizacao: "Revisão da conta.",
-      proximos: "Retomar o contato com a cliente. Verificação da conta (confirmação de telefone) até 20/11." },
-    { nome: "THAIS", segmento: "Psicologia", plataformas: ["google"], conta: "337-708-3643", mensal: 150, parcelas: 0, inicio: "11/11/2026", revisao: "16/11/2026", situacao: "Rodando",
-      cenario: "Campanhas no ar desde 11/11, com foco, por enquanto, no atendimento online.",
-      otimizacao: "Ajustes nos termos de pesquisa.",
-      proximos: "Confirmar com a cliente como foram os últimos contatos e fazer otimizações maiores na quarta-feira (18/11). Verificação do anunciante até 15/12." },
-    { nome: "NEIVA", segmento: "Psicologia", plataformas: ["google"], mensal: 150, parcelas: 0, inicio: "", revisao: "", situacao: "Não iniciada",
-      cenario: "Site pronto. Aguardando o acesso ao domínio (Registro.br) e a criação da conta de anúncios.",
-      otimizacao: "",
-      proximos: "Iniciar as campanhas assim que a conta de anúncios estiver criada." },
+    { nome: "SHEILA", segmento: "Psicologia", plataformas: ["google"], conta: "353-831-5205", mensal: 150, parcelas: 1, inicio: "24/09/2026", revisao: "16/11/2026", situacao: "Ativo",
+      reporte: "Desde 11/11 as campanhas rodam com uma nova dinâmica, com troca das palavras-chave, para trazer resultado e entender o que funciona melhor. A verificação da conta já foi feita. Estamos aguardando o feedback da cliente sobre manter as campanhas ou pausar por um período." },
+    { nome: "CARMEM", segmento: "Psicologia", plataformas: ["google"], conta: "918-578-8000", mensal: 150, parcelas: 0, inicio: "05/10/2026", revisao: "16/11/2026", situacao: "Ativo",
+      reporte: "Campanhas no ar e verificação da conta concluída. Na última revisão, ajustamos os termos de pesquisa e as campanhas; com o feedback da cliente, faremos mais alterações na quarta-feira (18/11)." },
+    { nome: "THAYNARA", segmento: "Psicologia", plataformas: ["google"], conta: "337-837-5511", mensal: 150, parcelas: 1, inicio: "03/09/2026", revisao: "16/11/2026", situacao: "Pausada · promoção atingida",
+      reporte: "Campanhas pausadas: a cliente prefere aguardar a entrada dos créditos do Google para voltar a investir. A conta está em ordem e sem verificação pendente. Os créditos ainda não entraram, e vamos conferir de novo na quarta-feira (18/11)." },
+    { nome: "DANIELLE", segmento: "Psicologia", plataformas: ["google"], conta: "150-686-1633", mensal: 150, parcelas: 1, inicio: "14/09/2026", revisao: "16/11/2026", situacao: "Pausada · promoção atingida",
+      reporte: "Campanhas pausadas até a entrada dos créditos do Google, que ainda não caíram. A conta está sem verificação pendente. Na quarta-feira (18/11), vamos conferir os créditos com a cliente e, na volta, reestruturar as campanhas com as mudanças que ela vai sinalizar." },
+    { nome: "ALICE", segmento: "Psicologia", plataformas: ["google"], conta: "357-411-5648", mensal: 150, parcelas: 1, inicio: "14/09/2026", revisao: "16/11/2026", situacao: "Ativo",
+      reporte: "Conta revisada e em ordem; a cliente optou por seguir com as campanhas. Vamos pedir a recarga na quarta-feira (18/11) e, com o feedback dela, fazer novos ajustes. A verificação da conta está pendente, mas ainda sem prazo." },
+    { nome: "YASMIN", segmento: "Psicologia", plataformas: ["google"], conta: "756-159-1841", mensal: 150, parcelas: 1, inicio: "30/09/2026", revisao: "16/11/2026", situacao: "Pausada · promoção atingida",
+      reporte: "Campanhas pausadas até a entrada dos créditos do Google, que ainda não caíram. Ainda não tivemos retorno da cliente sobre os resultados, e estamos retomando o contato. A verificação da conta (confirmação de telefone) precisa ser feita até 20/11." },
+    { nome: "THAIS", segmento: "Psicologia", plataformas: ["google"], conta: "337-708-3643", mensal: 150, parcelas: 0, inicio: "11/11/2026", revisao: "16/11/2026", situacao: "Ativo",
+      reporte: "Campanhas no ar desde 11/11, com foco, por enquanto, no atendimento online. Na última revisão, ajustamos os termos de pesquisa; agora vamos confirmar com a cliente como foram os últimos contatos e fazer otimizações maiores na quarta-feira (18/11). A verificação do anunciante precisa ser feita até 15/12." },
+    { nome: "NEIVA", segmento: "Psicologia", plataformas: ["google"], mensal: 150, parcelas: 0, inicio: "", revisao: "", situacao: "Ativo",
+      reporte: "Site pronto. Estamos pegando o acesso ao domínio (Registro.br), e a cliente vai criar a conta de anúncios; as campanhas começam assim que a conta estiver pronta." },
   ] },
 ];
 
@@ -144,7 +116,7 @@ const DIA_PAGAMENTO = 20;
 
   /* Card de cada cliente */
   .card { padding: 13px 16px 14px; background: var(--surface); border: 1px solid var(--line); }
-  .dados { display: grid; grid-template-columns: minmax(250px, 1.3fr) minmax(200px, 1fr) minmax(240px, 1.3fr) minmax(150px, .8fr); align-items: center; font-variant-numeric: tabular-nums; }
+  .dados { display: grid; grid-template-columns: minmax(250px, 1.2fr) minmax(250px, 1.1fr) minmax(220px, 1.2fr) minmax(150px, .8fr); align-items: center; font-variant-numeric: tabular-nums; }
   .dados > div { min-width: 0; padding: 0 20px; border-left: 1px solid var(--line); white-space: nowrap; }
   .dados > div:first-child { padding-left: 0; border-left: 0; }
   .k { display: block; font-size: 11px; color: var(--label); }
@@ -164,7 +136,7 @@ const DIA_PAGAMENTO = 20;
   .barra i { display: block; height: 100%; background: var(--bar); }
   .barra-linha b { min-width: 34px; text-align: right; font-size: 12.5px; font-weight: 600; }
 
-  /* Situação: só "Rodando" ganha cor; o resto fica neutro */
+  /* Situação: "Ativo" em verde; "Pausada · promoção atingida" neutro */
   .sit { display: inline-block; padding: 1px 8px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; background: #eef1ef; color: var(--soft-ink); white-space: nowrap; }
   .sit.rodando { background: #e3f1e9; color: #1f6b47; }
   .sit.nao-iniciada { background: none; box-shadow: inset 0 0 0 1px #cfd6d2; color: var(--label); }
@@ -173,30 +145,25 @@ const DIA_PAGAMENTO = 20;
   .texto { margin: 0; font-size: 12.5px; color: var(--soft-ink); text-wrap: pretty; } /* evita palavra sozinha na última linha */
   .texto b { margin-right: 6px; font-size: 11px; font-weight: 700; color: var(--label); text-transform: uppercase; letter-spacing: .04em; }
 
-  /* Aba Financeiro */
-  .fin-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-  .kpi { padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--bar); }
-  .kpi .k { font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
-  .kpi .v { margin-top: 6px; font-size: 26px; font-weight: 700; line-height: 1.15; letter-spacing: -.01em; }
-  .kpi .s { display: block; margin-top: 4px; font-size: 12px; color: var(--soft-ink); }
-  .regras { margin: 16px 0 0; padding: 12px 16px; background: var(--surface); border-left: 4px solid var(--bar); font-size: 13px; color: var(--soft-ink); }
-  .regras p { margin: 0; }
-  .regras p + p { margin-top: 6px; }
-  .regras b { color: var(--ink); }
-  .fin-table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
-  .fin-table th { padding: 10px 16px; border-bottom: 1px solid var(--line); text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--label); white-space: nowrap; }
-  .fin-table td { padding: 10px 16px; border-bottom: 1px solid var(--line); vertical-align: middle; }
-  .fin-table .num { text-align: right; white-space: nowrap; }
-  .fin-table .cli { font-weight: 700; }
-  .fin-table td small { display: block; font-size: 11.5px; font-weight: 500; color: var(--label); }
-  .fin-table tfoot td { background: var(--row-soft); font-weight: 700; border-bottom: 0; }
-  .fin-table tfoot td small { font-weight: 500; }
-  .entra { font-weight: 600; color: #1f6b47; }
-  .fica { font-weight: 600; color: #8a5a12; }
-  .parc { display: inline-flex; align-items: center; gap: 5px; font-weight: 700; color: #24593f; white-space: nowrap; }
-  .parc i { display: inline-block; width: 8px; height: 8px; background: #d3ddd8; }
-  .parc i.ok { background: var(--bar); }
-  .parc span { margin-left: 3px; }
+  /* Aba Financeiro: total do dia 20 em destaque e uma lista simples de clientes, por grupo */
+  .fin-total, .fin-card { max-width: 760px; }
+  .fin-total { padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--bar); }
+  .fin-total .k { font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+  .fin-total .v { margin-top: 4px; font-size: 30px; font-weight: 700; line-height: 1.15; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+  .fin-total .s { display: block; margin-top: 6px; font-size: 12.5px; color: var(--soft-ink); }
+  .fin-card { margin-top: 16px; padding: 4px 20px 16px; background: var(--surface); border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+  .fin-grupo h3 { display: flex; justify-content: space-between; gap: 16px; margin: 14px 0 4px; padding-bottom: 6px; border-bottom: 2px solid var(--ink); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+  .fin-grupo h3 b { font-size: 13px; letter-spacing: 0; }
+  .fin-grupo .obs { margin: 6px 0 2px; font-size: 12px; color: var(--label); }
+  .fin-lista { margin: 0; padding: 0; list-style: none; }
+  .fin-lista li { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+  .fin-lista .cli { font-weight: 700; }
+  .fin-lista small { display: block; margin-top: 1px; font-size: 11.5px; font-weight: 500; color: var(--label); }
+  .fin-lista .val { font-weight: 600; white-space: nowrap; }
+  .fin-lista li.fora .cli { color: var(--label); }
+  .fin-lista li.fora small { color: #8a5a12; }
+  .fin-lista li.fora .val { color: var(--label); }
+  .fin-soma { display: flex; justify-content: space-between; gap: 16px; margin-top: 14px; padding: 12px 14px; background: var(--row-soft); font-size: 15px; font-weight: 700; }
 
   @media (max-width: 1000px) {
     .wrap { padding: 16px; }
@@ -206,10 +173,6 @@ const DIA_PAGAMENTO = 20;
     .dados > div { padding: 0; border-left: 0; white-space: normal; }
     .dados > div:first-child, .dados > .promo, .dados > .disc { grid-column: 1 / -1; }
     .dados > .disc { text-align: left; }
-    .fin-kpis { grid-template-columns: minmax(0, 1fr); }
-    .fin-table .col-ini, .fin-table .col-sit { display: none; }
-    .fin-table th, .fin-table td { padding-left: 10px; padding-right: 10px; }
-    .fin-grupo { overflow-x: auto; } /* tabela larga rola dentro da caixa, não a página */
   }
 </style>
 </head>
@@ -253,7 +216,7 @@ const DIA_PAGAMENTO = 20;
     meta: { title: "Meta Ads", svg: `<svg viewBox="0 0 24 24"><path d="M12 12c-2-3-3.6-5.2-5.6-5.2S2.8 9 2.8 12s1.6 5.2 3.6 5.2S10 15 12 12s3.6-5.2 5.6-5.2 3.6 2.2 3.6 5.2-1.6 5.2-3.6 5.2S14 15 12 12z" fill="none" stroke="#0866FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
   };
 
-  const sitClasse = s => s === "Rodando" ? "rodando" : s === "Não iniciada" ? "nao-iniciada" : "";
+  const sitClasse = s => s === "Ativo" ? "rodando" : "";
   const sit = s => `<span class="sit ${sitClasse(s)}">${esc(s)}</span>`;
 
   /* Promoção do Google: só a barrinha e o percentual de R$ 1.200 gastos, lidos ao vivo da aba "Geral" da planilha */
@@ -306,11 +269,10 @@ const DIA_PAGAMENTO = 20;
     const pct = gasto == null ? 0 : Math.min(Math.floor(gasto / META * 100), 100);
     const promo = c.conta ? `<div class="promo"><span class="k">Promoção Google</span><span class="barra-linha">` +
       `<span class="barra"><i style="width:${pct}%"></i></span><b>${gasto == null ? "—" : pct + "%"}</b></span></div>` : "";
-    const textos = [["Cenário", c.cenario], ["Última otimização", c.otimizacao], ["Próximos passos", c.proximos]]
-      .filter(([, t]) => t).map(([k, t]) => `<p class="texto"><b>${k}</b>${esc(t)}</p>`).join("");
+    const textos = c.reporte ? `<p class="texto"><b>Reporte</b>${esc(c.reporte)}</p>` : "";
     return `<article class="card"><div class="dados">` +
       `<div><span class="nome">${esc(c.nome)}${plats}</span><span class="seg">${esc(c.segmento)}</span></div>` +
-      `<div class="sit-cell"><span class="k">Situação</span><span class="v">${sit(c.situacao)}<small>${isDate(c.inicio) ? `início ${c.inicio.slice(0, 5)}` : "início —"}</small></span></div>` +
+      `<div class="sit-cell"><span class="k">Situação · início ${isDate(c.inicio) ? c.inicio.slice(0, 5) : "—"}</span><span class="v">${sit(c.situacao)}</span></div>` +
       promo +
       `<div class="disc">${money(c.mensal)}${c.parcelas != null ? ` · ${c.parcelas} de ${PARCELAS} parcelas` : ""}</div>` +
       `</div><div class="textos">${textos}</div></article>`;
@@ -332,46 +294,31 @@ const DIA_PAGAMENTO = 20;
     const dia = ddmm(data);
     const todos = GRUPOS.flatMap(g => g.clientes.map(c => ({ c, g, pag: noPagamento(c, g, data) })));
     const soma = l => l.reduce((s, x) => s + (x.c.mensal || 0), 0);
-    const entram = todos.filter(x => x.pag.entra), ficam = todos.filter(x => !x.pag.entra);
+    const entram = todos.filter(x => x.pag.entra);
     const faltam = Math.round((data - today()) / DAY);
     const quando = faltam === 0 ? "é hoje" : faltam === 1 ? "é amanhã" : `faltam ${faltam} dias`;
 
-    const kpi = (k, v, s) => `<div class="kpi"><span class="k">${k}</span><span class="v">${v}</span><span class="s">${s}</span></div>`;
-    const kpis = kpi(`Próximo pagamento · ${dia}`, money(soma(entram)), `${qtd(entram.length)} · ${quando}`) +
-      kpi("Mensalidade total", money(soma(todos)), `${qtd(todos.length)}, somando todos os grupos`) +
-      kpi("Entram depois", money(soma(ficam)), ficam.length ? ficam.map(x => `${esc(x.c.nome)} (${esc(x.pag.txt.toLowerCase())})`).join(" · ") : "nenhum cliente");
+    // Total a pagar no dia 20, em destaque
+    const topo = `<div class="fin-total"><span class="k">A pagar no dia ${dia}</span><span class="v">${money(soma(entram))}</span>` +
+      `<span class="s">${qtd(entram.length)} · ${quando}. Contam só os clientes com pelo menos 30 dias de campanha rodando.</span></div>`;
 
-    const projetos = (GRUPOS.find(g => g.id === "proj") || { clientes: [] }).clientes;
-    const semParcela = projetos.filter(c => !c.parcelas).map(c => c.nome);
-    const regras = `<div class="regras">` +
-      `<p><b>Pagamento todo dia ${DIA_PAGAMENTO}:</b> entram os clientes que já completaram 30 dias desde o início das campanhas. Os demais entram no mês seguinte.</p>` +
-      `<p><b>Psicólogos de projeto:</b> o combinado é R$ 600 por projeto, em 4 parcelas de R$ 150. A maior parte já pagou 1 parcela` +
-      (semParcela.length ? `; ${semParcela.map(esc).join(", ").replace(/, ([^,]*)$/, " e $1")} ainda não ${semParcela.length === 1 ? "pagou" : "pagaram"} nenhuma.` : ".") + `</p></div>`;
-
-    const parcelas = c => {
-      const n = c.parcelas || 0;
-      const marcas = Array.from({ length: PARCELAS }, (_, i) => `<i${i < n ? ` class="ok"` : ""}></i>`).join("");
-      return `<span class="parc">${marcas}<span>${n} de ${PARCELAS}</span></span>`;
+    // Lista simples: cada cliente e quanto representa no dia 20, separada por grupo, com o subtotal de cada grupo
+    const linha = ({ c, g, pag }) => {
+      const parcela = g.id === "proj" && pag.entra ? `parcela ${(c.parcelas || 0) + 1} de ${PARCELAS}` : "";
+      const nota = pag.entra ? parcela : "Não conta: ainda não completou 30 dias de campanha rodando";
+      return `<li${pag.entra ? "" : ` class="fora"`}><span class="cli">${esc(c.nome)}${nota ? `<small>${esc(nota)}</small>` : ""}</span>` +
+        `<span class="val">${pag.entra ? money(c.mensal) : "—"}</span></li>`;
     };
-    const tabela = g => {
+    const grupo = g => {
       const linhas = todos.filter(x => x.g === g);
-      const proj = g.id === "proj";
-      const doGrupo = linhas.filter(x => x.pag.entra);
-      return `<section class="fin-grupo"><h2>${esc(g.titulo)} <span>${qtd(linhas.length)}</span></h2>` +
-        `<table class="fin-table"><thead><tr><th>Cliente</th><th class="col-sit">Situação</th><th class="col-ini">Início</th>` +
-        (proj ? `<th>Parcelas pagas</th>` : "") + `<th class="num">Mensalidade</th><th class="num">No dia ${dia}</th></tr></thead><tbody>` +
-        linhas.map(({ c, pag }) => `<tr><td class="cli">${esc(c.nome)}<small>${esc(c.segmento)}</small></td>` +
-          `<td class="col-sit">${sit(c.situacao)}</td><td class="col-ini">${isDate(c.inicio) ? c.inicio.slice(0, 5) : "—"}</td>` +
-          (proj ? `<td>${parcelas(c)}</td>` : "") +
-          `<td class="num">${money(c.mensal)}</td>` +
-          `<td class="num">${pag.entra ? `<span class="entra">Entra</span>` : `<span class="fica">${esc(pag.txt)}</span>`}</td></tr>`).join("") +
-        `</tbody><tfoot><tr><td colspan="${proj ? 4 : 3}">Total do grupo<small>${qtd(doGrupo.length)} no dia ${dia}</small></td>` +
-        `<td class="num">${money(soma(linhas))}</td><td class="num">${money(soma(doGrupo))}</td></tr></tfoot></table></section>`;
+      return `<div class="fin-grupo"><h3><span>${esc(g.titulo)}</span><b>${money(soma(linhas.filter(x => x.pag.entra)))}</b></h3>` +
+        (g.id === "proj" ? `<p class="obs">Combinado: R$ 600 por projeto, em 4 parcelas de R$ 150.</p>` : "") +
+        `<ul class="fin-lista">${linhas.map(linha).join("")}</ul></div>`;
     };
 
     document.getElementById("aba-financeiro").innerHTML =
-      `<section><h2>Resumo</h2><div class="fin-kpis">${kpis}</div>${regras}</section>` +
-      GRUPOS.map(tabela).join("");
+      `<section><h2>Pagamento do dia ${dia}</h2>${topo}<div class="fin-card">${GRUPOS.map(grupo).join("")}` +
+      `<div class="fin-soma"><span>Total no dia ${dia}</span><b>${money(soma(entram))}</b></div></div></section>`;
   }
 
   function render() {
