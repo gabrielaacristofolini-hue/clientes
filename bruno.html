@@ -17,7 +17,7 @@
    Só a barrinha da promoção vem ao vivo da planilha (pela "conta").
    situacao: "Ativo" ou "Pausada · promoção atingida" (só quem pausou porque já atingiu a promoção).
    ===================================================================== */
-const ATUALIZADO_EM = "18/11/2026 às 16:00";
+const ATUALIZADO_EM = "18/11/2026 às 16:06";
 
 const GRUPOS = [
   { id: "rec", titulo: "Clientes recorrentes", clientes: [
@@ -42,9 +42,9 @@ const GRUPOS = [
     { nome: "CARMEM", segmento: "Psicologia", plataformas: ["google"], conta: "918-578-8000", mensal: 150, parcelas: 0, inicio: "05/10/2026", revisao: "18/11/2026", situacao: "Ativo",
       reporte: "A cliente deu um retorno positivo nos últimos dias: está conseguindo fechar com alguns clientes, e o resultado está bem interessante. A pedido dela, ajustamos o público e as palavras-chave das campanhas na última revisão. A verificação da conta está concluída." },
     { nome: "THAYNARA", segmento: "Psicologia", plataformas: ["google"], conta: "337-837-5511", mensal: 150, parcelas: 1, inicio: "03/09/2026", revisao: "16/11/2026", situacao: "Pausada · promoção atingida",
-      reporte: "Campanhas pausadas: a cliente prefere aguardar a entrada dos créditos do Google para voltar a investir. A conta está em ordem e sem verificação pendente. Os créditos ainda não entraram, e vamos conferir de novo na quarta-feira (18/11)." },
+      reporte: "Campanhas pausadas: a cliente prefere aguardar a entrada dos créditos do Google para voltar a investir. A conta está em ordem e sem verificação pendente. Até a última conferência, os créditos ainda não tinham entrado, e seguimos acompanhando." },
     { nome: "DANIELLE", segmento: "Psicologia", plataformas: ["google"], conta: "150-686-1633", mensal: 150, parcelas: 1, inicio: "14/09/2026", revisao: "18/11/2026", situacao: "Pausada · promoção atingida",
-      reporte: "Campanhas pausadas até a entrada dos créditos do Google, como a cliente preferiu. Para a volta, ela quer testar uma dinâmica diferente, voltada para clínica, o que deve incluir mudanças no site; estamos levantando e organizando essa proposta antes do retorno. A conta está sem verificação pendente." },
+      reporte: "Campanhas pausadas até a entrada dos créditos do Google, como a cliente preferiu. Para a volta, ela quer testar uma dinâmica diferente, voltada para clínica, o que deve incluir mudanças no site; estamos levantando e organizando essa proposta e vamos alinhar com você se esse é mesmo o caminho antes do retorno. A conta está sem verificação pendente." },
     { nome: "ALICE", segmento: "Psicologia", plataformas: ["google"], conta: "357-411-5648", mensal: 150, parcelas: 1, inicio: "14/09/2026", revisao: "18/11/2026", situacao: "Ativo",
       reporte: "O resultado segue interessante, com contatos fechados pela cliente; estamos levantando com ela quantos foram desde o início das campanhas e como estão os contatos dos últimos dias. A recarga anterior acabou, e a nova já foi solicitada à cliente, que optou por seguir com as campanhas. Na última revisão, fizemos ajustes de rotina. A verificação da conta está pendente, ainda sem prazo." },
     { nome: "YASMIN", segmento: "Psicologia", plataformas: ["google"], conta: "756-159-1841", mensal: 150, parcelas: 1, inicio: "30/09/2026", revisao: "18/11/2026", situacao: "Pausada · promoção atingida",
@@ -88,7 +88,7 @@ const DIA_PAGAMENTO = 20;
   [hidden] { display: none !important; }
   .wrap { padding: 32px 40px 44px; }
   /* Largura fixa (igual nas duas abas), para o cabeçalho não mudar de lugar */
-  .layout { display: grid; grid-template-columns: minmax(0, 1fr); width: min(1240px, 100%); margin: 0 auto; gap: 26px; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr); width: min(960px, 100%); margin: 0 auto; gap: 26px; }
 
   .top {
     display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
@@ -112,38 +112,39 @@ const DIA_PAGAMENTO = 20;
     text-transform: uppercase; letter-spacing: .08em;
   }
   section h2 span { color: var(--box-label); font-weight: 500; text-transform: none; letter-spacing: 0; }
-  .cards { display: grid; gap: 10px; }
-
-  /* Card de cada cliente */
-  .card { padding: 13px 16px 14px; background: var(--surface); border: 1px solid var(--line); }
-  .dados { display: grid; grid-template-columns: minmax(250px, 1.2fr) minmax(250px, 1.1fr) minmax(220px, 1.2fr) minmax(150px, .8fr); align-items: center; font-variant-numeric: tabular-nums; }
-  .dados > div { min-width: 0; padding: 0 20px; border-left: 1px solid var(--line); white-space: nowrap; }
-  .dados > div:first-child { padding-left: 0; border-left: 0; }
-  .k { display: block; font-size: 11px; color: var(--label); }
-  .v { display: block; font-size: 13px; font-weight: 500; }
-  .nome { font-size: 13px; font-weight: 700; letter-spacing: .01em; }
-  .seg { display: block; font-size: 11.5px; font-weight: 500; letter-spacing: 0; color: var(--label); }
-  .plat { display: inline-block; width: 14px; height: 14px; margin-left: 6px; vertical-align: -2px; }
+  /* Aba Clientes em formato de reporte: uma folha branca, um bloco de texto por cliente */
+  .folha { background: var(--surface); border: 1px solid var(--line); padding: 28px 36px 14px; }
+  .folha-topo { padding-bottom: 16px; border-bottom: 2px solid var(--ink); }
+  .folha-topo h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -.01em; }
+  .folha-topo p { margin: 4px 0 0; font-size: 13px; color: var(--soft-ink); }
+  .grupo h2 {
+    display: flex; align-items: baseline; gap: 8px;
+    margin: 28px 0 0; padding-bottom: 8px; border-bottom: 1px solid var(--line);
+    font-size: 12px; font-weight: 700; color: #1f6b47; text-transform: uppercase; letter-spacing: .08em;
+  }
+  .grupo h2 span { color: var(--label); font-weight: 500; text-transform: none; letter-spacing: 0; }
+  .cliente { padding: 16px 0 18px; border-bottom: 1px solid var(--line); }
+  .grupo .cliente:last-child { border-bottom: 0; }
+  .cli-topo { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+  .cli-topo h3 { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: .01em; }
+  /* Mensalidade e parcelas bem discretas, no canto direito */
+  .disc { margin-left: auto; font-size: 11.5px; color: var(--label); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; margin: 4px 0 0; font-size: 12px; color: var(--label); font-variant-numeric: tabular-nums; }
+  .plat { display: inline-block; width: 14px; height: 14px; margin-left: 6px; vertical-align: -1px; }
   .plat + .plat { margin-left: 4px; }
   .plat svg { display: block; width: 100%; height: 100%; }
-  .sit-cell .v { display: flex; align-items: center; gap: 8px; }
-  .sit-cell small { font-size: 11.5px; color: var(--label); }
-  .dados > .promo { grid-column: 3; }
-  /* Mensalidade e parcelas bem discretas, no canto direito */
-  .dados > .disc { grid-column: 4; padding-right: 0; border-left: 0; text-align: right; font-size: 11px; color: var(--label); }
-  .barra-linha { display: flex; align-items: center; gap: 10px; height: 19px; }
-  .barra { flex: 1; height: 7px; background: var(--line); }
+  .barra-linha { display: inline-flex; align-items: center; gap: 8px; }
+  .barra { width: 120px; height: 6px; background: var(--line); }
   .barra i { display: block; height: 100%; background: var(--bar); }
-  .barra-linha b { min-width: 34px; text-align: right; font-size: 12.5px; font-weight: 600; }
+  .barra-linha b { font-weight: 600; color: var(--soft-ink); }
 
   /* Situação: "Ativo" em verde; "Pausada · promoção atingida" neutro */
   .sit { display: inline-block; padding: 1px 8px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; background: #eef1ef; color: var(--soft-ink); white-space: nowrap; }
   .sit.rodando { background: #e3f1e9; color: #1f6b47; }
-  .sit.nao-iniciada { background: none; box-shadow: inset 0 0 0 1px #cfd6d2; color: var(--label); }
 
-  .textos { display: grid; gap: 6px; margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line); }
-  .texto { margin: 0; font-size: 12.5px; color: var(--soft-ink); text-wrap: pretty; } /* evita palavra sozinha na última linha */
-  .texto b { margin-right: 6px; font-size: 11px; font-weight: 700; color: var(--label); text-transform: uppercase; letter-spacing: .04em; }
+  .texto { max-width: 92ch; margin: 10px 0 0; font-size: 14px; line-height: 1.6; color: var(--ink); text-wrap: pretty; } /* evita palavra sozinha na última linha */
+  .k { display: block; font-size: 11px; color: var(--label); }
+  .v { display: block; font-size: 13px; font-weight: 500; }
 
   /* Aba Financeiro: total do dia 20 em destaque e uma lista simples de clientes, por grupo */
   .fin-total, .fin-card { max-width: 760px; }
@@ -169,10 +170,8 @@ const DIA_PAGAMENTO = 20;
     .wrap { padding: 16px; }
     .updated { margin-left: 0; }
     section { padding: 12px; }
-    .dados { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: start; }
-    .dados > div { padding: 0; border-left: 0; white-space: normal; }
-    .dados > div:first-child, .dados > .promo, .dados > .disc { grid-column: 1 / -1; }
-    .dados > .disc { text-align: left; }
+    .folha { padding: 18px 16px 6px; }
+    .texto { font-size: 13.5px; }
   }
 </style>
 </head>
@@ -262,20 +261,17 @@ const DIA_PAGAMENTO = 20;
     return g.id === "proj" ? { entra: false, txt: "Após o início" } : { entra: true };
   }
 
-  /* ===== Aba Clientes ===== */
+  /* ===== Aba Clientes: reporte em texto, cliente por cliente ===== */
   function card(c) {
     const plats = (c.plataformas || []).map(p => `<span class="plat" title="${PLATFORMS[p].title}">${PLATFORMS[p].svg}</span>`).join("");
     const gasto = c.conta ? gastoPorConta[c.conta] : undefined;
     const pct = gasto == null ? 0 : Math.min(Math.floor(gasto / META * 100), 100);
-    const promo = c.conta ? `<div class="promo"><span class="k">Promoção Google</span><span class="barra-linha">` +
-      `<span class="barra"><i style="width:${pct}%"></i></span><b>${gasto == null ? "—" : pct + "%"}</b></span></div>` : "";
-    const textos = c.reporte ? `<p class="texto"><b>Reporte</b>${esc(c.reporte)}</p>` : "";
-    return `<article class="card"><div class="dados">` +
-      `<div><span class="nome">${esc(c.nome)}${plats}</span><span class="seg">${esc(c.segmento)}</span></div>` +
-      `<div class="sit-cell"><span class="k">Situação · início ${isDate(c.inicio) ? c.inicio.slice(0, 5) : "—"}</span><span class="v">${sit(c.situacao)}</span></div>` +
-      promo +
-      `<div class="disc">${money(c.mensal)}${c.parcelas != null ? ` · ${c.parcelas} de ${PARCELAS} parcelas` : ""}</div>` +
-      `</div><div class="textos">${textos}</div></article>`;
+    const promo = c.conta ? `<span class="barra-linha">Promoção Google <span class="barra"><i style="width:${pct}%"></i></span><b>${gasto == null ? "—" : pct + "%"}</b></span>` : "";
+    const inicio = isDate(c.inicio) ? `Início em ${c.inicio.slice(0, 5)}` : "Campanhas ainda não iniciadas";
+    return `<article class="cliente"><div class="cli-topo"><h3>${esc(c.nome)}${plats}</h3>${sit(c.situacao)}` +
+      `<span class="disc">${money(c.mensal)}${c.parcelas != null ? ` · ${c.parcelas} de ${PARCELAS} parcelas` : ""}</span></div>` +
+      `<p class="meta"><span>${esc(c.segmento)}</span><span>${inicio}</span>${promo}</p>` +
+      (c.reporte ? `<p class="texto">${esc(c.reporte)}</p>` : "") + `</article>`;
   }
 
   // Revisão mais recente primeiro; mesma data → ordem alfabética; sem data no fim
@@ -283,9 +279,14 @@ const DIA_PAGAMENTO = 20;
     (parseDate(b.revisao) ?? -Infinity) - (parseDate(a.revisao) ?? -Infinity) || a.nome.localeCompare(b.nome, "pt-BR"));
 
   function renderClientes() {
-    document.getElementById("aba-clientes").innerHTML = GRUPOS.map(g =>
-      `<section><h2>${esc(g.titulo)} <span>${qtd(g.clientes.length)}</span></h2>` +
-      `<div class="cards">${ordem(g.clientes).map(card).join("")}</div></section>`).join("");
+    const todos = GRUPOS.flatMap(g => g.clientes);
+    const ativos = todos.filter(c => c.situacao === "Ativo").length;
+    const pausados = todos.length - ativos;
+    document.getElementById("aba-clientes").innerHTML =
+      `<div class="folha"><div class="folha-topo"><h1>Reporte dos clientes</h1>` +
+      `<p>${qtd(todos.length)} · ${ativos} ativo${ativos === 1 ? "" : "s"} · ${pausados} pausado${pausados === 1 ? "" : "s"}</p></div>` +
+      GRUPOS.map(g => `<div class="grupo"><h2>${esc(g.titulo)} <span>${qtd(g.clientes.length)}</span></h2>` +
+        ordem(g.clientes).map(card).join("") + `</div>`).join("") + `</div>`;
   }
 
   /* ===== Aba Financeiro ===== */
