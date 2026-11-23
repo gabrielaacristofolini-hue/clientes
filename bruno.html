@@ -93,7 +93,10 @@ const DIA_PAGAMENTO = 20;
   .grupo h2 span { color: var(--label); font-weight: 500; text-transform: none; letter-spacing: 0; }
   .cliente { padding: 16px 0 18px; border-bottom: 1px solid var(--line); }
   .grupo .cliente:last-child { border-bottom: 0; }
-  .cli-topo { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+  /* Colunas fixas (como no painel principal): a tag de situação e as informações ficam sempre na mesma posição,
+     qualquer que seja o tamanho do nome ou do segmento */
+  .cli-topo, .meta { display: grid; grid-template-columns: 250px 120px minmax(0, 1fr); align-items: center; column-gap: 16px; }
+  .cli-topo > .sit { grid-column: 2 / -1; justify-self: start; }
   .cli-topo h3 { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: .01em; }
   /* Mensalidade e parcelas bem discretas, no canto direito */
   .parc { display: inline-flex; align-items: center; gap: 5px; margin-right: 6px; padding: 2px 8px; background: #e6f2ec; color: #24593f; font-size: 11.5px; font-weight: 700; vertical-align: 1px; white-space: nowrap; }
@@ -101,7 +104,7 @@ const DIA_PAGAMENTO = 20;
   .parc i.ok { background: var(--bar); }
   .parc i:last-of-type { margin-right: 2px; }
   .disc { margin-left: auto; font-size: 11.5px; color: var(--label); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; margin: 4px 0 0; font-size: 12px; color: var(--label); font-variant-numeric: tabular-nums; }
+  .meta { margin: 4px 0 0; font-size: 12px; color: var(--label); font-variant-numeric: tabular-nums; }
   .plat { display: inline-block; width: 14px; height: 14px; margin-left: 6px; vertical-align: -1px; }
   .plat + .plat { margin-left: 4px; }
   .plat svg { display: block; width: 100%; height: 100%; }
@@ -153,6 +156,8 @@ const DIA_PAGAMENTO = 20;
     section { padding: 12px; }
     .folha { padding: 18px 16px 6px; }
     .texto { font-size: 13.5px; }
+    /* Celular: volta a fluir em linha, sem colunas fixas */
+    .cli-topo, .meta { display: flex; flex-wrap: wrap; gap: 4px 12px; }
   }
 </style>
 </head>
@@ -251,9 +256,9 @@ const DIA_PAGAMENTO = 20;
     const plats = (c.plataformas || []).map(p => `<span class="plat" title="${PLATFORMS[p].title}">${PLATFORMS[p].svg}</span>`).join("");
     const gasto = c.conta ? gastoPorConta[c.conta] : undefined;
     const pct = gasto == null ? 0 : Math.min(Math.floor(gasto / META * 100), 100);
-    const promo = c.conta ? `<span class="barra-linha">Promoção Google <span class="barra"><i style="width:${pct}%"></i></span><b>${gasto == null ? "—" : pct + "%"}</b></span>` : "";
+    const promo = c.conta ? `<span class="barra-linha" style="justify-self: start">Promoção Google <span class="barra"><i style="width:${pct}%"></i></span><b>${gasto == null ? "—" : pct + "%"}</b></span>` : "";
     // Só mostra a data de início quando existe (os recorrentes antigos não têm; quem não começou já diz isso na situação)
-    const inicio = isDate(c.inicio) ? `<span>Início em ${c.inicio.slice(0, 5)}</span>` : "";
+    const inicio = `<span>${isDate(c.inicio) ? `Início em ${c.inicio.slice(0, 5)}` : ""}</span>`; // espaço sempre presente, para a promoção ficar alinhada
     return `<article class="cliente"><div class="cli-topo"><h3>${esc(c.nome)}${plats}</h3>${sit(c.situacao)}` +
       `</div>` + // mensalidade e parcelas ficam só na aba Financeiro
       `<p class="meta"><span>${esc(c.segmento)}</span>${inicio}${promo}</p>` +
