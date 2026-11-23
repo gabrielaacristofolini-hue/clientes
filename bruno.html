@@ -123,13 +123,16 @@ const DIA_PAGAMENTO = 20;
   .fin-total { padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--bar); }
   .fin-total .k { font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
   .fin-total .v { margin-top: 4px; font-size: 30px; font-weight: 700; line-height: 1.15; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
-  .fin-total.aberto { border-top-color: #c0261b; }
-  .fin-total.aberto .k { color: #c0261b; }
   .fin-total .s { display: block; margin-top: 6px; font-size: 12.5px; color: var(--soft-ink); }
   .fin-card { margin-top: 16px; padding: 4px 20px 16px; background: var(--surface); border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
   .fin-grupo h3 { display: flex; justify-content: space-between; gap: 16px; margin: 14px 0 4px; padding-bottom: 6px; border-bottom: 2px solid var(--ink); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
   .fin-grupo h3 b { font-size: 13px; letter-spacing: 0; }
   .fin-grupo .obs { margin: 6px 0 2px; font-size: 12px; color: var(--label); }
+  /* Cardzinho que explica a regra das parcelas dos projetos */
+  .fin-nota { margin: 10px 0 4px; padding: 12px 14px; background: #eef6f1; border-left: 3px solid var(--bar); font-size: 12.5px; color: var(--soft-ink); }
+  .fin-nota b { display: block; margin-bottom: 4px; font-size: 12px; color: #1f6b47; text-transform: uppercase; letter-spacing: .04em; }
+  .fin-nota p { margin: 4px 0 0; text-wrap: pretty; }
+  .fin-lista small.ini { color: var(--soft-ink); }
   .fin-lista { margin: 0; padding: 0; list-style: none; }
   /* Três colunas fixas: cliente, parcelas (só projetos) e valor; assim os quadradinhos ficam alinhados em todas as linhas */
   .fin-lista li { display: grid; grid-template-columns: minmax(0, 1fr) auto 96px; align-items: center; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--line); }
@@ -277,25 +280,44 @@ const DIA_PAGAMENTO = 20;
     const soma = l => l.reduce((s, x) => s + (x.c.mensal || 0), 0);
     const entram = todos.filter(x => x.pag.entra);
     const faltam = Math.round((data - today()) / DAY);
-    const quando = faltam < 0 ? `em aberto há ${-faltam} dia${faltam === -1 ? "" : "s"}` : faltam === 0 ? "é hoje" : faltam === 1 ? "é amanhã" : `faltam ${faltam} dias`;
+    // Pagamento vencido e ainda não recebido: aparece sem destaque nem contagem de dias (pedido do usuário)
+    const quando = faltam < 0 ? "" : faltam === 0 ? "é hoje" : faltam === 1 ? "é amanhã" : `faltam ${faltam} dias`;
 
     // Total a pagar no dia 20, em destaque
-    const topo = `<div class="fin-total${faltam < 0 ? " aberto" : ""}"><span class="k">${faltam < 0 ? `Em aberto · pagamento do dia ${dia}` : `A pagar no dia ${dia}`}</span><span class="v">${money(soma(entram))}</span>` +
-      `<span class="s">${qtd(entram.length)} · ${quando}${faltam < 0 ? `; depois dele, o próximo é dia ${ddmm(proximoPagamento())}` : ""}. Contam só os clientes com pelo menos 30 dias de campanha rodando.</span></div>`;
+    const topo = `<div class="fin-total"><span class="k">A pagar no dia ${dia}</span><span class="v">${money(soma(entram))}</span>` +
+      `<span class="s">${qtd(entram.length)}${quando ? ` · ${quando}` : ""}${faltam < 0 ? `; o seguinte é no dia ${ddmm(proximoPagamento())}` : ""}. Contam só os clientes com pelo menos 30 dias de campanha rodando.</span></div>`;
 
     // Lista simples: cada cliente e quanto representa no dia 20, separada por grupo, com o subtotal de cada grupo
     const linha = ({ c, g, pag }) => {
       // Deixa claro que o pagamento do dia é a próxima parcela, e quantas já foram pagas antes dele
       const pagas = c.parcelas || 0;
-      const parcela = g.id === "proj" && pag.entra ? `Neste pagamento (${dia}): ${pagas + 1}ª parcela de ${PARCELAS} · ${pagas ? `${pagas} já paga${pagas > 1 ? "s" : ""}` : "nenhuma paga ainda"}` : "";
+      const proj = g.id === "proj";
+      const inicio = isDate(c.inicio) ? `Início em ${c.inicio.slice(0, 5)}` : proj ? "Campanhas ainda não iniciadas" : "";
+      const parcela = proj && pag.entra ? `Neste pagamento (${dia}): ${pagas + 1}ª parcela de ${PARCELAS} · ${pagas ? `${pagas} já paga${pagas > 1 ? "s" : ""}` : "nenhuma paga ainda"}` : "";
       const nota = pag.entra ? parcela : "Não conta: ainda não completou 30 dias de campanha rodando";
-      return `<li${pag.entra ? "" : ` class="fora"`}><span class="cli">${esc(c.nome)}${nota ? `<small>${esc(nota)}</small>` : ""}</span><span>${g.id === "proj" ? parcelasHtml(pagas) : ""}</span>` +
+      const meta = inicio;
+      return `<li${pag.entra ? "" : ` class="fora"`}><span class="cli">${esc(c.nome)}` +
+        `${meta ? `<small class="ini">${esc(meta)}</small>` : ""}${nota ? `<small>${esc(nota)}</small>` : ""}</span>` +
+        `<span>${proj ? parcelasHtml(pagas) : ""}</span>` +
         `<span class="val">${pag.entra ? money(c.mensal) : "—"}</span></li>`;
+    };
+    // Explica por que a maioria dos projetos tem só a 1ª parcela paga e alguns nenhuma:
+    // o Bruno paga a 1ª parcela no primeiro dia 20 depois que a campanha completa 30 dias rodando
+    const notaProjetos = g => {
+      const semNenhuma = g.clientes.filter(c => !(c.parcelas > 0));
+      const nomeBonito = n => n.charAt(0) + n.slice(1).toLowerCase();
+      const exemplos = semNenhuma.map(c => isDate(c.inicio)
+        ? `${nomeBonito(c.nome)} começou em ${c.inicio.slice(0, 5)}, completou 30 dias em ${ddmm(parseDate(c.inicio) + 30 * DAY)} e tem a 1ª parcela em ${ddmm(primeiroPagamento(c.inicio))}`
+        : `${nomeBonito(c.nome)} ainda não começou as campanhas`);
+      return `<div class="fin-nota"><b>Como funcionam as parcelas dos projetos</b>` +
+        `<p>Combinado: R$ 600 por projeto, em 4 parcelas de R$ 150. A 1ª parcela só é paga no primeiro dia ${DIA_PAGAMENTO} depois que a campanha completa 30 dias rodando, como o Bruno optou. ` +
+        `Por isso a maioria dos projetos ainda tem só a 1ª parcela paga, e alguns ainda nenhuma.</p>` +
+        (exemplos.length ? `<p>${esc(exemplos.join("; "))}.</p>` : "") + `</div>`;
     };
     const grupo = g => {
       const linhas = todos.filter(x => x.g === g);
       return `<div class="fin-grupo"><h3><span>${esc(g.titulo)}</span><b>${money(soma(linhas.filter(x => x.pag.entra)))}</b></h3>` +
-        (g.id === "proj" ? `<p class="obs">Combinado: R$ 600 por projeto, em 4 parcelas de R$ 150.</p>` : "") +
+        (g.id === "proj" ? notaProjetos(g) : "") +
         `<ul class="fin-lista">${linhas.map(linha).join("")}</ul></div>`;
     };
 
