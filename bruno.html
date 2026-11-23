@@ -309,10 +309,14 @@ const DIA_PAGAMENTO = 20;
       const exemplos = semNenhuma.map(c => isDate(c.inicio)
         ? `${nomeBonito(c.nome)} começou em ${c.inicio.slice(0, 5)}, completou 30 dias em ${ddmm(parseDate(c.inicio) + 30 * DAY)} e tem a 1ª parcela em ${ddmm(primeiroPagamento(c.inicio))}`
         : `${nomeBonito(c.nome)} ainda não começou as campanhas`);
+      // Exceções: quem já tem parcela paga antes da data que a regra dá (o Bruno decidiu adiantar a 1ª parcela)
+      const lista = ns => ns.length > 1 ? ns.slice(0, -1).join(", ") + " e " + ns[ns.length - 1] : ns[0];
+      const excecoes = g.clientes.filter(c => c.parcelas > 0 && isDate(c.inicio) && primeiroPagamento(c.inicio) >= data).map(c => nomeBonito(c.nome));
+      const txtExcecoes = excecoes.length ? `<p>${excecoes.length > 1 ? `${esc(lista(excecoes))} são exceções` : `${esc(excecoes[0])} é uma exceção`}: o Bruno decidiu adiantar a 1ª parcela, antes de completar os 30 dias.</p>` : "";
       return `<div class="fin-nota"><b>Como funcionam as parcelas dos projetos</b>` +
         `<p>Combinado: R$ 600 por projeto, em 4 parcelas de R$ 150. A 1ª parcela só é paga no primeiro dia ${DIA_PAGAMENTO} depois que a campanha completa 30 dias rodando, como o Bruno optou. ` +
         `Por isso a maioria dos projetos ainda tem só a 1ª parcela paga, e alguns ainda nenhuma.</p>` +
-        (exemplos.length ? `<p>${esc(exemplos.join("; "))}.</p>` : "") + `</div>`;
+        (exemplos.length ? `<p>${esc(exemplos.join("; "))}.</p>` : "") + txtExcecoes + `</div>`;
     };
     const grupo = g => {
       const linhas = todos.filter(x => x.g === g);
