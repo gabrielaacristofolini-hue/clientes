@@ -1,12 +1,12 @@
 {
-  "atualizadoEm": "23/11/2026 às 15:23",
+  "atualizadoEm": "23/11/2026 às 15:55",
   "pagamentoEmAberto": "20/11/2026",
   "grupos": [
   { "id": "rec", "titulo": "Clientes recorrentes", "clientes": [
     { "nome": "VILA 86", "segmento": "Moda streetwear", "plataformas": ["meta", "google"], "mensal": 200, "inicio": "", "revisao": "18/11/2026", "situacao": "Ativo",
       "reporte": "As vendas no Google seguem num bom padrão: 28 conversões de 01 a 18/11 e 14 nos últimos 7 dias, uma média de 1 a 2 vendas por dia. No Meta, o vídeo da loja foi trocado pelo post de Black Friday mais recente deles, para aproveitar o período." },
-    { "nome": "061 RACING", "segmento": "Mecânica de alta performance", "plataformas": ["meta"], "mensal": 200, "inicio": "", "revisao": "18/11/2026", "situacao": "Ativo",
-      "reporte": "Campanhas entregando o volume esperado. O lead do remap está um pouco mais caro, e o da campanha de revisão sai mais barato. Estamos entendendo com o cliente qual criativo de revisão traz mais agendamentos, para concentrar o investimento nele. Por enquanto, seguimos com a mesma estratégia e coletando o feedback do cliente." }
+    { "nome": "061 RACING", "segmento": "Mecânica de alta performance", "plataformas": ["meta"], "mensal": 200, "inicio": "", "revisao": "23/11/2026", "situacao": "Ativo",
+      "reporte": "Os resultados seguem, na média, semelhantes aos das últimas semanas, e o cliente está conseguindo marcar revisões com os contatos das campanhas. Estamos levantando com ele como está o remap, para entender se algum cliente vindo do tráfego fechou remap recentemente. No momento, a conta está com um erro de pagamento; já pedimos ao cliente para corrigir e estamos acompanhando." }
   ] },
   { "id": "recpsi", "titulo": "Psicólogos recorrentes", "clientes": [
     { "nome": "NARA", "segmento": "Psicologia", "plataformas": ["google"], "conta": "775-492-4225", "mensal": 200, "inicio": "30/09/2026", "revisao": "18/11/2026", "situacao": "Ativo",
