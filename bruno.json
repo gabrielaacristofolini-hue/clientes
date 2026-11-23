@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "23/11/2026 às 17:43",
+  "atualizadoEm": "23/11/2026 às 17:46",
   "pagamentoEmAberto": "20/11/2026",
   "grupos": [
   { "id": "rec", "titulo": "Clientes recorrentes", "clientes": [
@@ -28,7 +28,7 @@
     { "nome": "DANIELLE", "segmento": "Psicologia", "plataformas": ["google"], "conta": "150-686-1633", "mensal": 150, "parcelas": 1, "inicio": "14/09/2026", "revisao": "23/11/2026", "situacao": "Campanhas pausadas · promoção atingida",
       "reporte": "Campanhas pausadas até a entrada dos créditos do Google, que ainda não caíram; vamos conferir de novo na quarta-feira (25/11). Enquanto isso, estamos levantando com a cliente como foram os fechamentos até agora e se ela quer seguir com a dinâmica voltada para clínica ou fazer outras mudanças. Em qualquer caso, a ideia é reformular o site para buscar um resultado mais interessante, e vamos alinhar com você o caminho antes do retorno. A conta está sem verificação pendente." },
     { "nome": "ALICE", "segmento": "Psicologia", "plataformas": ["google"], "conta": "357-411-5648", "mensal": 150, "parcelas": 1, "inicio": "14/09/2026", "revisao": "23/11/2026", "situacao": "Ativo",
-      "reporte": "O resultado segue interessante, com contatos fechados pela cliente; estamos levantando com ela quantos foram desde o início das campanhas e como estão os contatos dos últimos dias. A recarga anterior acabou, e a cliente, que optou por seguir com as campanhas, ainda não respondeu sobre a nova; precisamos dessa recarga para que os ajustes feitos na última otimização (18/11) tenham efeito na prática. A verificação da conta está pendente, ainda sem prazo." },
+      "reporte": "O resultado segue interessante, com contatos fechados pela cliente; estamos levantando com ela quantos foram desde o início das campanhas e como estão os contatos dos últimos dias. A recarga anterior acabou, e a cliente, que optou por seguir com as campanhas, ainda não respondeu sobre a nova; precisamos dessa recarga para que os ajustes feitos na última otimização tenham efeito na prática. A verificação da conta está pendente, ainda sem prazo." },
     { "nome": "YASMIN", "segmento": "Psicologia", "plataformas": ["google"], "conta": "756-159-1841", "mensal": 150, "parcelas": 1, "parcelaAdiantada": true, "inicio": "30/09/2026", "revisao": "23/11/2026", "situacao": "Campanhas pausadas · promoção atingida",
       "reporte": "A cliente optou por manter as campanhas pausadas até a entrada dos créditos do Google, e seguimos acompanhando os créditos e atualizando no grupo. Os resultados ficaram abaixo do esperado: houve alguns fechamentos, mas nada muito expressivo. Para a volta, vamos testar uma dinâmica diferente, provavelmente com foco em atendimento presencial, com alterações no site e nas campanhas; estamos alinhando essas mudanças com a cliente. A verificação da conta (confirmação de telefone) tinha prazo até 20/11, e estamos conferindo se foi concluída." },
     { "nome": "THAIS", "segmento": "Psicologia", "plataformas": ["google"], "conta": "337-708-3643", "mensal": 150, "parcelas": 0, "inicio": "11/11/2026", "revisao": "23/11/2026", "situacao": "Ativo",

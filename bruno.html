@@ -302,9 +302,9 @@ const DIA_PAGAMENTO = 20;
       // Deixa claro que o pagamento do dia é a próxima parcela, e quantas já foram pagas antes dele
       const pagas = c.parcelas || 0;
       const proj = g.id === "proj";
-      const inicio = isDate(c.inicio) ? `Início em ${c.inicio.slice(0, 5)}` : proj ? "Campanhas ainda não iniciadas" : "";
+      const inicio = isDate(c.inicio) ? `Início em ${c.inicio.slice(0, 5)}` : "";
       const parcela = proj && pag.entra ? `Neste pagamento (${dia}): ${pagas + 1}ª parcela de ${PARCELAS} · ${pagas ? `${pagas} já paga${pagas > 1 ? "s" : ""}` : "nenhuma paga ainda"}` : "";
-      const nota = pag.entra ? parcela : "Não conta: ainda não completou 30 dias de campanha rodando";
+      const nota = pag.entra ? parcela : isDate(c.inicio) ? "Não conta: ainda não completou 30 dias de campanha rodando" : "Não conta: campanhas ainda não iniciadas";
       const meta = inicio;
       return `<li${pag.entra ? "" : ` class="fora"`}><span class="cli">${esc(c.nome)}` +
         `${meta ? `<small class="ini">${esc(meta)}</small>` : ""}${nota ? `<small>${esc(nota)}</small>` : ""}</span>` +
