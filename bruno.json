@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "23/11/2026 às 15:21",
+  "atualizadoEm": "23/11/2026 às 15:23",
   "pagamentoEmAberto": "20/11/2026",
   "grupos": [
   { "id": "rec", "titulo": "Clientes recorrentes", "clientes": [
@@ -19,7 +19,7 @@
       "reporte": "As conversões caíram bastante nos últimos dias, então ajustamos palavras-chave, termos de pesquisa e anúncios, e o orçamento foi para R$ 20 por dia. O cliente segue fazendo recargas para manter as campanhas rodando. Como a campanha roda só em Recife, estamos avaliando expandir a localização para ganhar volume." }
   ] },
   { "id": "proj", "titulo": "Psicólogos de projeto", "clientes": [
-    { "nome": "SHEILA", "segmento": "Psicologia", "plataformas": ["google"], "conta": "353-831-5205", "mensal": 150, "parcelas": 1, "inicio": "24/09/2026", "revisao": "18/11/2026", "situacao": "Pausada · promoção atingida",
+    { "nome": "SHEILA", "segmento": "Psicologia", "plataformas": ["google"], "conta": "353-831-5205", "mensal": 150, "parcelas": 1, "parcelaAdiantada": true, "inicio": "24/09/2026", "revisao": "18/11/2026", "situacao": "Pausada · promoção atingida",
       "reporte": "Campanhas pausadas: a conta está sem saldo, e a cliente deve aguardar a entrada dos créditos do Google para voltar. O resultado ficou abaixo do esperado, com pouquíssimos fechamentos; por isso, vamos reestruturar a dinâmica para a volta, com alterações nas campanhas e, principalmente, no site. A verificação da conta já foi feita." },
     { "nome": "CARMEM", "segmento": "Psicologia", "plataformas": ["google"], "conta": "918-578-8000", "mensal": 150, "parcelas": 0, "inicio": "05/10/2026", "revisao": "18/11/2026", "situacao": "Ativo",
       "reporte": "A cliente deu um retorno positivo nos últimos dias: está conseguindo fechar com alguns clientes, e o resultado está bem interessante. A pedido dela, ajustamos o público e as palavras-chave das campanhas na última revisão. A verificação da conta está concluída." },
@@ -29,7 +29,7 @@
       "reporte": "Campanhas pausadas até a entrada dos créditos do Google, como a cliente preferiu. Para a volta, ela quer testar uma dinâmica diferente, voltada para clínica, o que deve incluir mudanças no site; estamos levantando e organizando essa proposta e vamos alinhar com você se esse é mesmo o caminho antes do retorno. A conta está sem verificação pendente." },
     { "nome": "ALICE", "segmento": "Psicologia", "plataformas": ["google"], "conta": "357-411-5648", "mensal": 150, "parcelas": 1, "inicio": "14/09/2026", "revisao": "18/11/2026", "situacao": "Ativo",
       "reporte": "O resultado segue interessante, com contatos fechados pela cliente; estamos levantando com ela quantos foram desde o início das campanhas e como estão os contatos dos últimos dias. A recarga anterior acabou, e a nova já foi solicitada à cliente, que optou por seguir com as campanhas. Na última revisão, fizemos ajustes de rotina. A verificação da conta está pendente, ainda sem prazo." },
-    { "nome": "YASMIN", "segmento": "Psicologia", "plataformas": ["google"], "conta": "756-159-1841", "mensal": 150, "parcelas": 1, "inicio": "30/09/2026", "revisao": "18/11/2026", "situacao": "Pausada · promoção atingida",
+    { "nome": "YASMIN", "segmento": "Psicologia", "plataformas": ["google"], "conta": "756-159-1841", "mensal": 150, "parcelas": 1, "parcelaAdiantada": true, "inicio": "30/09/2026", "revisao": "18/11/2026", "situacao": "Pausada · promoção atingida",
       "reporte": "A cliente optou por manter as campanhas pausadas até a entrada dos créditos do Google. Os resultados ficaram abaixo do esperado: houve alguns fechamentos, mas nada muito expressivo. Para a volta, vamos testar uma dinâmica diferente, com alterações no site e nas campanhas, e seguimos acompanhando os créditos e atualizando no grupo. A verificação da conta (confirmação de telefone) precisa ser feita até 20/11." },
     { "nome": "THAIS", "segmento": "Psicologia", "plataformas": ["google"], "conta": "337-708-3643", "mensal": 150, "parcelas": 0, "inicio": "11/11/2026", "revisao": "18/11/2026", "situacao": "Ativo",
       "reporte": "Nos últimos 7 dias, as campanhas trouxeram 7 contatos, praticamente um por dia, e ainda há espaço para melhorar. Na última revisão, ajustamos os termos de pesquisa e a dinâmica de palavras-chave. Estamos aguardando o retorno da cliente sobre o perfil desses contatos, se já houve fechamentos e o que podemos fazer diferente. A verificação do anunciante precisa ser feita até 16/12." },

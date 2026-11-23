@@ -301,8 +301,14 @@ const DIA_PAGAMENTO = 20;
         `<span>${proj ? parcelasHtml(pagas) : ""}</span>` +
         `<span class="val">${pag.entra ? money(c.mensal) : "—"}</span></li>`;
     };
-    const notaProjetos = () =>
-      `<div class="fin-nota"><p>Combinado: R$ 600 por projeto, em 4 parcelas de R$ 150. A maior parte ainda está na 1ª parcela, ou ainda não teve nenhuma, porque o primeiro pagamento só foi feito depois dos 30 dias de campanha.</p></div>`;
+    // Quem teve a 1ª parcela paga um pouco antes dos 30 dias: "parcelaAdiantada": true no bruno.json
+    const notaProjetos = g => {
+      const nome = n => n.charAt(0) + n.slice(1).toLowerCase();
+      const adiantados = g.clientes.filter(c => c.parcelaAdiantada).map(c => "da " + nome(c.nome));
+      const lista = adiantados.length > 1 ? adiantados.slice(0, -1).join(", ") + " e " + adiantados[adiantados.length - 1] : adiantados[0];
+      const excecao = adiantados.length ? ` (alguns um pouco antes: é o caso só ${lista})` : "";
+      return `<div class="fin-nota"><p>Combinado: R$ 600 por projeto, em 4 parcelas de R$ 150. A maior parte ainda está na 1ª parcela, ou ainda não teve nenhuma, porque o primeiro pagamento só foi feito depois dos 30 dias de campanha${esc(excecao)}.</p></div>`;
+    };
     const grupo = g => {
       const linhas = todos.filter(x => x.g === g);
       return `<div class="fin-grupo"><h3><span>${esc(g.titulo)}</span><b>${money(soma(linhas.filter(x => x.pag.entra)))}</b></h3>` +
