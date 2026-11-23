@@ -22,6 +22,7 @@
    ===================================================================== */
 let ATUALIZADO_EM = "";
 let GRUPOS = [];
+let EM_ABERTO = ""; // bruno.json "pagamentoEmAberto": pagamento do dia 20 que já venceu e ainda não foi recebido (apagar quando receber)
 
 /* Pagamento do Bruno: todo dia 20, só dos clientes que já completaram 30 dias desde o início */
 const DIA_PAGAMENTO = 20;
@@ -122,16 +123,20 @@ const DIA_PAGAMENTO = 20;
   .fin-total { padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--bar); }
   .fin-total .k { font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
   .fin-total .v { margin-top: 4px; font-size: 30px; font-weight: 700; line-height: 1.15; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+  .fin-total.aberto { border-top-color: #c0261b; }
+  .fin-total.aberto .k { color: #c0261b; }
   .fin-total .s { display: block; margin-top: 6px; font-size: 12.5px; color: var(--soft-ink); }
   .fin-card { margin-top: 16px; padding: 4px 20px 16px; background: var(--surface); border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
   .fin-grupo h3 { display: flex; justify-content: space-between; gap: 16px; margin: 14px 0 4px; padding-bottom: 6px; border-bottom: 2px solid var(--ink); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
   .fin-grupo h3 b { font-size: 13px; letter-spacing: 0; }
   .fin-grupo .obs { margin: 6px 0 2px; font-size: 12px; color: var(--label); }
   .fin-lista { margin: 0; padding: 0; list-style: none; }
-  .fin-lista li { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+  /* Três colunas fixas: cliente, parcelas (só projetos) e valor; assim os quadradinhos ficam alinhados em todas as linhas */
+  .fin-lista li { display: grid; grid-template-columns: minmax(0, 1fr) auto 96px; align-items: center; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+  .fin-lista .parc { margin-right: 0; }
   .fin-lista .cli { font-weight: 700; }
   .fin-lista small { display: block; margin-top: 1px; font-size: 11.5px; font-weight: 500; color: var(--label); }
-  .fin-lista .val { font-weight: 600; white-space: nowrap; }
+  .fin-lista .val { font-weight: 600; white-space: nowrap; text-align: right; }
   .fin-lista li.fora .cli { color: var(--label); }
   .fin-lista li.fora small { color: #8a5a12; }
   .fin-lista li.fora .val { color: var(--label); }
@@ -265,17 +270,18 @@ const DIA_PAGAMENTO = 20;
 
   /* ===== Aba Financeiro ===== */
   function renderFinanceiro() {
-    const data = proximoPagamento();
+    const aberto = isDate(EM_ABERTO) ? parseDate(EM_ABERTO) : null; // pagamento vencido continua sendo o atual até ser recebido
+    const data = aberto ?? proximoPagamento();
     const dia = ddmm(data);
     const todos = GRUPOS.flatMap(g => g.clientes.map(c => ({ c, g, pag: noPagamento(c, g, data) })));
     const soma = l => l.reduce((s, x) => s + (x.c.mensal || 0), 0);
     const entram = todos.filter(x => x.pag.entra);
     const faltam = Math.round((data - today()) / DAY);
-    const quando = faltam === 0 ? "é hoje" : faltam === 1 ? "é amanhã" : `faltam ${faltam} dias`;
+    const quando = faltam < 0 ? `em aberto há ${-faltam} dia${faltam === -1 ? "" : "s"}` : faltam === 0 ? "é hoje" : faltam === 1 ? "é amanhã" : `faltam ${faltam} dias`;
 
     // Total a pagar no dia 20, em destaque
-    const topo = `<div class="fin-total"><span class="k">A pagar no dia ${dia}</span><span class="v">${money(soma(entram))}</span>` +
-      `<span class="s">${qtd(entram.length)} · ${quando}. Contam só os clientes com pelo menos 30 dias de campanha rodando.</span></div>`;
+    const topo = `<div class="fin-total${faltam < 0 ? " aberto" : ""}"><span class="k">${faltam < 0 ? `Em aberto · pagamento do dia ${dia}` : `A pagar no dia ${dia}`}</span><span class="v">${money(soma(entram))}</span>` +
+      `<span class="s">${qtd(entram.length)} · ${quando}${faltam < 0 ? `; depois dele, o próximo é dia ${ddmm(proximoPagamento())}` : ""}. Contam só os clientes com pelo menos 30 dias de campanha rodando.</span></div>`;
 
     // Lista simples: cada cliente e quanto representa no dia 20, separada por grupo, com o subtotal de cada grupo
     const linha = ({ c, g, pag }) => {
@@ -283,7 +289,7 @@ const DIA_PAGAMENTO = 20;
       const pagas = c.parcelas || 0;
       const parcela = g.id === "proj" && pag.entra ? `Neste pagamento (${dia}): ${pagas + 1}ª parcela de ${PARCELAS} · ${pagas ? `${pagas} já paga${pagas > 1 ? "s" : ""}` : "nenhuma paga ainda"}` : "";
       const nota = pag.entra ? parcela : "Não conta: ainda não completou 30 dias de campanha rodando";
-      return `<li${pag.entra ? "" : ` class="fora"`}><span class="cli">${esc(c.nome)}${g.id === "proj" ? " " + parcelasHtml(pagas) : ""}${nota ? `<small>${esc(nota)}</small>` : ""}</span>` +
+      return `<li${pag.entra ? "" : ` class="fora"`}><span class="cli">${esc(c.nome)}${nota ? `<small>${esc(nota)}</small>` : ""}</span><span>${g.id === "proj" ? parcelasHtml(pagas) : ""}</span>` +
         `<span class="val">${pag.entra ? money(c.mensal) : "—"}</span></li>`;
     };
     const grupo = g => {
@@ -357,6 +363,7 @@ const DIA_PAGAMENTO = 20;
       return;
     }
     ATUALIZADO_EM = dados.atualizadoEm || "";
+    EM_ABERTO = dados.pagamentoEmAberto || "";
     GRUPOS = dados.grupos || [];
     render();
     carregarPlanilha();
