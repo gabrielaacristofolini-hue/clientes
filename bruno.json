@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "23/11/2026 às 17:28",
+  "atualizadoEm": "23/11/2026 às 17:29",
   "pagamentoEmAberto": "20/11/2026",
   "grupos": [
   { "id": "rec", "titulo": "Clientes recorrentes", "clientes": [
@@ -31,8 +31,8 @@
       "reporte": "O resultado segue interessante, com contatos fechados pela cliente; estamos levantando com ela quantos foram desde o início das campanhas e como estão os contatos dos últimos dias. A recarga anterior acabou, e a cliente, que optou por seguir com as campanhas, ainda não respondeu sobre a nova; precisamos dessa recarga para que os ajustes feitos na última otimização (18/11) tenham efeito na prática. A verificação da conta está pendente, ainda sem prazo." },
     { "nome": "YASMIN", "segmento": "Psicologia", "plataformas": ["google"], "conta": "756-159-1841", "mensal": 150, "parcelas": 1, "parcelaAdiantada": true, "inicio": "30/09/2026", "revisao": "18/11/2026", "situacao": "Campanhas pausadas · promoção atingida",
       "reporte": "A cliente optou por manter as campanhas pausadas até a entrada dos créditos do Google. Os resultados ficaram abaixo do esperado: houve alguns fechamentos, mas nada muito expressivo. Para a volta, vamos testar uma dinâmica diferente, com alterações no site e nas campanhas, e seguimos acompanhando os créditos e atualizando no grupo. A verificação da conta (confirmação de telefone) precisa ser feita até 20/11." },
-    { "nome": "THAIS", "segmento": "Psicologia", "plataformas": ["google"], "conta": "337-708-3643", "mensal": 150, "parcelas": 0, "inicio": "11/11/2026", "revisao": "18/11/2026", "situacao": "Ativo",
-      "reporte": "Nos últimos 7 dias, as campanhas trouxeram 7 contatos, praticamente um por dia, e ainda há espaço para melhorar. Na última revisão, ajustamos os termos de pesquisa e a dinâmica de palavras-chave. Estamos aguardando o retorno da cliente sobre o perfil desses contatos, se já houve fechamentos e o que podemos fazer diferente. A verificação do anunciante precisa ser feita até 16/12." },
+    { "nome": "THAIS", "segmento": "Psicologia", "plataformas": ["google"], "conta": "337-708-3643", "mensal": 150, "parcelas": 0, "inicio": "11/11/2026", "revisao": "23/11/2026", "situacao": "Ativo",
+      "reporte": "O custo por conversão segue dentro do esperado; está um pouco mais alto porque usamos palavras-chave exatas, mais fechadas, mas ainda bem dentro do previsto. Até quarta-feira (25/11), vamos levantar com a cliente como estão os últimos contatos, se houve fechamentos desde o último retorno e se ela consegue nos enviar prints dos atendimentos, para definir as próximas mudanças. Na última otimização, ajustamos os termos de pesquisa e a dinâmica de palavras-chave. As campanhas têm foco, por enquanto, no atendimento online. A verificação do anunciante precisa ser feita até 16/12." },
     { "nome": "NEIVA", "segmento": "Psicologia", "plataformas": ["google"], "mensal": 150, "parcelas": 0, "inicio": "", "revisao": "23/11/2026", "situacao": "Campanhas ainda não iniciadas",
       "reporte": "Site e campanhas prontos do nosso lado. Para subir, falta só a cliente criar a conta de anúncios e pagar o registro do domínio no Registro.br; estamos acompanhando com ela quase todos os dias." }
   ] }
