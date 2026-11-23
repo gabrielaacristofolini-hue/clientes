@@ -113,6 +113,8 @@ const DIA_PAGAMENTO = 20;
   /* Situação: "Ativo" em verde; "Pausada · promoção atingida" neutro */
   .sit { display: inline-block; padding: 1px 8px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; background: #eef1ef; color: var(--soft-ink); white-space: nowrap; }
   .sit.rodando { background: #e3f1e9; color: #1f6b47; }
+  .sit.pausada { background: #fdf0dc; color: #8a5a12; } /* campanhas pausadas: sempre bem claro */
+  .sit.nao-iniciada { background: none; box-shadow: inset 0 0 0 1px #cfd6d2; color: var(--label); }
 
   .texto { max-width: 92ch; margin: 10px 0 0; font-size: 14px; line-height: 1.6; color: var(--ink); text-wrap: pretty; } /* evita palavra sozinha na última linha */
   .k { display: block; font-size: 11px; color: var(--label); }
@@ -197,7 +199,8 @@ const DIA_PAGAMENTO = 20;
     meta: { title: "Meta Ads", svg: `<svg viewBox="0 0 24 24"><path d="M12 12c-2-3-3.6-5.2-5.6-5.2S2.8 9 2.8 12s1.6 5.2 3.6 5.2S10 15 12 12s3.6-5.2 5.6-5.2 3.6 2.2 3.6 5.2-1.6 5.2-3.6 5.2S14 15 12 12z" fill="none" stroke="#0866FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
   };
 
-  const sitClasse = s => s === "Ativo" ? "rodando" : "";
+  // situacao: "Ativo", "Campanhas pausadas · …" ou "Campanhas ainda não iniciadas"
+  const sitClasse = s => s === "Ativo" ? "rodando" : /pausad/i.test(s) ? "pausada" : /não iniciad/i.test(s) ? "nao-iniciada" : "";
   const sit = s => `<span class="sit ${sitClasse(s)}">${esc(s)}</span>`;
 
   /* Promoção do Google: só a barrinha e o percentual de R$ 1.200 gastos, lidos ao vivo da aba "Geral" da planilha */
@@ -249,10 +252,11 @@ const DIA_PAGAMENTO = 20;
     const gasto = c.conta ? gastoPorConta[c.conta] : undefined;
     const pct = gasto == null ? 0 : Math.min(Math.floor(gasto / META * 100), 100);
     const promo = c.conta ? `<span class="barra-linha">Promoção Google <span class="barra"><i style="width:${pct}%"></i></span><b>${gasto == null ? "—" : pct + "%"}</b></span>` : "";
-    const inicio = isDate(c.inicio) ? `Início em ${c.inicio.slice(0, 5)}` : "Campanhas ainda não iniciadas";
+    // Só mostra a data de início quando existe (os recorrentes antigos não têm; quem não começou já diz isso na situação)
+    const inicio = isDate(c.inicio) ? `<span>Início em ${c.inicio.slice(0, 5)}</span>` : "";
     return `<article class="cliente"><div class="cli-topo"><h3>${esc(c.nome)}${plats}</h3>${sit(c.situacao)}` +
       `<span class="disc">${c.parcelas != null ? parcelasHtml(c.parcelas) + " " : ""}${money(c.mensal)}</span></div>` +
-      `<p class="meta"><span>${esc(c.segmento)}</span><span>${inicio}</span>${promo}</p>` +
+      `<p class="meta"><span>${esc(c.segmento)}</span>${inicio}${promo}</p>` +
       (c.reporte ? `<p class="texto">${esc(c.reporte)}</p>` : "") + `</article>`;
   }
 
@@ -263,10 +267,11 @@ const DIA_PAGAMENTO = 20;
   function renderClientes() {
     const todos = GRUPOS.flatMap(g => g.clientes);
     const ativos = todos.filter(c => c.situacao === "Ativo").length;
-    const pausados = todos.length - ativos;
+    const pausados = todos.filter(c => /pausad/i.test(c.situacao)).length;
+    const naoIniciados = todos.filter(c => /não iniciad/i.test(c.situacao)).length;
     document.getElementById("aba-clientes").innerHTML =
       `<div class="folha"><div class="folha-topo"><h1>Reporte dos clientes</h1>` +
-      `<p>${qtd(todos.length)} · ${ativos} ativo${ativos === 1 ? "" : "s"} · ${pausados} pausado${pausados === 1 ? "" : "s"}</p></div>` +
+      `<p>${qtd(todos.length)} · ${ativos} ativo${ativos === 1 ? "" : "s"} · ${pausados} com campanhas pausadas${naoIniciados ? ` · ${naoIniciados} ainda sem campanhas` : ""}</p></div>` +
       GRUPOS.map(g => `<div class="grupo"><h2>${esc(g.titulo)} <span>${qtd(g.clientes.length)}</span></h2>` +
         ordem(g.clientes).map(card).join("") + `</div>`).join("") + `</div>`;
   }
