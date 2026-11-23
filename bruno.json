@@ -1,0 +1,39 @@
+{
+  "atualizadoEm": "23/11/2026 às 10:23",
+  "grupos": [
+  { "id": "rec", "titulo": "Clientes recorrentes", "clientes": [
+    { "nome": "VILA 86", "segmento": "Moda streetwear", "plataformas": ["meta", "google"], "mensal": 200, "inicio": "", "revisao": "18/11/2026", "situacao": "Ativo",
+      "reporte": "As vendas no Google seguem num bom padrão: 28 conversões de 01 a 18/11 e 14 nos últimos 7 dias, uma média de 1 a 2 vendas por dia. No Meta, o vídeo da loja foi trocado pelo post de Black Friday mais recente deles, para aproveitar o período." },
+    { "nome": "061 RACING", "segmento": "Mecânica de alta performance", "plataformas": ["meta"], "mensal": 200, "inicio": "", "revisao": "18/11/2026", "situacao": "Ativo",
+      "reporte": "Campanhas entregando o volume esperado. O lead do remap está um pouco mais caro, e o da campanha de revisão sai mais barato. Estamos entendendo com o cliente qual criativo de revisão traz mais agendamentos, para concentrar o investimento nele. Por enquanto, seguimos com a mesma estratégia e coletando o feedback do cliente." }
+  ] },
+  { "id": "recpsi", "titulo": "Psicólogos recorrentes", "clientes": [
+    { "nome": "NARA", "segmento": "Psicologia", "plataformas": ["google"], "conta": "775-492-4225", "mensal": 200, "inicio": "30/09/2026", "revisao": "18/11/2026", "situacao": "Ativo",
+      "reporte": "Campanhas seguem ativas; a cliente vai pausar ainda esta semana e aguardar a entrada dos créditos do Google para voltar. Em paralelo, estamos levantando com ela quais foram os problemas no período e o que fazer diferente na volta; a tendência é reformular o site e as campanhas como um todo." },
+    { "nome": "NATHALIA", "segmento": "Psicologia", "plataformas": ["google"], "mensal": 200, "inicio": "23/09/2026", "revisao": "18/11/2026", "situacao": "Ativo",
+      "reporte": "Campanha local, só na região de São Carlos, com foco em contatos de perfil mais high ticket. Por isso o custo por contato é maior, mas já houve retornos positivos e fechamentos. Na última revisão, incluímos novas palavras-chave para aumentar o volume de conversões e concentramos o investimento numa só campanha, a que mais converte. A verificação da conta precisa ser feita até 02/12." },
+    { "nome": "CLÉCIA", "segmento": "Psicologia", "plataformas": ["google"], "conta": "128-846-8174", "mensal": 200, "inicio": "22/09/2026", "revisao": "18/11/2026", "situacao": "Ativo",
+      "reporte": "Verificação da conta feita e campanhas de volta ao ar. As conversões caíram um pouco na última semana, então ajustamos palavras-chave e termos de pesquisa, com novas palavras e alguns termos removidos. A cliente pediu para seguir investindo até cerca de R$ 1.400 no total, e ela já confirmou alguns fechamentos." },
+    { "nome": "HUGO", "segmento": "Psicologia", "plataformas": ["google"], "conta": "587-222-5596", "mensal": 200, "inicio": "29/09/2026", "revisao": "18/11/2026", "situacao": "Ativo",
+      "reporte": "As conversões caíram bastante nos últimos dias, então ajustamos palavras-chave, termos de pesquisa e anúncios, e o orçamento foi para R$ 20 por dia. O cliente segue fazendo recargas para manter as campanhas rodando. Como a campanha roda só em Recife, estamos avaliando expandir a localização para ganhar volume." }
+  ] },
+  { "id": "proj", "titulo": "Psicólogos de projeto", "clientes": [
+    { "nome": "SHEILA", "segmento": "Psicologia", "plataformas": ["google"], "conta": "353-831-5205", "mensal": 150, "parcelas": 1, "inicio": "24/09/2026", "revisao": "18/11/2026", "situacao": "Pausada · promoção atingida",
+      "reporte": "Campanhas pausadas: a conta está sem saldo, e a cliente deve aguardar a entrada dos créditos do Google para voltar. O resultado ficou abaixo do esperado, com pouquíssimos fechamentos; por isso, vamos reestruturar a dinâmica para a volta, com alterações nas campanhas e, principalmente, no site. A verificação da conta já foi feita." },
+    { "nome": "CARMEM", "segmento": "Psicologia", "plataformas": ["google"], "conta": "918-578-8000", "mensal": 150, "parcelas": 0, "inicio": "05/10/2026", "revisao": "18/11/2026", "situacao": "Ativo",
+      "reporte": "A cliente deu um retorno positivo nos últimos dias: está conseguindo fechar com alguns clientes, e o resultado está bem interessante. A pedido dela, ajustamos o público e as palavras-chave das campanhas na última revisão. A verificação da conta está concluída." },
+    { "nome": "THAYNARA", "segmento": "Psicologia", "plataformas": ["google"], "conta": "337-837-5511", "mensal": 150, "parcelas": 1, "inicio": "03/09/2026", "revisao": "16/11/2026", "situacao": "Pausada · promoção atingida",
+      "reporte": "Campanhas pausadas: a cliente prefere aguardar a entrada dos créditos do Google para voltar a investir. A conta está em ordem e sem verificação pendente. Até a última conferência, os créditos ainda não tinham entrado, e seguimos acompanhando." },
+    { "nome": "DANIELLE", "segmento": "Psicologia", "plataformas": ["google"], "conta": "150-686-1633", "mensal": 150, "parcelas": 1, "inicio": "14/09/2026", "revisao": "18/11/2026", "situacao": "Pausada · promoção atingida",
+      "reporte": "Campanhas pausadas até a entrada dos créditos do Google, como a cliente preferiu. Para a volta, ela quer testar uma dinâmica diferente, voltada para clínica, o que deve incluir mudanças no site; estamos levantando e organizando essa proposta e vamos alinhar com você se esse é mesmo o caminho antes do retorno. A conta está sem verificação pendente." },
+    { "nome": "ALICE", "segmento": "Psicologia", "plataformas": ["google"], "conta": "357-411-5648", "mensal": 150, "parcelas": 1, "inicio": "14/09/2026", "revisao": "18/11/2026", "situacao": "Ativo",
+      "reporte": "O resultado segue interessante, com contatos fechados pela cliente; estamos levantando com ela quantos foram desde o início das campanhas e como estão os contatos dos últimos dias. A recarga anterior acabou, e a nova já foi solicitada à cliente, que optou por seguir com as campanhas. Na última revisão, fizemos ajustes de rotina. A verificação da conta está pendente, ainda sem prazo." },
+    { "nome": "YASMIN", "segmento": "Psicologia", "plataformas": ["google"], "conta": "756-159-1841", "mensal": 150, "parcelas": 1, "inicio": "30/09/2026", "revisao": "18/11/2026", "situacao": "Pausada · promoção atingida",
+      "reporte": "A cliente optou por manter as campanhas pausadas até a entrada dos créditos do Google. Os resultados ficaram abaixo do esperado: houve alguns fechamentos, mas nada muito expressivo. Para a volta, vamos testar uma dinâmica diferente, com alterações no site e nas campanhas, e seguimos acompanhando os créditos e atualizando no grupo. A verificação da conta (confirmação de telefone) precisa ser feita até 20/11." },
+    { "nome": "THAIS", "segmento": "Psicologia", "plataformas": ["google"], "conta": "337-708-3643", "mensal": 150, "parcelas": 0, "inicio": "11/11/2026", "revisao": "18/11/2026", "situacao": "Ativo",
+      "reporte": "Nos últimos 7 dias, as campanhas trouxeram 7 contatos, praticamente um por dia, e ainda há espaço para melhorar. Na última revisão, ajustamos os termos de pesquisa e a dinâmica de palavras-chave. Estamos aguardando o retorno da cliente sobre o perfil desses contatos, se já houve fechamentos e o que podemos fazer diferente. A verificação do anunciante precisa ser feita até 16/12." },
+    { "nome": "NEIVA", "segmento": "Psicologia", "plataformas": ["google"], "mensal": 150, "parcelas": 0, "inicio": "", "revisao": "", "situacao": "Ativo",
+      "reporte": "Site e campanhas prontos do nosso lado. Para subir, falta a cliente criar a conta de anúncios (já solicitado no grupo) e pagar o domínio no Registro.br." }
+  ] }
+  ]
+}
