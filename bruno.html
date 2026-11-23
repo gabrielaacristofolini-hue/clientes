@@ -95,6 +95,10 @@ const DIA_PAGAMENTO = 20;
   .cli-topo { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
   .cli-topo h3 { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: .01em; }
   /* Mensalidade e parcelas bem discretas, no canto direito */
+  .parc { display: inline-flex; align-items: center; gap: 5px; margin-right: 6px; padding: 2px 8px; background: #e6f2ec; color: #24593f; font-size: 11.5px; font-weight: 700; vertical-align: 1px; white-space: nowrap; }
+  .parc i { display: inline-block; width: 7px; height: 7px; background: #c9d6cf; }
+  .parc i.ok { background: var(--bar); }
+  .parc i:last-of-type { margin-right: 2px; }
   .disc { margin-left: auto; font-size: 11.5px; color: var(--label); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; margin: 4px 0 0; font-size: 12px; color: var(--label); font-variant-numeric: tabular-nums; }
   .plat { display: inline-block; width: 14px; height: 14px; margin-left: 6px; vertical-align: -1px; }
@@ -169,6 +173,9 @@ const DIA_PAGAMENTO = 20;
 (function () {
   const DAY = 86400000;
   const PARCELAS = 4; // projeto de R$ 600 dividido em 4 parcelas de R$ 150
+  // Parcelas pagas como quadradinhos preenchidos (igual ao painel principal), ex.: ■□□□ 1 de 4
+  const parcelasHtml = n => `<span class="parc" title="${n} de ${PARCELAS} parcelas pagas">` +
+    Array.from({ length: PARCELAS }, (_, i) => `<i${i < n ? ` class="ok"` : ""}></i>`).join("") + `${n} de ${PARCELAS}</span>`;
   const money = v => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const isDate = s => /^\d\d\/\d\d\/\d{4}$/.test(s || "");
@@ -236,7 +243,7 @@ const DIA_PAGAMENTO = 20;
     const promo = c.conta ? `<span class="barra-linha">Promoção Google <span class="barra"><i style="width:${pct}%"></i></span><b>${gasto == null ? "—" : pct + "%"}</b></span>` : "";
     const inicio = isDate(c.inicio) ? `Início em ${c.inicio.slice(0, 5)}` : "Campanhas ainda não iniciadas";
     return `<article class="cliente"><div class="cli-topo"><h3>${esc(c.nome)}${plats}</h3>${sit(c.situacao)}` +
-      `<span class="disc">${money(c.mensal)}${c.parcelas != null ? ` · ${c.parcelas} de ${PARCELAS} parcelas` : ""}</span></div>` +
+      `<span class="disc">${c.parcelas != null ? parcelasHtml(c.parcelas) + " " : ""}${money(c.mensal)}</span></div>` +
       `<p class="meta"><span>${esc(c.segmento)}</span><span>${inicio}</span>${promo}</p>` +
       (c.reporte ? `<p class="texto">${esc(c.reporte)}</p>` : "") + `</article>`;
   }
@@ -276,7 +283,7 @@ const DIA_PAGAMENTO = 20;
       const pagas = c.parcelas || 0;
       const parcela = g.id === "proj" && pag.entra ? `Neste pagamento (${dia}): ${pagas + 1}ª parcela de ${PARCELAS} · ${pagas ? `${pagas} já paga${pagas > 1 ? "s" : ""}` : "nenhuma paga ainda"}` : "";
       const nota = pag.entra ? parcela : "Não conta: ainda não completou 30 dias de campanha rodando";
-      return `<li${pag.entra ? "" : ` class="fora"`}><span class="cli">${esc(c.nome)}${nota ? `<small>${esc(nota)}</small>` : ""}</span>` +
+      return `<li${pag.entra ? "" : ` class="fora"`}><span class="cli">${esc(c.nome)}${g.id === "proj" ? " " + parcelasHtml(pagas) : ""}${nota ? `<small>${esc(nota)}</small>` : ""}</span>` +
         `<span class="val">${pag.entra ? money(c.mensal) : "—"}</span></li>`;
     };
     const grupo = g => {
