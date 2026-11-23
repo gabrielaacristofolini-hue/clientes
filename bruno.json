@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "23/11/2026 às 15:14",
+  "atualizadoEm": "23/11/2026 às 15:19",
   "pagamentoEmAberto": "20/11/2026",
   "grupos": [
   { "id": "rec", "titulo": "Clientes recorrentes", "clientes": [
@@ -33,8 +33,8 @@
       "reporte": "A cliente optou por manter as campanhas pausadas até a entrada dos créditos do Google. Os resultados ficaram abaixo do esperado: houve alguns fechamentos, mas nada muito expressivo. Para a volta, vamos testar uma dinâmica diferente, com alterações no site e nas campanhas, e seguimos acompanhando os créditos e atualizando no grupo. A verificação da conta (confirmação de telefone) precisa ser feita até 20/11." },
     { "nome": "THAIS", "segmento": "Psicologia", "plataformas": ["google"], "conta": "337-708-3643", "mensal": 150, "parcelas": 0, "inicio": "11/11/2026", "revisao": "18/11/2026", "situacao": "Ativo",
       "reporte": "Nos últimos 7 dias, as campanhas trouxeram 7 contatos, praticamente um por dia, e ainda há espaço para melhorar. Na última revisão, ajustamos os termos de pesquisa e a dinâmica de palavras-chave. Estamos aguardando o retorno da cliente sobre o perfil desses contatos, se já houve fechamentos e o que podemos fazer diferente. A verificação do anunciante precisa ser feita até 16/12." },
-    { "nome": "NEIVA", "segmento": "Psicologia", "plataformas": ["google"], "mensal": 150, "parcelas": 0, "inicio": "", "revisao": "", "situacao": "Ativo",
-      "reporte": "Site e campanhas prontos do nosso lado. Para subir, falta a cliente criar a conta de anúncios (já solicitado no grupo) e pagar o domínio no Registro.br." }
+    { "nome": "NEIVA", "segmento": "Psicologia", "plataformas": ["google"], "mensal": 150, "parcelas": 0, "inicio": "", "revisao": "23/11/2026", "situacao": "Ativo",
+      "reporte": "Site e campanhas prontos do nosso lado. Para subir, falta só a cliente criar a conta de anúncios e pagar o registro do domínio no Registro.br; estamos acompanhando com ela quase todos os dias." }
   ] }
   ]
 }
