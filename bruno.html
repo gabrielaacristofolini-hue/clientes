@@ -255,7 +255,7 @@ const DIA_PAGAMENTO = 20;
     // Só mostra a data de início quando existe (os recorrentes antigos não têm; quem não começou já diz isso na situação)
     const inicio = isDate(c.inicio) ? `<span>Início em ${c.inicio.slice(0, 5)}</span>` : "";
     return `<article class="cliente"><div class="cli-topo"><h3>${esc(c.nome)}${plats}</h3>${sit(c.situacao)}` +
-      `<span class="disc">${c.parcelas != null ? parcelasHtml(c.parcelas) + " " : ""}${money(c.mensal)}</span></div>` +
+      `</div>` + // mensalidade e parcelas ficam só na aba Financeiro
       `<p class="meta"><span>${esc(c.segmento)}</span>${inicio}${promo}</p>` +
       (c.reporte ? `<p class="texto">${esc(c.reporte)}</p>` : "") + `</article>`;
   }
