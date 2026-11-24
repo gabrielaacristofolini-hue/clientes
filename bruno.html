@@ -314,10 +314,10 @@ const DIA_PAGAMENTO = 20;
     // Quem teve a 1ª parcela paga um pouco antes dos 30 dias: "parcelaAdiantada": true no bruno.json
     const notaProjetos = g => {
       const nome = n => n.charAt(0) + n.slice(1).toLowerCase();
-      const adiantados = g.clientes.filter(c => c.parcelaAdiantada).map(c => "da " + nome(c.nome));
+      const adiantados = g.clientes.filter(c => c.parcelaAdiantada).map(c => nome(c.nome));
       const lista = adiantados.length > 1 ? adiantados.slice(0, -1).join(", ") + " e " + adiantados[adiantados.length - 1] : adiantados[0];
-      const excecao = adiantados.length ? ` (alguns um pouco antes: é o caso só ${lista})` : "";
-      return `<div class="fin-nota"><p>Combinado: R$ 600 por projeto, em 4 parcelas de R$ 150. A maior parte ainda está na 1ª parcela, ou ainda não teve nenhuma, porque o primeiro pagamento só foi feito depois dos 30 dias de campanha${esc(excecao)}.</p></div>`;
+      const excecao = adiantados.length ? ` (alguns um pouco antes: é o caso só de ${lista})` : "";
+      return `<div class="fin-nota"><p>Combinado: R$ 600 por projeto, em 4 parcelas de R$ 150. O primeiro pagamento de cada projeto só é feito depois dos 30 dias de campanha${esc(excecao)}, por isso quem começou depois ainda tem menos parcelas pagas.</p></div>`;
     };
     const grupo = g => {
       const linhas = todos.filter(x => x.g === g);
