@@ -1,9 +1,9 @@
 {
-  "atualizadoEm": "26/11/2026 às 16:58",
+  "atualizadoEm": "26/11/2026 às 17:04",
   "grupos": [
   { "id": "rec", "titulo": "Clientes recorrentes", "clientes": [
-    { "nome": "VILA 86", "segmento": "Moda streetwear", "plataformas": ["meta", "google"], "mensal": 200, "inicio": "", "revisao": "23/11/2026", "situacao": "Ativo",
-      "reporte": "No Google, as vendas seguem muito bem, dentro do padrão, com algumas vendas por dia. Estamos criando criativos de imagem com as peças de Black Friday do site, para rodar num grupo separado dentro da campanha do Google até quarta-feira (25/11). No Meta, iniciamos uma campanha de tráfego para o perfil do Instagram, focada na Black Friday. O Meta recusou o cartão e desabilitou a conta temporariamente, pedindo um novo cadastro do cartão; estamos acompanhando com o cliente." },
+    { "nome": "VILA 86", "segmento": "Moda streetwear", "plataformas": ["meta", "google"], "mensal": 200, "inicio": "", "revisao": "26/11/2026", "situacao": "Ativo",
+      "reporte": "O problema do cartão no Meta foi resolvido, e o material de Black Friday segue rodando lá, na campanha de tráfego para o perfil do Instagram. No Google, que já vinha bem, com vendas diárias dentro do padrão, incluímos um grupo com criativos de Black Friday produzidos por nós, para dar uma impulsionada no período." },
     { "nome": "061 RACING", "segmento": "Mecânica de alta performance", "plataformas": ["meta"], "mensal": 200, "inicio": "", "revisao": "26/11/2026", "situacao": "Ativo",
       "reporte": "Os resultados seguem, na média, semelhantes aos das últimas semanas: as campanhas trazem bastante agendamento de revisão, mas poucos contatos de remap. Por isso, o próximo ajuste é refazer a campanha de remap, buscando contatos mais qualificados, mesmo que o custo por lead fique mais alto. Seguimos levantando com o cliente se algum contato do tráfego fechou remap recentemente. A conta continua com um erro de pagamento no cartão; já pedimos de novo ao cliente para corrigir e estamos acompanhando." }
   ] },
