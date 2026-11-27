@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "27/11/2026 às 16:22",
+  "atualizadoEm": "27/11/2026 às 16:25",
   "grupos": [
   { "id": "rec", "titulo": "Clientes recorrentes", "clientes": [
     { "nome": "VILA 86", "segmento": "Moda streetwear", "plataformas": ["meta", "google"], "mensal": 200, "inicio": "", "revisao": "26/11/2026", "situacao": "Ativo",
@@ -10,8 +10,8 @@
   { "id": "recpsi", "titulo": "Psicólogos recorrentes", "clientes": [
     { "nome": "NARA", "segmento": "Psicologia", "plataformas": ["google"], "conta": "775-492-4225", "mensal": 200, "inicio": "30/09/2026", "revisao": "27/11/2026", "situacao": "Campanhas pausadas · promoção atingida",
       "reporte": "Campanhas pausadas até a entrada dos créditos do Google, como a cliente prefere. Os contatos chegaram, mas não viraram resultado: os termos de pesquisa estavam fracos e, até agora, acreditamos que não houve fechamentos; no período todo, praticamente sem resultado. A campanha rodava para atendimento online, em mais regiões e só em dias de semana. Durante a pausa, vamos reformular o site e reajustar as campanhas para o retorno, e queremos alinhar com você a dinâmica de Instagram/Meta que você comentou." },
-    { "nome": "NATHALIA", "segmento": "Psicologia", "plataformas": ["google"], "mensal": 200, "inicio": "23/09/2026", "revisao": "23/11/2026", "situacao": "Ativo",
-      "reporte": "Segue dentro do padrão. A campanha é local, só na região de São Carlos, com foco em contatos de perfil mais high ticket, por isso o custo por contato é naturalmente maior: de 19/11 para cá foram 4 contatos, a cerca de R$ 32,74 cada. Já houve retornos positivos e fechamentos. Na última otimização, incluímos novas palavras-chave para aumentar o volume de conversões e concentramos o investimento numa só campanha, a que mais converte; por enquanto, sem novas mudanças. Na quarta-feira (25/11), vamos falar com a cliente para entender como foram esses últimos contatos. A verificação da conta precisa ser feita até 02/12." },
+    { "nome": "NATHALIA", "segmento": "Psicologia", "plataformas": ["google"], "mensal": 200, "inicio": "23/09/2026", "revisao": "27/11/2026", "situacao": "Ativo",
+      "reporte": "Segue dentro do padrão, com custo por conversão um pouco mais alto porque a campanha é local, só na região de São Carlos, com foco em contatos de perfil mais high ticket. Já houve retornos positivos e fechamentos. Estamos levantando com a cliente como foi esta última semana, para fazer alterações na semana que vem. Na última otimização, incluímos novas palavras-chave para aumentar o volume de conversões e concentramos o investimento numa só campanha, a que mais converte. A verificação da conta precisa ser feita até 02/12." },
     { "nome": "CLÉCIA", "segmento": "Psicologia", "plataformas": ["google"], "conta": "128-846-8174", "mensal": 200, "inicio": "22/09/2026", "revisao": "27/11/2026", "situacao": "Campanhas pausadas · promoção atingida",
       "reporte": "A cliente decidiu manter as campanhas pausadas até a entrada dos créditos do Google. Para a volta, vamos revisar toda a estrutura de campanha e o site, para retomar com uma abordagem nova. Antes da pausa, o volume de conversões tinha caído (5 conversões entre 18 e 23/11, a cerca de R$ 31 cada), com contatos vindos de palavras-chave qualificadas; a cliente já tinha confirmado alguns fechamentos. A verificação da conta está concluída." }
   ] },
