@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Clientes Elite Stage</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="alternate icon" type="image/png" href="favicon.png">
+<!-- =====================================================================
+     Página da Elite Stage: reporte detalhado dos clientes da Elite Stage.
+     Aba Clientes: situação, resumo e blocos (campanhas, otimizações, resultados, próximos passos).
+     Aba Financeiro: mensalidade de cada cliente e o próximo pagamento (todo dia 10).
+     Os dados ficam em elite.json, lido direto do repositório pela API do GitHub (aparece logo após
+     o push); se a API falhar, usa a cópia publicada. Esta página nunca mostra clientes de outros donos.
+     ===================================================================== -->
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --box: #143a2b;
+    --box-ink: #e4eee8;
+    --box-label: #a3c2b1;
+    --box-line: #2a5a45;
+    --surface: #ffffff;
+    --ink: #1a1f24;
+    --label: #8a929b;
+    --soft-ink: #4a535c;
+    --line: #e4ebe7;
+    --row-soft: #f2f6f4;
+    --title: #f0d78c;
+    --bar: #2f7a57;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; color-scheme: light; scrollbar-gutter: stable; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 13px/1.45 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  [hidden] { display: none !important; }
+  .wrap { padding: 32px 40px 44px; }
+  /* Largura fixa (igual nas duas abas), para o cabeçalho não mudar de lugar */
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr); width: min(960px, 100%); margin: 0 auto; gap: 26px; }
+
+  .top {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    padding: 2px 2px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, .12);
+    color: var(--box-ink);
+    font-size: 16px; font-weight: 700; letter-spacing: .02em;
+  }
+  .top svg { display: block; flex: none; }
+  .top .marca { margin-right: 6px; }
+  .tabs { display: flex; gap: 4px; }
+  .tabs a { padding: 5px 12px; color: var(--box-ink); opacity: .65; text-decoration: none; font-size: 14px; font-weight: 600; letter-spacing: .01em; }
+  .tabs a:hover { opacity: 1; }
+  .tabs a[aria-current="page"] { opacity: 1; background: var(--box); color: #fff; box-shadow: inset 0 0 0 1px var(--box-line); }
+  .updated { margin-left: auto; padding: 3px 10px; border: 1px solid rgba(255, 255, 255, .2); font-size: 12.5px; font-weight: 500; letter-spacing: 0; }
+
+  section { min-width: 0; background: var(--box); border: 1px solid var(--box-line); padding: 16px 20px 20px; }
+  section h2 {
+    display: flex; align-items: baseline; gap: 8px;
+    margin: 0 0 12px 2px; font-size: 12px; font-weight: 600; color: var(--title);
+    text-transform: uppercase; letter-spacing: .08em;
+  }
+
+  /* Aba Clientes: folha branca, um bloco por cliente */
+  .folha { background: var(--surface); border: 1px solid var(--line); padding: 28px 36px 18px; }
+  .folha-topo { padding-bottom: 16px; border-bottom: 2px solid var(--ink); }
+  .folha-topo h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -.01em; }
+  .folha-topo p { margin: 4px 0 0; font-size: 13px; color: var(--soft-ink); }
+  .cliente { padding: 22px 0 24px; border-bottom: 1px solid var(--line); }
+  .cliente:last-child { border-bottom: 0; }
+  /* Colunas fixas: a tag de situação e as informações ficam sempre na mesma posição, qualquer que seja o nome */
+  .cli-topo, .meta { display: grid; grid-template-columns: 250px 120px minmax(0, 1fr); align-items: center; column-gap: 16px; }
+  .cli-topo > .sit { grid-column: 2 / -1; justify-self: start; }
+  .cli-topo h3 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: .01em; }
+  .meta { margin: 4px 0 0; font-size: 12px; color: var(--label); font-variant-numeric: tabular-nums; }
+  .plat { display: inline-block; width: 14px; height: 14px; margin-left: 6px; vertical-align: -1px; }
+  .plat + .plat { margin-left: 4px; }
+  .plat svg { display: block; width: 100%; height: 100%; }
+  .sit { display: inline-block; padding: 1px 8px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; background: #eef1ef; color: var(--soft-ink); white-space: nowrap; }
+  .sit.rodando { background: #e3f1e9; color: #1f6b47; }
+  .sit.pausada { background: #fdf0dc; color: #8a5a12; }
+  .sit.nao-iniciada { background: none; box-shadow: inset 0 0 0 1px #cfd6d2; color: var(--label); }
+
+  .resumo { max-width: 92ch; margin: 12px 0 0; font-size: 14px; line-height: 1.6; color: var(--ink); text-wrap: pretty; }
+  /* Blocos do cliente (campanhas, otimizações, resultados, próximos passos), em duas colunas */
+  .blocos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+  .bloco { padding: 12px 14px 12px; background: var(--row-soft); border-left: 3px solid var(--bar); }
+  .bloco.passos { border-left-color: #c58a2b; background: #fbf5ea; }
+  .bloco h4 { margin: 0 0 6px; font-size: 11px; font-weight: 700; color: #1f6b47; text-transform: uppercase; letter-spacing: .06em; }
+  .bloco.passos h4 { color: #8a5a12; }
+  .bloco ul { margin: 0; padding-left: 16px; }
+  .bloco li { margin: 3px 0; font-size: 13px; line-height: 1.5; color: var(--ink); text-wrap: pretty; }
+  .bloco li::marker { color: var(--label); }
+
+  /* Aba Financeiro: total do próximo pagamento em destaque e a lista de clientes */
+  .fin-total, .fin-card { max-width: 760px; }
+  .fin-total { padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--bar); }
+  .fin-total .k { display: block; font-size: 11px; color: var(--label); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+  .fin-total .v { display: block; margin-top: 4px; font-size: 30px; font-weight: 700; line-height: 1.15; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+  .fin-total .s { display: block; margin-top: 6px; font-size: 12.5px; color: var(--soft-ink); }
+  .fin-card { margin-top: 16px; padding: 4px 20px 16px; background: var(--surface); border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+  .fin-card h3 { display: flex; justify-content: space-between; gap: 16px; margin: 14px 0 4px; padding-bottom: 6px; border-bottom: 2px solid var(--ink); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+  .fin-lista { margin: 0; padding: 0; list-style: none; }
+  .fin-lista li { display: grid; grid-template-columns: minmax(0, 1fr) 110px; align-items: center; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+  .fin-lista .cli { font-weight: 700; }
+  .fin-lista small { display: block; margin-top: 1px; font-size: 11.5px; font-weight: 500; color: var(--soft-ink); }
+  .fin-lista .val { font-weight: 600; white-space: nowrap; text-align: right; }
+  .fin-soma { display: flex; justify-content: space-between; gap: 16px; margin-top: 14px; padding: 12px 14px; background: var(--row-soft); font-size: 15px; font-weight: 700; }
+
+  @media (max-width: 1000px) {
+    .wrap { padding: 16px; }
+    .updated { margin-left: 0; }
+    section { padding: 12px; }
+    .folha { padding: 18px 16px 8px; }
+    .resumo { font-size: 13.5px; }
+    .cli-topo, .meta { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+    .blocos { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="layout">
+    <header class="top">
+      <svg width="30" height="30" viewBox="0 0 64 64" aria-hidden="true">
+        <defs><clipPath id="avatar-clip"><circle cx="32" cy="32" r="32"/></clipPath></defs>
+        <g clip-path="url(#avatar-clip)">
+          <rect width="64" height="64" fill="#2f7a57"/>
+          <circle cx="32" cy="25" r="11" fill="#fff"/>
+          <path d="M9 68c0-15 10-25 23-25s23 10 23 25z" fill="#fff"/>
+        </g>
+      </svg>
+      <span class="marca">Elite Stage</span>
+      <nav class="tabs" aria-label="Abas">
+        <a href="#clientes" data-tab="clientes">Clientes</a>
+        <a href="#financeiro" data-tab="financeiro">Financeiro</a>
+      </nav>
+      <span class="updated" id="updated"></span>
+    </header>
+    <main class="aba" id="aba-clientes"></main>
+    <main class="aba" id="aba-financeiro" hidden></main>
+  </div>
+</div>
+
+<script>
+(function () {
+  const DAY = 86400000;
+  let DADOS = { clientes: [] };
+  const money = v => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const isDate = s => /^\d\d\/\d\d\/\d{4}$/.test(s || "");
+  const parseDate = s => { if (!isDate(s)) return null; const [d, m, y] = s.split("/").map(Number); return Date.UTC(y, m - 1, d); };
+  const ddmm = t => { const d = new Date(t); return String(d.getUTCDate()).padStart(2, "0") + "/" + String(d.getUTCMonth() + 1).padStart(2, "0"); };
+  const today = () => { const n = new Date(); return Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()); };
+  const qtd = n => `${n} cliente${n === 1 ? "" : "s"}`;
+
+  const PLATFORMS = {
+    google: { title: "Google Ads", svg: `<svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.650z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>` },
+    meta: { title: "Meta Ads", svg: `<svg viewBox="0 0 24 24"><path d="M12 12c-2-3-3.6-5.2-5.6-5.2S2.8 9 2.8 12s1.6 5.2 3.6 5.2S10 15 12 12s3.6-5.2 5.6-5.2 3.6 2.2 3.6 5.2-1.6 5.2-3.6 5.2S14 15 12 12z" fill="none" stroke="#0866FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
+  };
+  const sitClasse = s => s === "Ativo" ? "rodando" : /pausad/i.test(s) ? "pausada" : /não iniciad/i.test(s) ? "nao-iniciada" : "";
+
+  /* ===== Aba Clientes ===== */
+  function card(c) {
+    const plats = (c.plataformas || []).filter(p => PLATFORMS[p]).map(p => `<span class="plat" title="${PLATFORMS[p].title}">${PLATFORMS[p].svg}</span>`).join("");
+    const inicio = `<span>${isDate(c.inicio) ? `Início em ${c.inicio.slice(0, 5)}` : ""}</span>`;
+    const blocos = (c.blocos || []).map(b =>
+      `<div class="bloco${/próximos passos/i.test(b.titulo) ? " passos" : ""}"><h4>${esc(b.titulo)}</h4><ul>` +
+      (b.itens || []).map(i => `<li>${esc(i)}</li>`).join("") + `</ul></div>`).join("");
+    return `<article class="cliente"><div class="cli-topo"><h3>${esc(c.nome)}${plats}</h3>` +
+      `<span class="sit ${sitClasse(c.situacao)}">${esc(c.situacao)}</span></div>` +
+      `<p class="meta"><span>${esc(c.segmento)}</span>${inicio}</p>` +
+      (c.resumo ? `<p class="resumo">${esc(c.resumo)}</p>` : "") +
+      (blocos ? `<div class="blocos">${blocos}</div>` : "") + `</article>`;
+  }
+
+  function renderClientes() {
+    const cs = DADOS.clientes || [];
+    const ativos = cs.filter(c => c.situacao === "Ativo").length;
+    document.getElementById("aba-clientes").innerHTML =
+      `<div class="folha"><div class="folha-topo"><h1>Reporte dos clientes</h1>` +
+      `<p>${qtd(cs.length)} · ${ativos} ativo${ativos === 1 ? "" : "s"}</p></div>` +
+      cs.map(card).join("") + `</div>`;
+  }
+
+  /* ===== Aba Financeiro: próximo pagamento (todo dia "diaPagamento") ===== */
+  function proximoPagamento(dia) {
+    const n = new Date();
+    return Date.UTC(n.getFullYear(), n.getMonth() + (n.getDate() > dia ? 1 : 0), dia);
+  }
+  function renderFinanceiro() {
+    const cs = DADOS.clientes || [];
+    const diaPag = DADOS.diaPagamento || 10;
+    const data = proximoPagamento(diaPag);
+    const dia = ddmm(data);
+    const total = cs.reduce((s, c) => s + (c.mensal || 0), 0);
+    const faltam = Math.round((data - today()) / DAY);
+    const quando = faltam === 0 ? "é hoje" : faltam === 1 ? "é amanhã" : `faltam ${faltam} dias`;
+    const ultimo = isDate(DADOS.ultimoRecebido) ? ` Último pagamento recebido em ${DADOS.ultimoRecebido.slice(0, 5)}.` : "";
+    const linhas = cs.map(c => `<li><span class="cli">${esc(c.nome)}` +
+      `${isDate(c.inicio) ? `<small>Início em ${c.inicio.slice(0, 5)}</small>` : ""}</span>` +
+      `<span class="val">${money(c.mensal || 0)}</span></li>`).join("");
+    document.getElementById("aba-financeiro").innerHTML =
+      `<section><h2>Pagamento do dia ${dia}</h2>` +
+      `<div class="fin-total"><span class="k">A pagar no dia ${dia}</span><span class="v">${money(total)}</span>` +
+      `<span class="s">${qtd(cs.length)} · ${quando}. Mensalidade de cada cliente, paga todo dia ${diaPag}.${ultimo}</span></div>` +
+      `<div class="fin-card"><h3><span>Clientes</span><b>${money(total)}</b></h3><ul class="fin-lista">${linhas}</ul>` +
+      `<div class="fin-soma"><span>Total no dia ${dia}</span><b>${money(total)}</b></div></div></section>`;
+  }
+
+  function render() {
+    document.getElementById("updated").textContent = DADOS.atualizadoEm ? `Atualizado em ${DADOS.atualizadoEm}` : "";
+    renderClientes();
+    renderFinanceiro();
+  }
+
+  // Abas: a aba aberta fica no endereço (#clientes ou #financeiro)
+  function showTab() {
+    const aba = location.hash === "#financeiro" ? "financeiro" : "clientes";
+    document.getElementById("aba-clientes").hidden = aba !== "clientes";
+    document.getElementById("aba-financeiro").hidden = aba !== "financeiro";
+    document.querySelectorAll(".tabs a").forEach(a => {
+      if (a.dataset.tab === aba) a.setAttribute("aria-current", "page");
+      else a.removeAttribute("aria-current");
+    });
+  }
+  addEventListener("hashchange", showTab);
+  showTab();
+
+  // Dados (elite.json): primeiro direto do repositório (versão do último push), senão a cópia publicada
+  const REPO_API = "https://api.github.com/repos/gabrielaacristofolini-hue/clientes/contents/";
+  async function lerJSON(arquivo) {
+    const fontes = [
+      [REPO_API + arquivo + "?ref=main", { Accept: "application/vnd.github.raw" }],
+      [arquivo + "?t=" + Date.now(), {}],
+    ];
+    for (const [url, headers] of fontes) {
+      try {
+        const ctrl = new AbortController(), t = setTimeout(() => ctrl.abort(), 5000);
+        const r = await fetch(url, { cache: "no-store", headers, signal: ctrl.signal });
+        clearTimeout(t);
+        if (r.ok) return await r.json();
+      } catch (e) {}
+    }
+    return null;
+  }
+
+  lerJSON("elite.json").then(dados => {
+    if (!dados) {
+      document.getElementById("aba-clientes").innerHTML = `<div class="folha"><p>Não foi possível carregar os dados agora. Recarregue a página em instantes.</p></div>`;
+      return;
+    }
+    DADOS = dados;
+    render();
+  });
+})();
+</script>
+</body>
+</html>
