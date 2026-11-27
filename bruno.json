@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "27/11/2026 às 15:27",
+  "atualizadoEm": "27/11/2026 às 15:28",
   "grupos": [
   { "id": "rec", "titulo": "Clientes recorrentes", "clientes": [
     { "nome": "VILA 86", "segmento": "Moda streetwear", "plataformas": ["meta", "google"], "mensal": 200, "inicio": "", "revisao": "26/11/2026", "situacao": "Ativo",
@@ -29,7 +29,7 @@
     { "nome": "YASMIN", "segmento": "Psicologia", "plataformas": ["google"], "conta": "756-159-1841", "mensal": 150, "parcelas": 2, "parcelaAdiantada": true, "inicio": "30/09/2026", "revisao": "27/11/2026", "situacao": "Campanhas pausadas · promoção atingida",
       "reporte": "A cliente optou por manter as campanhas pausadas até a entrada dos créditos do Google, que ainda não caíram; seguimos dentro do prazo de 35 dias para isso, acompanhando e atualizando no grupo. Os resultados ficaram abaixo do esperado: houve alguns fechamentos, mas nada muito expressivo. Para a volta, vamos testar uma dinâmica diferente, provavelmente com foco em atendimento presencial, com alterações no site e nas campanhas; estamos alinhando essas mudanças com a cliente. A verificação da conta (confirmação de telefone) ainda precisa ser feita pela cliente; o prazo era 20/11." },
     { "nome": "THAIS", "segmento": "Psicologia", "plataformas": ["google"], "conta": "337-708-3643", "mensal": 150, "parcelas": 0, "inicio": "11/11/2026", "revisao": "27/11/2026", "situacao": "Ativo",
-      "reporte": "O custo por conversão está interessante, com média de R$ 16. O CPC médio das palavras-chave, entre R$ 8 e R$ 9, não é o ideal, mas está num bom patamar, já que usamos palavras-chave exatas, mais fechadas. A cliente não deu retorno ao longo desta semana, e seguimos tentando o feedback dela sobre como estão os contatos e se já houve fechamentos. Na última otimização, ajustamos os termos de pesquisa e a dinâmica de palavras-chave. As campanhas têm foco, por enquanto, no atendimento online. A verificação do anunciante precisa ser feita até 16/12." },
+      "reporte": "O custo por conversão está interessante, com média de R$ 16. O CPC médio das palavras-chave, entre R$ 8 e R$ 9, não é o ideal, mas está num bom patamar, já que usamos palavras-chave exatas, mais fechadas. A cliente respondeu que ainda não teve fechamentos e que ainda não assistiu ao seu vídeo sobre atendimento; estamos entendendo com ela como foram esses contatos. Na última otimização, ajustamos os termos de pesquisa e a dinâmica de palavras-chave. As campanhas têm foco, por enquanto, no atendimento online. A verificação do anunciante precisa ser feita até 16/12." },
     { "nome": "NEIVA", "segmento": "Psicologia", "plataformas": ["google"], "mensal": 150, "parcelas": 0, "inicio": "", "revisao": "23/11/2026", "situacao": "Campanhas ainda não iniciadas",
       "reporte": "Site e campanhas prontos do nosso lado. Para subir, falta só a cliente criar a conta de anúncios e pagar o registro do domínio no Registro.br; estamos acompanhando com ela quase todos os dias." }
   ] }
