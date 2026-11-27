@@ -1,43 +1,13 @@
 {
-  "atualizadoEm": "27/11/2026 às 16:51",
+  "atualizadoEm": "27/11/2026 às 16:56",
   "diaPagamento": 10,
-  "ultimoRecebido": "10/11/2026",
-  "clientes": [
+  "regra30": false,
+  "grupos": [
+  { "id": "rec", "titulo": "Clientes recorrentes", "clientes": [
     { "nome": "LEO CAR", "segmento": "Concessionária", "plataformas": ["meta"], "mensal": 250, "inicio": "", "revisao": "27/11/2026", "situacao": "Ativo",
-      "resumo": "Campanhas rodando dentro do padrão, com custo por lead estável e saldo tranquilo na conta. A estrutura é de uma campanha de mensagem por carro, com o contato chegando direto no WhatsApp da loja.",
-      "blocos": [
-        { "titulo": "Campanhas no ar", "itens": [
-          "8 dos 11 carros da lista atual estão com campanha ativa: ASX, Toro, EcoSport, Cronos, City, March, Onix LTZ e Fusca.",
-          "Spin e Prisma estão com a campanha desativada, e o HB20 ainda não tem campanha: os três vão entrar com criativos novos."
-        ] },
-        { "titulo": "Resultados", "itens": [
-          "Custo por lead dentro do padrão nos carros ativos.",
-          "Saldo da conta tranquilo para seguir rodando."
-        ] },
-        { "titulo": "Próximos passos", "itens": [
-          "Aguardar a produção e a edição dos vídeos pedidos para Spin, Prisma e HB20. Se demorar, subimos com peças estáticas para não deixar esses carros parados.",
-          "Na segunda-feira (30/11), enviar um relatório ao cliente e alinhar o perfil dos leads dos últimos dias."
-        ] }
-      ] },
+      "reporte": "Campanhas rodando dentro do padrão, com custo por lead estável e saldo tranquilo na conta. Dos 11 carros da lista atual, 8 estão no ar (ASX, Toro, EcoSport, Cronos, City, March, Onix LTZ e Fusca), cada um com sua campanha de mensagem. Spin, Prisma e HB20 vão entrar com criativos novos: estamos aguardando a produção e a edição dos vídeos e, se demorar, subimos com peças estáticas para não deixar esses carros parados. Na segunda-feira (30/11), enviamos um relatório ao cliente e alinhamos o perfil dos leads dos últimos dias." },
     { "nome": "BAHIA AUTOMARCAS", "segmento": "Concessionária", "plataformas": ["meta"], "mensal": 250, "inicio": "16/11/2026", "revisao": "27/11/2026", "situacao": "Ativo",
-      "resumo": "Campanhas iniciadas em 16/11. Ajustamos a dinâmica para priorizar contatos mais qualificados, e o cliente já percebe melhora nas visitas à loja.",
-      "blocos": [
-        { "titulo": "Campanhas", "itens": [
-          "Reconhecimento, com criativo de Black Friday: rodando (R$ 10/dia).",
-          "Contratação de vendedor: já pausada."
-        ] },
-        { "titulo": "Otimizações recentes", "itens": [
-          "Ajustes no público.",
-          "Nova mensagem inicial do WhatsApp, que antes era “Tenho interesse em comprar o [modelo]” e agora é “Olá! Quero agendar uma visita e conhecer as condições para o [modelo]”. A ideia é que só os mais qualificados usem a mensagem pronta."
-        ] },
-        { "titulo": "Resultados", "itens": [
-          "O volume de contatos caiu, como esperado com o filtro da nova mensagem.",
-          "O cliente relatou melhora na qualificação dos contatos e no número de visitas."
-        ] },
-        { "titulo": "Próximos passos", "itens": [
-          "Manter essa configuração por mais alguns dias para acompanhar a relação contatos × visitas.",
-          "Depois, decidir se vale voltar a buscar mais volume."
-        ] }
-      ] }
+      "reporte": "A campanha de reconhecimento, com criativo de Black Friday, segue rodando, e a de contratação de vendedor já foi pausada. Ajustamos o público e trocamos a mensagem inicial do WhatsApp para “Olá! Quero agendar uma visita e conhecer as condições para o [modelo]”, para filtrar os contatos. O volume caiu, como esperado, mas o cliente relatou melhora na qualificação e no número de visitas. Vamos manter essa configuração por mais alguns dias para acompanhar a relação contatos × visitas e decidir se vale voltar a buscar mais volume." }
+  ] }
   ]
 }

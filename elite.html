@@ -7,13 +7,30 @@
 <title>Clientes Elite Stage</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="alternate icon" type="image/png" href="favicon.png">
-<!-- =====================================================================
-     Página da Elite Stage: reporte detalhado dos clientes da Elite Stage.
-     Aba Clientes: situação, resumo e blocos (campanhas, otimizações, resultados, próximos passos).
-     Aba Financeiro: mensalidade de cada cliente e o próximo pagamento (todo dia 10).
-     Os dados ficam em elite.json, lido direto do repositório pela API do GitHub (aparece logo após
-     o push); se a API falhar, usa a cópia publicada. Esta página nunca mostra clientes de outros donos.
-     ===================================================================== -->
+<script>
+/* =====================================================================
+   Página de reporte de um dono de clientes (o layout é o mesmo para todos; só muda o arquivo de dados).
+   As páginas dos outros donos são geradas a partir desta, trocando ARQUIVO e o título (ver .claude/subir.sh).
+   Aba Clientes: situação, início e um reporte geral de cada cliente (o mais atualizado possível).
+   Aba Financeiro: mensalidades por grupo, próximo pagamento e parcelas pagas dos projetos
+   (R$ 600 em 4 parcelas de R$ 150).
+   Sem histórico de otimizações nem prazos de promoção.
+   Só a barrinha da promoção vem ao vivo da planilha (pela "conta").
+   situacao: "Ativo", "Campanhas pausadas · …" ou "Campanhas ainda não iniciadas".
+   Os dados (grupos, clientes, reportes, dia de pagamento) ficam no ARQUIVO. A página lê o arquivo direto do
+   repositório pela API do GitHub, para mostrar a versão nova logo depois do push, sem esperar o
+   GitHub Pages; se a API falhar, usa a cópia publicada.
+   ===================================================================== */
+const ARQUIVO = "elite.json";
+let ATUALIZADO_EM = "";
+let GRUPOS = [];
+let EM_ABERTO = ""; // "pagamentoEmAberto" no arquivo: pagamento que já venceu e ainda não foi recebido (apagar quando receber)
+
+/* Pagamento: dia do mês ("diaPagamento" no arquivo, padrão 20) e, com "regra30" (padrão sim),
+   só entram os clientes que já completaram 30 dias desde o início */
+let DIA_PAGAMENTO = 20;
+let REGRA30 = true;
+</script>
 <style>
   :root {
     --bg: #0f0f0f;
@@ -53,7 +70,6 @@
     font-size: 16px; font-weight: 700; letter-spacing: .02em;
   }
   .top svg { display: block; flex: none; }
-  .top .marca { margin-right: 6px; }
   .tabs { display: flex; gap: 4px; }
   .tabs a { padding: 5px 12px; color: var(--box-ink); opacity: .65; text-decoration: none; font-size: 14px; font-weight: 600; letter-spacing: .01em; }
   .tabs a:hover { opacity: 1; }
@@ -61,66 +77,91 @@
   .updated { margin-left: auto; padding: 3px 10px; border: 1px solid rgba(255, 255, 255, .2); font-size: 12.5px; font-weight: 500; letter-spacing: 0; }
 
   section { min-width: 0; background: var(--box); border: 1px solid var(--box-line); padding: 16px 20px 20px; }
+  .aba > section + section, .aba > section + .fin-grupo, .fin-grupo + .fin-grupo { margin-top: 30px; }
   section h2 {
     display: flex; align-items: baseline; gap: 8px;
     margin: 0 0 12px 2px; font-size: 12px; font-weight: 600; color: var(--title);
     text-transform: uppercase; letter-spacing: .08em;
   }
-
-  /* Aba Clientes: folha branca, um bloco por cliente */
-  .folha { background: var(--surface); border: 1px solid var(--line); padding: 28px 36px 18px; }
+  section h2 span { color: var(--box-label); font-weight: 500; text-transform: none; letter-spacing: 0; }
+  /* Aba Clientes em formato de reporte: uma folha branca, um bloco de texto por cliente */
+  .folha { background: var(--surface); border: 1px solid var(--line); padding: 28px 36px 14px; }
   .folha-topo { padding-bottom: 16px; border-bottom: 2px solid var(--ink); }
   .folha-topo h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -.01em; }
   .folha-topo p { margin: 4px 0 0; font-size: 13px; color: var(--soft-ink); }
-  .cliente { padding: 22px 0 24px; border-bottom: 1px solid var(--line); }
-  .cliente:last-child { border-bottom: 0; }
-  /* Colunas fixas: a tag de situação e as informações ficam sempre na mesma posição, qualquer que seja o nome */
+  .grupo h2 {
+    display: flex; align-items: baseline; gap: 8px;
+    margin: 28px 0 0; padding-bottom: 8px; border-bottom: 1px solid var(--line);
+    font-size: 12px; font-weight: 700; color: #1f6b47; text-transform: uppercase; letter-spacing: .08em;
+  }
+  .grupo h2 span { color: var(--label); font-weight: 500; text-transform: none; letter-spacing: 0; }
+  .cliente { padding: 16px 0 18px; border-bottom: 1px solid var(--line); }
+  .grupo .cliente:last-child { border-bottom: 0; }
+  /* Colunas fixas (como no painel principal): a tag de situação e as informações ficam sempre na mesma posição,
+     qualquer que seja o tamanho do nome ou do segmento */
   .cli-topo, .meta { display: grid; grid-template-columns: 250px 120px minmax(0, 1fr); align-items: center; column-gap: 16px; }
   .cli-topo > .sit { grid-column: 2 / -1; justify-self: start; }
-  .cli-topo h3 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: .01em; }
+  .cli-topo h3 { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: .01em; }
+  /* Mensalidade e parcelas bem discretas, no canto direito */
+  .parc { display: inline-flex; align-items: center; gap: 5px; margin-right: 6px; padding: 2px 8px; background: #e6f2ec; color: #24593f; font-size: 11.5px; font-weight: 700; vertical-align: 1px; white-space: nowrap; }
+  .parc i { display: inline-block; width: 7px; height: 7px; background: #c9d6cf; }
+  .parc i.ok { background: var(--bar); }
+  .parc i:last-of-type { margin-right: 2px; }
+  .disc { margin-left: auto; font-size: 11.5px; color: var(--label); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .meta { margin: 4px 0 0; font-size: 12px; color: var(--label); font-variant-numeric: tabular-nums; }
   .plat { display: inline-block; width: 14px; height: 14px; margin-left: 6px; vertical-align: -1px; }
   .plat + .plat { margin-left: 4px; }
   .plat svg { display: block; width: 100%; height: 100%; }
+  .barra-linha { display: inline-flex; align-items: center; gap: 8px; }
+  .barra { width: 120px; height: 6px; background: var(--line); }
+  .barra i { display: block; height: 100%; background: var(--bar); }
+  .barra-linha b { font-weight: 600; color: var(--soft-ink); }
+
+  /* Situação: "Ativo" em verde; "Pausada · promoção atingida" neutro */
   .sit { display: inline-block; padding: 1px 8px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; background: #eef1ef; color: var(--soft-ink); white-space: nowrap; }
   .sit.rodando { background: #e3f1e9; color: #1f6b47; }
-  .sit.pausada { background: #fdf0dc; color: #8a5a12; }
+  .sit.pausada { background: #fdf0dc; color: #8a5a12; } /* campanhas pausadas: sempre bem claro */
   .sit.nao-iniciada { background: none; box-shadow: inset 0 0 0 1px #cfd6d2; color: var(--label); }
 
-  .resumo { max-width: 92ch; margin: 12px 0 0; font-size: 14px; line-height: 1.6; color: var(--ink); text-wrap: pretty; }
-  /* Blocos do cliente (campanhas, otimizações, resultados, próximos passos), em duas colunas */
-  .blocos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
-  .bloco { padding: 12px 14px 12px; background: var(--row-soft); border-left: 3px solid var(--bar); }
-  .bloco.passos { border-left-color: #c58a2b; background: #fbf5ea; }
-  .bloco h4 { margin: 0 0 6px; font-size: 11px; font-weight: 700; color: #1f6b47; text-transform: uppercase; letter-spacing: .06em; }
-  .bloco.passos h4 { color: #8a5a12; }
-  .bloco ul { margin: 0; padding-left: 16px; }
-  .bloco li { margin: 3px 0; font-size: 13px; line-height: 1.5; color: var(--ink); text-wrap: pretty; }
-  .bloco li::marker { color: var(--label); }
+  .texto { max-width: 92ch; margin: 10px 0 0; font-size: 14px; line-height: 1.6; color: var(--ink); text-wrap: pretty; } /* evita palavra sozinha na última linha */
+  .k { display: block; font-size: 11px; color: var(--label); }
+  .v { display: block; font-size: 13px; font-weight: 500; }
 
-  /* Aba Financeiro: total do próximo pagamento em destaque e a lista de clientes */
+  /* Aba Financeiro: total do dia 20 em destaque e uma lista simples de clientes, por grupo */
   .fin-total, .fin-card { max-width: 760px; }
   .fin-total { padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--bar); }
-  .fin-total .k { display: block; font-size: 11px; color: var(--label); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
-  .fin-total .v { display: block; margin-top: 4px; font-size: 30px; font-weight: 700; line-height: 1.15; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+  .fin-total .k { font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+  .fin-total .v { margin-top: 4px; font-size: 30px; font-weight: 700; line-height: 1.15; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
   .fin-total .s { display: block; margin-top: 6px; font-size: 12.5px; color: var(--soft-ink); }
   .fin-card { margin-top: 16px; padding: 4px 20px 16px; background: var(--surface); border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
-  .fin-card h3 { display: flex; justify-content: space-between; gap: 16px; margin: 14px 0 4px; padding-bottom: 6px; border-bottom: 2px solid var(--ink); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+  .fin-grupo h3 { display: flex; justify-content: space-between; gap: 16px; margin: 14px 0 4px; padding-bottom: 6px; border-bottom: 2px solid var(--ink); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+  .fin-grupo h3 b { font-size: 13px; letter-spacing: 0; }
+  .fin-grupo .obs { margin: 6px 0 2px; font-size: 12px; color: var(--label); }
+  /* Cardzinho que explica a regra das parcelas dos projetos */
+  .fin-nota { margin: 10px 0 4px; padding: 12px 14px; background: #eef6f1; border-left: 3px solid var(--bar); font-size: 12.5px; color: var(--soft-ink); }
+  .fin-nota b { display: block; margin-bottom: 4px; font-size: 12px; color: #1f6b47; text-transform: uppercase; letter-spacing: .04em; }
+  .fin-nota p { margin: 4px 0 0; text-wrap: pretty; }
+  .fin-lista small.ini { color: var(--soft-ink); }
   .fin-lista { margin: 0; padding: 0; list-style: none; }
-  .fin-lista li { display: grid; grid-template-columns: minmax(0, 1fr) 110px; align-items: center; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+  /* Três colunas fixas: cliente, parcelas (só projetos) e valor; assim os quadradinhos ficam alinhados em todas as linhas */
+  .fin-lista li { display: grid; grid-template-columns: minmax(0, 1fr) auto 96px; align-items: center; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+  .fin-lista .parc { margin-right: 0; }
   .fin-lista .cli { font-weight: 700; }
-  .fin-lista small { display: block; margin-top: 1px; font-size: 11.5px; font-weight: 500; color: var(--soft-ink); }
+  .fin-lista small { display: block; margin-top: 1px; font-size: 11.5px; font-weight: 500; color: var(--label); }
   .fin-lista .val { font-weight: 600; white-space: nowrap; text-align: right; }
+  .fin-lista li.fora .cli { color: var(--label); }
+  .fin-lista li.fora small { color: #8a5a12; }
+  .fin-lista li.fora .val { color: var(--label); }
   .fin-soma { display: flex; justify-content: space-between; gap: 16px; margin-top: 14px; padding: 12px 14px; background: var(--row-soft); font-size: 15px; font-weight: 700; }
 
   @media (max-width: 1000px) {
     .wrap { padding: 16px; }
     .updated { margin-left: 0; }
     section { padding: 12px; }
-    .folha { padding: 18px 16px 8px; }
-    .resumo { font-size: 13.5px; }
+    .folha { padding: 18px 16px 6px; }
+    .texto { font-size: 13.5px; }
+    /* Celular: volta a fluir em linha, sem colunas fixas */
     .cli-topo, .meta { display: flex; flex-wrap: wrap; gap: 4px 12px; }
-    .blocos { grid-template-columns: minmax(0, 1fr); }
   }
 </style>
 </head>
@@ -136,7 +177,6 @@
           <path d="M9 68c0-15 10-25 23-25s23 10 23 25z" fill="#fff"/>
         </g>
       </svg>
-      <span class="marca">Elite Stage</span>
       <nav class="tabs" aria-label="Abas">
         <a href="#clientes" data-tab="clientes">Clientes</a>
         <a href="#financeiro" data-tab="financeiro">Financeiro</a>
@@ -151,7 +191,10 @@
 <script>
 (function () {
   const DAY = 86400000;
-  let DADOS = { clientes: [] };
+  const PARCELAS = 4; // projeto de R$ 600 dividido em 4 parcelas de R$ 150
+  // Parcelas pagas como quadradinhos preenchidos (igual ao painel principal), ex.: ■□□□ 1 de 4
+  const parcelasHtml = n => `<span class="parc" title="${n} de ${PARCELAS} parcelas pagas">` +
+    Array.from({ length: PARCELAS }, (_, i) => `<i${i < n ? ` class="ok"` : ""}></i>`).join("") + `${n} de ${PARCELAS}</span>`;
   const money = v => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const isDate = s => /^\d\d\/\d\d\/\d{4}$/.test(s || "");
@@ -161,66 +204,145 @@
   const qtd = n => `${n} cliente${n === 1 ? "" : "s"}`;
 
   const PLATFORMS = {
-    google: { title: "Google Ads", svg: `<svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.650z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>` },
+    google: { title: "Google Ads", svg: `<svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>` },
     meta: { title: "Meta Ads", svg: `<svg viewBox="0 0 24 24"><path d="M12 12c-2-3-3.6-5.2-5.6-5.2S2.8 9 2.8 12s1.6 5.2 3.6 5.2S10 15 12 12s3.6-5.2 5.6-5.2 3.6 2.2 3.6 5.2-1.6 5.2-3.6 5.2S14 15 12 12z" fill="none" stroke="#0866FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
   };
-  const sitClasse = s => s === "Ativo" ? "rodando" : /pausad/i.test(s) ? "pausada" : /não iniciad/i.test(s) ? "nao-iniciada" : "";
 
-  /* ===== Aba Clientes ===== */
-  function card(c) {
-    const plats = (c.plataformas || []).filter(p => PLATFORMS[p]).map(p => `<span class="plat" title="${PLATFORMS[p].title}">${PLATFORMS[p].svg}</span>`).join("");
-    const inicio = `<span>${isDate(c.inicio) ? `Início em ${c.inicio.slice(0, 5)}` : ""}</span>`;
-    const blocos = (c.blocos || []).map(b =>
-      `<div class="bloco${/próximos passos/i.test(b.titulo) ? " passos" : ""}"><h4>${esc(b.titulo)}</h4><ul>` +
-      (b.itens || []).map(i => `<li>${esc(i)}</li>`).join("") + `</ul></div>`).join("");
-    return `<article class="cliente"><div class="cli-topo"><h3>${esc(c.nome)}${plats}</h3>` +
-      `<span class="sit ${sitClasse(c.situacao)}">${esc(c.situacao)}</span></div>` +
-      `<p class="meta"><span>${esc(c.segmento)}</span>${inicio}</p>` +
-      (c.resumo ? `<p class="resumo">${esc(c.resumo)}</p>` : "") +
-      (blocos ? `<div class="blocos">${blocos}</div>` : "") + `</article>`;
+  // situacao: "Ativo", "Campanhas pausadas · …" ou "Campanhas ainda não iniciadas"
+  const sitClasse = s => s === "Ativo" ? "rodando" : /pausad/i.test(s) ? "pausada" : /não iniciad/i.test(s) ? "nao-iniciada" : "";
+  const sit = s => `<span class="sit ${sitClasse(s)}">${esc(s)}</span>`;
+
+  /* Promoção do Google: só a barrinha e o percentual de R$ 1.200 gastos, lidos ao vivo da aba "Geral" da planilha */
+  const SHEET_CSV = "https://docs.google.com/spreadsheets/d/14wsRMmTuI7v7nT2yy6AXYKzlhBHNkznw4XXsen69xxE/gviz/tq?tqx=out:csv&sheet=Geral";
+  const META = 1200;
+  const gastoPorConta = {};
+  const toNumber = s => parseFloat(String(s || "").replace(/[^\d,-]/g, "").replace(",", ".")) || 0;
+
+  function parseCSV(text) {
+    const rows = []; let row = [], cur = "", q = false;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (q) {
+        if (ch === '"' && text[i + 1] === '"') { cur += '"'; i++; }
+        else if (ch === '"') q = false;
+        else cur += ch;
+      } else if (ch === '"') q = true;
+      else if (ch === ",") { row.push(cur); cur = ""; }
+      else if (ch === "\n") { row.push(cur); rows.push(row); row = []; cur = ""; }
+      else if (ch !== "\r") cur += ch;
+    }
+    if (cur || row.length) { row.push(cur); rows.push(row); }
+    return rows;
   }
+
+  /* ===== Pagamento: próximo dia 20 e quem entra nele ===== */
+  function proximoPagamento() {
+    const n = new Date();
+    return Date.UTC(n.getFullYear(), n.getMonth() + (n.getDate() > DIA_PAGAMENTO ? 1 : 0), DIA_PAGAMENTO);
+  }
+  // Primeiro dia 20 em que o cliente já tem 30 dias desde o início
+  function primeiroPagamento(inicio) {
+    const t = parseDate(inicio) + 30 * DAY, d = new Date(t);
+    const mesmo = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), DIA_PAGAMENTO);
+    return mesmo >= t ? mesmo : Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, DIA_PAGAMENTO);
+  }
+  // Recorrentes sem data de início são clientes antigos e entram; projetos sem início ainda não começaram
+  function noPagamento(c, g, data) {
+    if (!REGRA30) return { entra: true };
+    if (isDate(c.inicio)) {
+      const p = primeiroPagamento(c.inicio);
+      return p <= data ? { entra: true } : { entra: false, txt: `A partir de ${ddmm(p)}` };
+    }
+    return g.id === "proj" ? { entra: false, txt: "Após o início" } : { entra: true };
+  }
+
+  /* ===== Aba Clientes: reporte em texto, cliente por cliente ===== */
+  function card(c) {
+    const plats = (c.plataformas || []).map(p => `<span class="plat" title="${PLATFORMS[p].title}">${PLATFORMS[p].svg}</span>`).join("");
+    const gasto = c.conta ? gastoPorConta[c.conta] : undefined;
+    const pct = gasto == null ? 0 : Math.min(Math.floor(gasto / META * 100), 100);
+    const promo = c.conta ? `<span class="barra-linha" style="justify-self: start">Promoção Google <span class="barra"><i style="width:${pct}%"></i></span><b>${gasto == null ? "—" : pct + "%"}</b></span>` : "";
+    // Só mostra a data de início quando existe (os recorrentes antigos não têm; quem não começou já diz isso na situação)
+    const inicio = `<span>${isDate(c.inicio) ? `Início em ${c.inicio.slice(0, 5)}` : ""}</span>`; // espaço sempre presente, para a promoção ficar alinhada
+    return `<article class="cliente"><div class="cli-topo"><h3>${esc(c.nome)}${plats}</h3>${sit(c.situacao)}` +
+      `</div>` + // mensalidade e parcelas ficam só na aba Financeiro
+      `<p class="meta"><span>${esc(c.segmento)}</span>${inicio}${promo}</p>` +
+      (c.reporte ? `<p class="texto">${esc(c.reporte)}</p>` : "") + `</article>`;
+  }
+
+  // Revisão mais recente primeiro; mesma data → ordem alfabética; sem data no fim
+  const ordem = lista => lista.slice().sort((a, b) =>
+    (parseDate(b.revisao) ?? -Infinity) - (parseDate(a.revisao) ?? -Infinity) || a.nome.localeCompare(b.nome, "pt-BR"));
 
   function renderClientes() {
-    const cs = DADOS.clientes || [];
-    const ativos = cs.filter(c => c.situacao === "Ativo").length;
+    const todos = GRUPOS.flatMap(g => g.clientes);
+    const ativos = todos.filter(c => c.situacao === "Ativo").length;
+    const pausados = todos.filter(c => /pausad/i.test(c.situacao)).length;
+    const naoIniciados = todos.filter(c => /não iniciad/i.test(c.situacao)).length;
     document.getElementById("aba-clientes").innerHTML =
       `<div class="folha"><div class="folha-topo"><h1>Reporte dos clientes</h1>` +
-      `<p>${qtd(cs.length)} · ${ativos} ativo${ativos === 1 ? "" : "s"}</p></div>` +
-      cs.map(card).join("") + `</div>`;
+      `<p>${qtd(todos.length)} · ${ativos} ativo${ativos === 1 ? "" : "s"} · ${pausados} com campanhas pausadas${naoIniciados ? ` · ${naoIniciados} ainda sem campanhas` : ""}</p></div>` +
+      GRUPOS.map(g => `<div class="grupo"><h2>${esc(g.titulo)} <span>${qtd(g.clientes.length)}</span></h2>` +
+        ordem(g.clientes).map(card).join("") + `</div>`).join("") + `</div>`;
   }
 
-  /* ===== Aba Financeiro: próximo pagamento (todo dia "diaPagamento") ===== */
-  function proximoPagamento(dia) {
-    const n = new Date();
-    return Date.UTC(n.getFullYear(), n.getMonth() + (n.getDate() > dia ? 1 : 0), dia);
-  }
+  /* ===== Aba Financeiro ===== */
   function renderFinanceiro() {
-    const cs = DADOS.clientes || [];
-    const diaPag = DADOS.diaPagamento || 10;
-    const data = proximoPagamento(diaPag);
+    const aberto = isDate(EM_ABERTO) ? parseDate(EM_ABERTO) : null; // pagamento vencido continua sendo o atual até ser recebido
+    const data = aberto ?? proximoPagamento();
     const dia = ddmm(data);
-    const total = cs.reduce((s, c) => s + (c.mensal || 0), 0);
+    const todos = GRUPOS.flatMap(g => g.clientes.map(c => ({ c, g, pag: noPagamento(c, g, data) })));
+    const soma = l => l.reduce((s, x) => s + (x.c.mensal || 0), 0);
+    const entram = todos.filter(x => x.pag.entra);
     const faltam = Math.round((data - today()) / DAY);
-    const quando = faltam === 0 ? "é hoje" : faltam === 1 ? "é amanhã" : `faltam ${faltam} dias`;
-    const ultimo = isDate(DADOS.ultimoRecebido) ? ` Último pagamento recebido em ${DADOS.ultimoRecebido.slice(0, 5)}.` : "";
-    const linhas = cs.map(c => `<li><span class="cli">${esc(c.nome)}` +
-      `${isDate(c.inicio) ? `<small>Início em ${c.inicio.slice(0, 5)}</small>` : ""}</span>` +
-      `<span class="val">${money(c.mensal || 0)}</span></li>`).join("");
+    // Pagamento vencido e ainda não recebido: aparece sem destaque nem contagem de dias (pedido do usuário)
+    const quando = faltam < 0 ? "" : faltam === 0 ? "é hoje" : faltam === 1 ? "é amanhã" : `faltam ${faltam} dias`;
+
+    // Total a pagar no dia 20, em destaque
+    const topo = `<div class="fin-total"><span class="k">A pagar no dia ${dia}</span><span class="v">${money(soma(entram))}</span>` +
+      `<span class="s">${qtd(entram.length)}${quando ? ` · ${quando}` : ""}${faltam < 0 ? `; o seguinte é no dia ${ddmm(proximoPagamento())}` : ""}.${REGRA30 ? " Contam só os clientes com pelo menos 30 dias de campanha rodando." : ""}</span></div>`;
+
+    // Lista simples: cada cliente e quanto representa no dia 20, separada por grupo, com o subtotal de cada grupo
+    const linha = ({ c, g, pag }) => {
+      // Deixa claro que o pagamento do dia é a próxima parcela, e quantas já foram pagas antes dele
+      const pagas = c.parcelas || 0;
+      const proj = g.id === "proj";
+      const inicio = isDate(c.inicio) ? `Início em ${c.inicio.slice(0, 5)}` : "";
+      const parcela = proj && pag.entra ? `Neste pagamento (${dia}): ${pagas + 1}ª parcela de ${PARCELAS} · ${pagas ? `${pagas} já paga${pagas > 1 ? "s" : ""}` : "nenhuma paga ainda"}` : "";
+      const nota = pag.entra ? parcela : isDate(c.inicio) ? "Não conta: ainda não completou 30 dias de campanha rodando" : "Não conta: campanhas ainda não iniciadas";
+      const meta = inicio;
+      return `<li${pag.entra ? "" : ` class="fora"`}><span class="cli">${esc(c.nome)}` +
+        `${meta ? `<small class="ini">${esc(meta)}</small>` : ""}${nota ? `<small>${esc(nota)}</small>` : ""}</span>` +
+        `<span>${proj ? parcelasHtml(pagas) : ""}</span>` +
+        `<span class="val">${pag.entra ? money(c.mensal) : "—"}</span></li>`;
+    };
+    // Quem teve a 1ª parcela paga um pouco antes dos 30 dias: "parcelaAdiantada": true no arquivo de dados
+    const notaProjetos = g => {
+      const nome = n => n.charAt(0) + n.slice(1).toLowerCase();
+      const adiantados = g.clientes.filter(c => c.parcelaAdiantada).map(c => nome(c.nome));
+      const lista = adiantados.length > 1 ? adiantados.slice(0, -1).join(", ") + " e " + adiantados[adiantados.length - 1] : adiantados[0];
+      const excecao = adiantados.length ? ` (alguns um pouco antes: é o caso só de ${lista})` : "";
+      return `<div class="fin-nota"><p>Combinado: R$ 600 por projeto, em 4 parcelas de R$ 150. O primeiro pagamento de cada projeto só é feito depois dos 30 dias de campanha${esc(excecao)}, por isso quem começou depois ainda tem menos parcelas pagas.</p></div>`;
+    };
+    const grupo = g => {
+      const linhas = todos.filter(x => x.g === g);
+      return `<div class="fin-grupo"><h3><span>${esc(g.titulo)}</span><b>${money(soma(linhas.filter(x => x.pag.entra)))}</b></h3>` +
+        (g.id === "proj" ? notaProjetos(g) : "") +
+        `<ul class="fin-lista">${linhas.map(linha).join("")}</ul></div>`;
+    };
+
     document.getElementById("aba-financeiro").innerHTML =
-      `<section><h2>Pagamento do dia ${dia}</h2>` +
-      `<div class="fin-total"><span class="k">A pagar no dia ${dia}</span><span class="v">${money(total)}</span>` +
-      `<span class="s">${qtd(cs.length)} · ${quando}. Mensalidade de cada cliente, paga todo dia ${diaPag}.${ultimo}</span></div>` +
-      `<div class="fin-card"><h3><span>Clientes</span><b>${money(total)}</b></h3><ul class="fin-lista">${linhas}</ul>` +
-      `<div class="fin-soma"><span>Total no dia ${dia}</span><b>${money(total)}</b></div></div></section>`;
+      `<section><h2>Pagamento do dia ${dia}</h2>${topo}<div class="fin-card">${GRUPOS.map(grupo).join("")}` +
+      `<div class="fin-soma"><span>Total no dia ${dia}</span><b>${money(soma(entram))}</b></div></div></section>`;
   }
 
   function render() {
-    document.getElementById("updated").textContent = DADOS.atualizadoEm ? `Atualizado em ${DADOS.atualizadoEm}` : "";
+    document.getElementById("updated").textContent = `Atualizado em ${ATUALIZADO_EM}`;
     renderClientes();
     renderFinanceiro();
   }
 
-  // Abas: a aba aberta fica no endereço (#clientes ou #financeiro)
+  // Abas: a aba aberta fica no endereço (#clientes ou #financeiro); os ids das abas são diferentes para o navegador não rolar a página
   function showTab() {
     const aba = location.hash === "#financeiro" ? "financeiro" : "clientes";
     document.getElementById("aba-clientes").hidden = aba !== "clientes";
@@ -233,7 +355,23 @@
   addEventListener("hashchange", showTab);
   showTab();
 
-  // Dados (elite.json): primeiro direto do repositório (versão do último push), senão a cópia publicada
+  // Barrinha da promoção: lê a planilha ao abrir e de novo a cada 1 hora enquanto a página fica aberta.
+  // "conta" só existe nos clientes que entram na promoção; só essas linhas da planilha são usadas
+  function carregarPlanilha() {
+    const contas = GRUPOS.flatMap(g => g.clientes.map(c => c.conta)).filter(Boolean);
+    fetch(SHEET_CSV + "&t=" + Date.now())
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+      .then(text => {
+        const all = parseCSV(text);
+        const total = (all[0] || []).findIndex(s => /^TODO O PERÍODO/.test((s || "").trim().toUpperCase()));
+        if (total < 0) return;
+        all.slice(1).filter(r => r[1] && contas.includes(r[1].trim())).forEach(r => { gastoPorConta[r[1].trim()] = toNumber(r[total]); });
+        renderClientes();
+      })
+      .catch(() => {}); // sem a planilha, a barrinha fica vazia e o resto da página continua normal
+  }
+
+  // Dados da página (ARQUIVO): primeiro direto do repositório (versão do último push), senão a cópia publicada
   const REPO_API = "https://api.github.com/repos/gabrielaacristofolini-hue/clientes/contents/";
   async function lerJSON(arquivo) {
     const fontes = [
@@ -251,13 +389,19 @@
     return null;
   }
 
-  lerJSON("elite.json").then(dados => {
+  lerJSON(ARQUIVO).then(dados => {
     if (!dados) {
       document.getElementById("aba-clientes").innerHTML = `<div class="folha"><p>Não foi possível carregar os dados agora. Recarregue a página em instantes.</p></div>`;
       return;
     }
-    DADOS = dados;
+    ATUALIZADO_EM = dados.atualizadoEm || "";
+    EM_ABERTO = dados.pagamentoEmAberto || "";
+    DIA_PAGAMENTO = dados.diaPagamento || 20;
+    REGRA30 = dados.regra30 !== false;
+    GRUPOS = dados.grupos || [];
     render();
+    carregarPlanilha();
+    setInterval(carregarPlanilha, 60 * 60 * 1000);
   });
 })();
 </script>

@@ -9,23 +9,27 @@
 <link rel="alternate icon" type="image/png" href="favicon.png">
 <script>
 /* =====================================================================
-   Página do Bruno: reporte dos clientes dele.
+   Página de reporte de um dono de clientes (o layout é o mesmo para todos; só muda o arquivo de dados).
+   As páginas dos outros donos são geradas a partir desta, trocando ARQUIVO e o título (ver .claude/subir.sh).
    Aba Clientes: situação, início e um reporte geral de cada cliente (o mais atualizado possível).
-   Aba Financeiro: mensalidades por grupo, próximo pagamento (dia 20, só quem já completou 30 dias)
-   e parcelas pagas dos projetos (R$ 600 em 4 parcelas de R$ 150).
+   Aba Financeiro: mensalidades por grupo, próximo pagamento e parcelas pagas dos projetos
+   (R$ 600 em 4 parcelas de R$ 150).
    Sem histórico de otimizações nem prazos de promoção.
    Só a barrinha da promoção vem ao vivo da planilha (pela "conta").
-   situacao: "Ativo" ou "Pausada · promoção atingida" (só quem pausou porque já atingiu a promoção).
-   Os dados (grupos, clientes, reportes) ficam em bruno.json. A página lê o arquivo direto do
+   situacao: "Ativo", "Campanhas pausadas · …" ou "Campanhas ainda não iniciadas".
+   Os dados (grupos, clientes, reportes, dia de pagamento) ficam no ARQUIVO. A página lê o arquivo direto do
    repositório pela API do GitHub, para mostrar a versão nova logo depois do push, sem esperar o
    GitHub Pages; se a API falhar, usa a cópia publicada.
    ===================================================================== */
+const ARQUIVO = "bruno.json";
 let ATUALIZADO_EM = "";
 let GRUPOS = [];
-let EM_ABERTO = ""; // bruno.json "pagamentoEmAberto": pagamento do dia 20 que já venceu e ainda não foi recebido (apagar quando receber)
+let EM_ABERTO = ""; // "pagamentoEmAberto" no arquivo: pagamento que já venceu e ainda não foi recebido (apagar quando receber)
 
-/* Pagamento do Bruno: todo dia 20, só dos clientes que já completaram 30 dias desde o início */
-const DIA_PAGAMENTO = 20;
+/* Pagamento: dia do mês ("diaPagamento" no arquivo, padrão 20) e, com "regra30" (padrão sim),
+   só entram os clientes que já completaram 30 dias desde o início */
+let DIA_PAGAMENTO = 20;
+let REGRA30 = true;
 </script>
 <style>
   :root {
@@ -244,6 +248,7 @@ const DIA_PAGAMENTO = 20;
   }
   // Recorrentes sem data de início são clientes antigos e entram; projetos sem início ainda não começaram
   function noPagamento(c, g, data) {
+    if (!REGRA30) return { entra: true };
     if (isDate(c.inicio)) {
       const p = primeiroPagamento(c.inicio);
       return p <= data ? { entra: true } : { entra: false, txt: `A partir de ${ddmm(p)}` };
@@ -295,7 +300,7 @@ const DIA_PAGAMENTO = 20;
 
     // Total a pagar no dia 20, em destaque
     const topo = `<div class="fin-total"><span class="k">A pagar no dia ${dia}</span><span class="v">${money(soma(entram))}</span>` +
-      `<span class="s">${qtd(entram.length)}${quando ? ` · ${quando}` : ""}${faltam < 0 ? `; o seguinte é no dia ${ddmm(proximoPagamento())}` : ""}. Contam só os clientes com pelo menos 30 dias de campanha rodando.</span></div>`;
+      `<span class="s">${qtd(entram.length)}${quando ? ` · ${quando}` : ""}${faltam < 0 ? `; o seguinte é no dia ${ddmm(proximoPagamento())}` : ""}.${REGRA30 ? " Contam só os clientes com pelo menos 30 dias de campanha rodando." : ""}</span></div>`;
 
     // Lista simples: cada cliente e quanto representa no dia 20, separada por grupo, com o subtotal de cada grupo
     const linha = ({ c, g, pag }) => {
@@ -311,7 +316,7 @@ const DIA_PAGAMENTO = 20;
         `<span>${proj ? parcelasHtml(pagas) : ""}</span>` +
         `<span class="val">${pag.entra ? money(c.mensal) : "—"}</span></li>`;
     };
-    // Quem teve a 1ª parcela paga um pouco antes dos 30 dias: "parcelaAdiantada": true no bruno.json
+    // Quem teve a 1ª parcela paga um pouco antes dos 30 dias: "parcelaAdiantada": true no arquivo de dados
     const notaProjetos = g => {
       const nome = n => n.charAt(0) + n.slice(1).toLowerCase();
       const adiantados = g.clientes.filter(c => c.parcelaAdiantada).map(c => nome(c.nome));
@@ -366,7 +371,7 @@ const DIA_PAGAMENTO = 20;
       .catch(() => {}); // sem a planilha, a barrinha fica vazia e o resto da página continua normal
   }
 
-  // Dados da página (bruno.json): primeiro direto do repositório (versão do último push), senão a cópia publicada
+  // Dados da página (ARQUIVO): primeiro direto do repositório (versão do último push), senão a cópia publicada
   const REPO_API = "https://api.github.com/repos/gabrielaacristofolini-hue/clientes/contents/";
   async function lerJSON(arquivo) {
     const fontes = [
@@ -384,13 +389,15 @@ const DIA_PAGAMENTO = 20;
     return null;
   }
 
-  lerJSON("bruno.json").then(dados => {
+  lerJSON(ARQUIVO).then(dados => {
     if (!dados) {
       document.getElementById("aba-clientes").innerHTML = `<div class="folha"><p>Não foi possível carregar os dados agora. Recarregue a página em instantes.</p></div>`;
       return;
     }
     ATUALIZADO_EM = dados.atualizadoEm || "";
     EM_ABERTO = dados.pagamentoEmAberto || "";
+    DIA_PAGAMENTO = dados.diaPagamento || 20;
+    REGRA30 = dados.regra30 !== false;
     GRUPOS = dados.grupos || [];
     render();
     carregarPlanilha();
